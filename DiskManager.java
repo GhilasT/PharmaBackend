@@ -8,6 +8,7 @@ public class DiskManager {
 	private  int Xfichier ; // indice du fichier actuel 
 	private int   indicPage; // indice de la page dans le fichier actuel
 	private int tailleActuFich; // la taille actuel du fichier (octets)
+	private ArrayList<PageID> page_vide;
 
 	
 	public DiskManager(DBConfig config) {
@@ -20,7 +21,13 @@ public class DiskManager {
 	
 	public PageID AllocPage() {
 		//Vérifier qu'on peut ajouter une page au fichier (taille)
-		if(this.tailleActuFich + config.getPagesize() > config.getDm_maxfilesize()){
+
+		if(!(page_vide.isEmpty)){
+			PageID page1= page_vide.get(0);
+			page_vide.remove(0)
+			return page1;
+		}
+		else if(this.tailleActuFich + config.getPagesize() > config.getDm_maxfilesize()){
 			this.Xfichier ++;
 			this.tailleActuFich =0;
 			this.indicPage = 0;
