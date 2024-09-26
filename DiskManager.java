@@ -1,36 +1,52 @@
 import java.nio.ByteBuffer;
+import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class DiskManager {
 	private DBConfig config;
+	private  int Xfichier ; // indice du fichier actuleee 
+	private int   indicPage; // indice de la page dans le fichier actuell
+	private int tailleActuFich; // la taille actuelle du fichier (octets)
+
 	
 	public DiskManager(DBConfig config) {
 		this.config = config;
+		this.Xfichier =0;
+		this.indicPage =0;
+		this. tailleActuFich = 0;
 		
 	}
-	int indFich = 0;
-	int indPage = 0;
+	
 	public PageID AllocPage() {
-		PageID page = new PageID(indFich, indPage);
-		indFich++;
-		indPage ++;
+		//Vérifier qu'on peut ajouter une page au fichier (taille)
+		if(this.tailleActuFich + config.getPagesize() > config.getDm_maxfilesize()){
+			this.Xfichier ++;
+			this.tailleActuFich =0;
+			this.indicPage = 0;
+		}
+
+		PageID page = new PageID(this.Xfichier, this.indicPage);
+		this.indicPage++;
+		this.tailleActuFich += this.config.getPagesize();
 		return page;
-		
+
 	}
-	
+
 	public void ReadPage(PageID pageId,ByteBuffer buff) {
-		
+
 	}
-	
+
 	public void WritePage(PageID pageId, ByteBuffer buff) {
-		
+
 	}
-	
+
 	public void DeallocPage (PageID pageId) {
-		
+
 	}
-	
+
 	public void SaveState() {
-		
+
 	}
 	
 	public void LoadState() {
