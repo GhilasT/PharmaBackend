@@ -5,9 +5,9 @@ import java.util.List;
 
 public class DiskManager {
 	private DBConfig config;
-	private  int Xfichier ; // indice du fichier actuleee 
-	private int   indicPage; // indice de la page dans le fichier actuell
-	private int tailleActuFich; // la taille actuelle du fichier (octets)
+	private  int Xfichier ; // indice du fichier actuel 
+	private int   indicPage; // indice de la page dans le fichier actuel
+	private int tailleActuFich; // la taille actuel du fichier (octets)
 
 	
 	public DiskManager(DBConfig config) {
