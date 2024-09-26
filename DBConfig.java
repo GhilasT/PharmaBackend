@@ -1,7 +1,7 @@
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
-
+// commentaire
 public class DBConfig {
     String dbpath;
 
