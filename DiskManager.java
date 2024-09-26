@@ -7,8 +7,13 @@ public class DiskManager {
 		this.config = config;
 		
 	}
-	
+	int indFich = 0;
+	int indPage = 0;
 	public PageID AllocPage() {
+		PageID page = new PageID(indFich, indPage);
+		indFich++;
+		indPage ++;
+		return page;
 		
 	}
 	
