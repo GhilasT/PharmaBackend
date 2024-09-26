@@ -9,7 +9,7 @@ public class DBConfig {
     public DBConfig(String dbp) {
         this.dbpath = dbp;
     }
-
+    //cm3
     
     public static DBConfig LoadDBConfig(File fichier_config) throws FileNotFoundException {
         DBConfig dbConfig = null;  
@@ -27,6 +27,6 @@ public class DBConfig {
     }
 
     
-test
+
     
 }
