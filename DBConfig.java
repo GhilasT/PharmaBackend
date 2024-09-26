@@ -5,7 +5,7 @@ import java.util.Scanner;
 public class DBConfig {
     String dbpath;
 
-    
+    // ommentaire 2
     public DBConfig(String dbp) {
         this.dbpath = dbp;
     }
