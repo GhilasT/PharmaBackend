@@ -85,9 +85,10 @@ public class DiskManager {
 	
 	
 	public void DeallocPage(PageID pageID) {
-		//??
-		
+		FileWriter writer = new FileWriter(pageID.getNomdePage());
+		writer.write("");																		// efface le contenu de la page
 		page_libre.get(pageID.getFileIdx()).set(pageID.getPageIdx(), 0);						// donne la valeur 0 à la page situé à l'endroit [FileIdx][PageIdx] dans le tableau des pages libre pour le remettre en utilisable
+		writer.close();
 	}
 	
 	
