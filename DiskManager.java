@@ -75,7 +75,16 @@ public class DiskManager {
 
 
 	public void DeallocPage(PageID Page) {
-	this.page_libre.add(Page);
+		Boolean dedans = true;
+		int i = 0;
+		while (dedans && (i< page_libre.size())){
+			if (Page == page_libre.get(i)) {
+				dedans = false;
+			}
+			i++;
+		}
+		if (!dedans) {
+			page_libre.add(Page);
 	}
 
 
