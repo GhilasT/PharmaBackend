@@ -15,32 +15,11 @@ public class DBConfig {
 
     
     public static DBConfig LoadDBConfig(File fichier_config) throws FileNotFoundException {
-        DBConfig dbConfig = null;  
-        Scanner myReader = new Scanner(fichier_config);
-        String data;
-        int ps;
-        int dmax;
-
-       
-        if (myReader.hasNextLine()) {
-            data = myReader.nextLine();
-			
-        
-        	if(myReader.hasNextInt()) {
-        		ps=myReader.nextInt();
-        		
-        		if(myReader.hasNextInt()) {
-        			dmax=myReader.nextInt();
-        			dbConfig=new DBConfig(data,ps,dmax);
-        			
-        		}
-        		
-        	}
-        	
-        }
-
-        myReader.close();
-        return dbConfig;  
+        Gson gson = new Gson();																		// crée une instance de gson
+		FileReader reader = new FileReader(fichier_config);											// Ouvre le fichier JSON
+		DBConfig fichier = gson.fromJson(reader,DBConfig.class);							// gson.fromJson vas désérialiser le fichier , le traduire du langage JSON pour le java
+		
+		return fichier;	
     }
 
 
