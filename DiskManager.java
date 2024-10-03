@@ -8,26 +8,25 @@ public class DiskManager {
 	private  int Xfichier ; // indice du fichier actuel 
 	private int   indicPage; // indice de la page dans le fichier actuel
 	private int tailleActuFich; // la taille actuel du fichier (octets)
-	private ArrayList<PageID> page_vide;
+	private ArrayList<PageID>page_libre;
 
 	
-	public DiskManager(DBConfig config) {
+	public DiskManager(DBConfig config, ArrayList<Integer> page_libre) {
 		this.config = config;
 		this.Xfichier =0;
 		this.indicPage =0;
 		this. tailleActuFich = 0;
+		this.page_libre = new ArrayList<PageID>();
 		
 	}
 	
 	public PageID AllocPage() {
 		//Vérifier qu'on peut ajouter une page au fichier (taille)
-
-		if(!(page_vide.isEmpty)){
-			PageID page1= page_vide.get(0);
-			page_vide.remove(0)
-			return page1;
+		if(page_libre.size() > 0 ){
+			PageID page = new PageID(page_libre.get(page_libre.size() - 1).getPageIdx(), page_libre.get(page_libre.size() - 1).getFileIdx());
+			this.page_libre.remove(this.page_libre.size() -1);
 		}
-		else if(this.tailleActuFich + config.getPagesize() > config.getDm_maxfilesize()){
+		if(this.tailleActuFich + config.getPagesize() > config.getDm_maxfilesize()){
 			this.Xfichier ++;
 			this.tailleActuFich =0;
 			this.indicPage = 0;
@@ -40,24 +39,64 @@ public class DiskManager {
 
 	}
 
-	public void ReadPage(PageID pageId,ByteBuffer buff) {
-
-	}
-
-	public void WritePage(PageID pageId, ByteBuffer buff) {
-
-	}
-
-	public void DeallocPage (PageID pageId) {
-
-	}
-
-	public void SaveState() {
-
+	public void ReadPage(PageID page, ByteBuffer buff) throws Exception{
+		String path="F"+page.getFileIdx()+".rsdb";
+		// ouvre le fichier en mode lecture
+		RandomAccessFile file = new RandomAccessFile(path,"r");
+		// on se place dans le fichier au niveau de la page
+		file.seek(page.getPageIdx()*config.getPagesize());
+		// on crée le tableau d'octet qui va récupérer les données de la page à lire
+		byte[] Page2 = new byte[config.getPagesize()];
+		file.readFully(Page2);
+		// verifie que le buffer est vide pour recevoir les données
+		buff.clear();
+		buff.put(Page2);																		// transfere les données du tableau d'octet Page dans le ByteBuffer buff
+		buff.flip();																		// assure du bon lancement à la prochaine utilisation de buff (remet le curseur à 0)
+		file.close();
 	}
 	
-	public void LoadState() {
-		
+	
+	public void WritePage(PageID Page, ByteBuffer buff) throws Exception {
+		String path="F"+Page.getFileIdx()+".rsdb";
+		RandomAccessFile file = new RandomAccessFile(path,"rw");			// ouvre le fichier en mode ecriture
+		file.seek(Page.getFileIdx()*config.getPagesize());
+		byte[] page = new byte[config.getPagesize()];
+		// transfère les données du ByteBuffer buff dans le tableau d'octet Byte
+		buff.get(page);
+		buff.flip();
+		file.write(page);
+		file.close();
+	}
+	
+	
+
+
+
+
+
+	public void DeallocPage(PageID Page) {
+	if()
+	}
+
+
+
+
+
+	public void SaveState() throws IOException {
+		Gson gson = new Gson();
+		String json = gson.toJson(page_libre);													// traduit le tableau page_libre en JSon
+		FileWriter writer = new FileWriter("dm_save.json");										// ouvre le fichier en droit ecriture
+		writer.write(json);																		// écrit json dans le fichier dm_save.json
+		writer.close();
+	}
+	
+	
+	public void LoadState() throws IOException {
+		Gson gson = new Gson();
+		BufferedReader reader = new BufferedReader(new FileReader("dm_save.json"));				// ouvre le fichier en droit lecture
+		Type type = new TypeToken<ArrayList<ArrayList<Integer>>>() {}.getType();				// crée un type arraylist en 2d pour la fonction en bas gson.fromJson
+		page_libre = gson.fromJson(reader,type);												// gson.fromJson vas traduire de language Json à Java 
+		reader.close();
 	}
 
 }
