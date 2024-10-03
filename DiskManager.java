@@ -26,7 +26,7 @@ public class DiskManager {
 			PageID page = new PageID(page_libre.get(page_libre.size() - 1).getPageIdx(), page_libre.get(page_libre.size() - 1).getFileIdx());
 			this.page_libre.remove(this.page_libre.size() -1);
 		}
-		if(this.tailleActuFich + config.getPagesize() > config.getDm_maxfilesize()){
+		if(this.tailleActuFich + config.getPagesize() > config.getDM_maxfilesize()){
 			this.Xfichier ++;
 			this.tailleActuFich =0;
 			this.indicPage = 0;
@@ -75,7 +75,7 @@ public class DiskManager {
 
 
 	public void DeallocPage(PageID Page) {
-	if()
+	this.page_libre.add(Page);
 	}
 
 
