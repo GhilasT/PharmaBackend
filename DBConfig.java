@@ -3,9 +3,11 @@ import java.io.FileNotFoundException;
 import java.util.Scanner;
 
 public class DBConfig {
-    String dbpath;
-    int pagesize;
-    int dm_maxfilesize;
+	String dbpath;
+	int pagesize;
+	int dm_maxfilesize;
+	int bm_buffercount;
+	int bm_policy;
     
     public DBConfig(String dbp,int ps,int dmax) {
         this.dbpath = dbp;
