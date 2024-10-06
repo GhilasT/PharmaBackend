@@ -4,29 +4,35 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.List;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 
 public class DiskManager {
 	private DBConfig config;
-	private  int Xfichier ; // indice du fichier actuel 
+	private  int Xfichier ; // indice du fichier actuel
 	private int   indicPage; // indice de la page dans le fichier actuel
 	private int tailleActuFich; // la taille actuel du fichier (octets)
 	private ArrayList<PageID>page_libre;
 
-	
-	public DiskManager(DBConfig config, ArrayList<Integer> page_libre) {
+	private String filechemin ; // chemin du fichier ou sauvgarder la liste des pages libres
+
+
+	public DiskManager(DBConfig config ) {
 		this.config = config;
 		this.Xfichier =0;
 		this.indicPage =0;
 		this. tailleActuFich = 0;
 		this.page_libre = new ArrayList<PageID>();
-		
+
 	}
-	
+
 	public PageID AllocPage() {
 		//Vérifier qu'on peut ajouter une page au fichier (taille)
 		if(page_libre.size() > 0 ){
@@ -61,8 +67,7 @@ public class DiskManager {
 		buff.flip();																		// assure du bon lancement à la prochaine utilisation de buff (remet le curseur à 0)
 		file.close();
 	}
-	
-	
+
 	public void WritePage(PageID Page, ByteBuffer buff) throws Exception {
 		String path="F"+Page.getFileIdx()+".rsdb";
 		RandomAccessFile file = new RandomAccessFile(path,"rw");			// ouvre le fichier en mode ecriture
@@ -74,15 +79,13 @@ public class DiskManager {
 		file.write(page);
 		file.close();
 	}
-	
-	
+
 
 
 
 
 
 	public void DeallocPage(PageID Page) {
-
 	Boolean dedans = false;
 		int i = 0;
 		while (!dedans && (i< page_libre.size())){
@@ -101,20 +104,41 @@ public class DiskManager {
 
 
 	public void SaveState() throws IOException {
-		Gson gson = new Gson();
-		String json = gson.toJson(page_libre);													// traduit le tableau page_libre en JSon
-		FileWriter writer = new FileWriter("dm_save.json");										// ouvre le fichier en droit ecriture
-		writer.write(json);																		// écrit json dans le fichier dm_save.json
-		writer.close();
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+		//recuperer la racine qui est stocker  dans path pour mettre le fichier 
+        filechemin = config.getDbpath() + "/dm.save";
+
+
+        try (FileWriter writer = new FileWriter(filechemin)) {
+			// pour chaque element de la liste
+			for(PageID pg : this.page_libre){
+
+            // Convertir la liste en JSON et l'écrire dans le fichier
+            gson.toJson(pg, writer);
+
+			}
+            System.out.println("Sauvegarde réussie dans " + filechemin);
+        } catch (IOException e) {
+            System.err.println("Erreur lors de la sauvegarde du fichier " + filechemin);
+            e.printStackTrace();
+        }
 	}
 
 
 	public void LoadState() throws IOException {
 		Gson gson = new Gson();
-		BufferedReader reader = new BufferedReader(new FileReader("dm_save.json"));				// ouvre le fichier en droit lecture
-		Type type = new TypeToken<ArrayList<ArrayList<Integer>>>() {}.getType();				// crée un type arraylist en 2d pour la fonction en bas gson.fromJson
-		page_libre = gson.fromJson(reader,type);												// gson.fromJson vas traduire de language Json à Java 
-		reader.close();
+		try {
+			// Lire le contenu du fichier
+			String json = new String(Files.readAllBytes(Paths.get(filechemin)));
+
+			// Désérialiser le JSON directement dans page_libre
+			page_libre = gson.fromJson(json, new TypeToken<List<PageID>>() {}.getType());
+
+			System.out.println("Chargement réussi depuis " + filechemin);
+		} catch (IOException e) {
+			System.err.println("Erreur lors du chargement du fichier " + filechemin);
+			e.printStackTrace();
+		}
 	}
 
 }
