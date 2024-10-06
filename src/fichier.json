@@ -1,5 +1,7 @@
 {
     "dbpath": "/chemin/vers/le/dossier/db",
     "pagesize": 4096,
-    "dm_maxfilesize": 1048576
+    "dm_maxfilesize": 1048576,
+    "bm_buffercount": 4096,
+    "bm_policy": 1048576
 }
