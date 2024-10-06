@@ -18,7 +18,8 @@ import com.google.gson.reflect.TypeToken;
 
 public class Main {
         public static void main(String[] args) {
-            DBConfig config = new DBConfig("/chemin/vers/le/dossier/db", 4096, 1048576);
+            //  le chemin  à changer pour chaque ordi
+            DBConfig config = new DBConfig("/Users/Projet_BDDA/src", 4096, 1048576);
             DiskManager diskManager = new DiskManager(config);
 
             diskManager.DeallocPage(new PageID(0,1));
