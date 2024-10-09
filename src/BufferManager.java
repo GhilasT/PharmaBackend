@@ -9,7 +9,7 @@ public class BufferManager {
 	private DiskManager disk;
 	private ArrayList<Buffer> buffListe;
 
-	// ajouter le nombre de buffeur
+	// spécifier le nombre de buffeur
 	public BufferManager(DBConfig config, DiskManager disk, int nbrBuff) {
 		this.config = config;
 		this.disk = disk;
