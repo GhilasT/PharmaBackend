@@ -58,6 +58,8 @@ public class Buffer {
     public void setDirty(boolean dirty) {
         this.dirty = dirty;
     }
+   // Met à jour le temps actuel
     public void updateLastAccessTime() {
+        this.lastAccessTime = System.currentTimeMillis();
     }
 }
