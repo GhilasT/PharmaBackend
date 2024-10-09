@@ -19,7 +19,7 @@ public class BufferManager {
         }
 	}
 	
-	
+	// j'ai utilisé la politique de remplacement LRU
 	public ByteBuffer GetPage(PageID pageId) throws Exception {
 		// verfier si la page est déjà dans un buffer
 
