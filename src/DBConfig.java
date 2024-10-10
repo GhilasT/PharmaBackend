@@ -80,5 +80,13 @@ JSONObject configData = new JSONObject(jsonString);
 
 configData.optString("dbpath", "../DB")
 
+    String dbpa = configData.optString("dbpath", "../DB");
+        int pagesi = configData.optInt("pagesize");
+        int dm_max = configData.optInt("dm_maxfilesize");
+        int bm_buff = configData.optInt("bm_buffercount");        
+        int bm_pol = configData.optInt("bm_policy");
+
+        
+        return new DBConfig(dbpa,pagesi,dm_max,bm_buff,bm_pol);
     
 }
