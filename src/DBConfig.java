@@ -54,7 +54,8 @@ public class DBConfig {
         return bm_policy;
     }
 
- public static DBConfig LoadDBConfig(String fichier_config) throws IOException {
+ // 2 constructeur
+    public static DBConfig LoadDBConfig(String fichier_config) throws IOException {
         // Lire le contenu du fichier JSON dans une chaîne de caractères
         BufferedReader reader = new BufferedReader(new FileReader(fichier_config));
         StringBuilder sb = new StringBuilder();
@@ -63,7 +64,7 @@ public class DBConfig {
             sb.append(line);
         }
         reader.close();
-        // Créer un JSONObject avec la chaîne lue
+
         JSONObject json = new JSONObject(sb.toString());
 
 
@@ -77,5 +78,6 @@ public class DBConfig {
 
         return new DBConfig(dbpa,pagesi,dm_max,bm_buff,bm_pol);
     }
+
 
 }
