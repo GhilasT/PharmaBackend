@@ -53,40 +53,29 @@ public class DBConfig {
     public int getBm_policy() {
         return bm_policy;
     }
-    public static DBConfig LoadDBConfig(File fichier_config) throws IOException {
-        Gson gson = new Gson();
-        FileReader reader = new FileReader(fichier_config);
-        //lire son contenu du fichier json
-        DBConfig dbConfig = gson.fromJson(reader, DBConfig.class);
+
+ public static DBConfig LoadDBConfig(String fichier_config) throws IOException {
+        // Lire le contenu du fichier JSON dans une chaîne de caractères
+        BufferedReader reader = new BufferedReader(new FileReader(fichier_config));
+        StringBuilder sb = new StringBuilder();
+        String line;
+        while ((line = reader.readLine()) != null) {
+            sb.append(line);
+        }
+        reader.close();
+        // Créer un JSONObject avec la chaîne lue
+        JSONObject json = new JSONObject(sb.toString());
+
+
+        String dbpa = json.optString("dbpath", "../DB");
+        int pagesi = json.optInt("pagesize");
+        int dm_max = json.optInt("dm_maxfilesize");
+        int bm_buff = json.optInt("bm_buffercount");
+        int bm_pol = json.optInt("bm_policy");
         reader.close();
 
-        return dbConfig;
+
+        return new DBConfig(dbpa,pagesi,dm_max,bm_buff,bm_pol);
     }
 
-import org.json.JSONObject;
-
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-
-try {
-jsonString = new String(Files.readAllBytes(Paths.get(configPath)));
-} catch (IOException e) {
-e.printStackTrace();
-return null; // Ou lancez une exception selon votre gestion des erreurs
-}
-
-JSONObject configData = new JSONObject(jsonString);
-
-configData.optString("dbpath", "../DB")
-
-    String dbpa = configData.optString("dbpath", "../DB");
-        int pagesi = configData.optInt("pagesize");
-        int dm_max = configData.optInt("dm_maxfilesize");
-        int bm_buff = configData.optInt("bm_buffercount");        
-        int bm_pol = configData.optInt("bm_policy");
-
-        
-        return new DBConfig(dbpa,pagesi,dm_max,bm_buff,bm_pol);
-    
 }
