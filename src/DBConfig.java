@@ -57,14 +57,13 @@ public class DBConfig {
  // 2 constructeur
     public static DBConfig LoadDBConfig(String fichier_config) throws IOException {
         // Lire le contenu du fichier JSON dans une chaîne de caractères
-        BufferedReader reader = new BufferedReader(new FileReader(fichier_config));
-        StringBuilder sb = new StringBuilder();
-        String line;
-        while ((line = reader.readLine()) != null) {
-            sb.append(line);
+        String jsonString;
+    	try {
+        	jsonString = new String(Files.readAllBytes(Paths.get(fichier_config)));
+        } catch (IOException e) {
+        	e.printStackTrace();
+        	return null; // Ou lancez une exception selon votre gestion des erreurs
         }
-        reader.close();
-
         JSONObject json = new JSONObject(sb.toString());
 
 
