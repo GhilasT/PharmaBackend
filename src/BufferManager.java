@@ -57,6 +57,13 @@ public class BufferManager {
 
 	
 	public void FreePage(PageID pageId, boolean valdirty) {
+		for (Buffer buffer : buffListe) {
+			if(buffer.getPageId() != null && buffer.getPageId().equals(pageId)){
+				buffer.decrementPinCount();
+				buffer.setDirty(valdirty);
+				buffer.updateLastAccessTime();
+			}
+		}
 		
 	}
 	
