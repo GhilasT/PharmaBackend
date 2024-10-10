@@ -56,25 +56,21 @@ public class DBConfig {
 
  // 2 constructeur
     public static DBConfig LoadDBConfig(String fichier_config) throws IOException {
-        // Lire le contenu du fichier JSON dans une chaîne de caractères
-        String jsonString;
+    	String jsonString;
     	try {
         	jsonString = new String(Files.readAllBytes(Paths.get(fichier_config)));
         } catch (IOException e) {
         	e.printStackTrace();
         	return null; // Ou lancez une exception selon votre gestion des erreurs
         }
-        JSONObject json = new JSONObject(sb.toString());
 
+        JSONObject configData = new JSONObject(jsonString);
 
-        String dbpa = json.optString("dbpath", "../DB");
-        int pagesi = json.optInt("pagesize");
-        int dm_max = json.optInt("dm_maxfilesize");
-        int bm_buff = json.optInt("bm_buffercount");
-        int bm_pol = json.optInt("bm_policy");
-        reader.close();
-
-
+        String dbpa = configData.optString("dbpath", "../DB");
+        int pagesi = configData.optInt("pagesize");
+        int dm_max = configData.optInt("dm_maxfilesize");
+        int bm_buff = configData.optInt("bm_buffercount");        
+        int bm_pol = configData.optInt("bm_policy");
         return new DBConfig(dbpa,pagesi,dm_max,bm_buff,bm_pol);
     }
 
