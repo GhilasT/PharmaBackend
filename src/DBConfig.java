@@ -63,7 +63,22 @@ public class DBConfig {
         return dbConfig;
     }
 
+import org.json.JSONObject;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
+try {
+jsonString = new String(Files.readAllBytes(Paths.get(configPath)));
+} catch (IOException e) {
+e.printStackTrace();
+return null; // Ou lancez une exception selon votre gestion des erreurs
+}
+
+JSONObject configData = new JSONObject(jsonString);
+
+configData.optString("dbpath", "../DB")
 
     
 }
