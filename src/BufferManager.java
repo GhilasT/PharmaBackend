@@ -73,18 +73,27 @@ public class BufferManager {
 	}
 	
 	public void FlushBuffers() {
-		for (Buffer buffer : buffListe) {
-            if (buffer.getPinCount() == 0 && buffer.isDirty()) {
+		 for (Buffer buffer : buffListe) {
+            // Vérifie si le buffer est dirty
+            if (buffer.isDirty() && buffer.getPinCount() == 0) {
                 try {
+                    // Écriture du contenu du buffer sur le disque
                     PageID pageId = buffer.getPageId();
                     ByteBuffer dataToWrite = ByteBuffer.wrap(buffer.getPageData());
                     disk.WritePage(pageId, dataToWrite);
-                    buffer.setDirty(false); // Réinitialiser l'état 'dirty'
+                    buffer.setDirty(false); 
                 } catch (IOException e) {
-                    System.err.println("Erreur lors de la vidange du buffer : " + e.getMessage());
+                    System.err.println("Erreur lors de l'écriture sur le disque pour la page " + buffer.getPageId() + ": " + e.getMessage());
                 }
             }
+            
+            // Remise à zéro de toutes les informations du buffer
+            buffer.setPageId(null); // Réinitialiser l'identifiant de la page
+            buffer.setPageData(new byte[config.getPagesize()]); // Réinitialiser le contenu
+            buffer.setPinCount(0); // Remise à zéro du compteur de pin
+            buffer.updateLastAccessTime(); // Mettre à jour l'heure d'accès si nécessaire
         }
+        System.out.println("Tous les buffers ont été vidés et remis à zéro.");
 		
-	}
+
 }
