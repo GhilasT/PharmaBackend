@@ -73,6 +73,18 @@ public class BufferManager {
 	}
 	
 	public void FlushBuffers() {
+		for (Buffer buffer : buffListe) {
+            if (buffer.getPinCount() == 0 && buffer.isDirty()) {
+                try {
+                    PageID pageId = buffer.getPageId();
+                    ByteBuffer dataToWrite = ByteBuffer.wrap(buffer.getPageData());
+                    disk.WritePage(pageId, dataToWrite);
+                    buffer.setDirty(false); // Réinitialiser l'état 'dirty'
+                } catch (IOException e) {
+                    System.err.println("Erreur lors de la vidange du buffer : " + e.getMessage());
+                }
+            }
+        }
 		
 	}
 }
