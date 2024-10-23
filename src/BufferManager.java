@@ -8,6 +8,7 @@ public class BufferManager {
 	private DBConfig config;
 	private DiskManager disk;
 	private ArrayList<Buffer> buffListe;
+	private String currentReplacementPolicy;
 
 	// spécifier le nombre de buffeur
 	public BufferManager(DBConfig config, DiskManager disk, int nbrBuff) {
@@ -68,7 +69,7 @@ public class BufferManager {
 	}
 	
 	public void SetCurrentReplacementPolicy(String policy) {
-		
+		this.currentReplacementPolicy = policy;
 	}
 	
 	public void FlushBuffers() {
