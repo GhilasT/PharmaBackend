@@ -1,0 +1,41 @@
+
+import java.nio.ByteBuffer;
+
+public class testTP4 {
+    public static void main(String[] args) {
+        Relation toto = new Relation("toto",4);
+        ColInfo c1 = new ColInfo("id", "INT");
+        ColInfo c2 = new ColInfo("nom", "STRING");
+        ColInfo c3 = new ColInfo("age", "INT");
+        ColInfo c4 = new ColInfo("not", "FLOAT");
+        toto.initialiserListeColonne(c1);
+        toto.initialiserListeColonne(c2);
+        toto.initialiserListeColonne(c3);
+        toto.initialiserListeColonne(c4);
+
+        Record r = new Record();
+        Record Rread = new Record();
+        
+        r.addValue(0, "1");
+        r.addValue(1, "titi");
+        r.addValue(2, "25");
+        r.addValue(3, "13.04");
+
+        ByteBuffer buff = ByteBuffer.allocate(1000);
+
+        int totalBytesWritten = toto.writeRecordToBuffer(r, buff, 0);
+        System.out.println(totalBytesWritten);
+
+
+        try {
+        int totalBytesRead = toto.readFromBuffer(Rread, buff, 0);
+        System.out.println("totalBytesRead : "+totalBytesRead);
+        } catch (Exception e) {
+            e.getMessage();
+        }
+        
+
+        
+    
+    }
+}
