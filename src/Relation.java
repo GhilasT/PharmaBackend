@@ -6,18 +6,18 @@ public class Relation {
 	private int nbColonnes;
 	
 	private ArrayList<ColInfo> colonnes;
-	private PageId headerPageId ;
+	private PageID headerPageId ;
 	private DiskManager diskManager;
 	private BufferManager bufferManager;
 	
 	
 	
 	
-	public Relation(String nom, int nbColonnes,PageId pageId,DiskManager dm,BufferManager bm) {
+	public Relation(String nom, int nbColonnes,PageID pageId,DiskManager dm,BufferManager bm) {
 		this.nom = nom;
 		this.nbColonnes = nbColonnes;
 		this.colonnes = new ArrayList<>(this.nbColonnes);
-		this.headerPageID=pagedId;
+		this.headerPageId=pageId;
 		this.diskManager=dm;
 		this.bufferManager=bm;
 	}
