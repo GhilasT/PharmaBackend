@@ -5,6 +5,19 @@ public class Relation {
 	private int nbColonnes;
 	private String nomColonne;
 	private String typeColonne;
+	private PageId headerPageId ;
+	private DiskManager diskManager;
+	private BufferManager bufferManager;
+	public Relation(String n, int nbc,String nc,String tc, PageId h,DiskManager d, BufferManager b){
+		this.nom=n;
+		this.nbcColonne=nbc;
+		this.nomColonne=nc;
+		this.typeColonne=tc;
+		this.headerPageId=h;
+		this.diskManager=d;
+		this.bufferManager=b;
+	}
+	
 	
 	
 	
