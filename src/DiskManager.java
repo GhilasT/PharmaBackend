@@ -1,5 +1,3 @@
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.RandomAccessFile;
@@ -7,11 +5,10 @@ import java.nio.ByteBuffer;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.List;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
+
 
 
 public class DiskManager {
@@ -21,7 +18,7 @@ public class DiskManager {
 	private int tailleActuFich; // la taille actuel du fichier (octets)
 	private ArrayList<PageID>page_libre;
 
-	private String filechemin ; // chemin du fichier ou sauvgarder la liste des pages libres
+	private String filechemin ; // chemin du fichier ou sauvegarder la liste des pages libres
 
 
 	public DiskManager(DBConfig config ) {
@@ -104,41 +101,45 @@ public class DiskManager {
 
 
 	public void SaveState() throws IOException {
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-		//recuperer la racine qui est stocker  dans path pour mettre le fichier 
-        filechemin = config.getDbpath() + "/dm.save";
-
-
-        try (FileWriter writer = new FileWriter(filechemin)) {
-			// pour chaque element de la liste
-			for(PageID pg : this.page_libre){
-
-            // Convertir la liste en JSON et l'écrire dans le fichier
-            gson.toJson(pg, writer);
-
-			}
-            System.out.println("Sauvegarde réussie dans " + filechemin);
-        } catch (IOException e) {
-            System.err.println("Erreur lors de la sauvegarde du fichier " + filechemin);
-            e.printStackTrace();
+		JSONArray jsonArray = new JSONArray();
+        for (PageID pg : this.page_libre) {
+        	JSONObject pageObject = new JSONObject();
+        	pageObject.put("FileIdx", pg.getFileIdx());
+        	pageObject.put("PageIdx", pg.getPageIdx());
+        	jsonArray.put(pageObject);
+        }
+        
+        String jsonString = jsonArray.toString(4);
+        
+        String filechemin = config.getDbpath() + "/dm_save";
+        
+        try (FileWriter writer = new FileWriter(filechemin)){
+        	writer.write(jsonString);
+        	System.out.println("Sauvegarde réussie dans " + filechemin);
+        }catch (IOException e) {
+        	 System.err.println("Erreur lors de la sauvegarde du fichier " + filechemin);
+             e.printStackTrace();
         }
 	}
 
 
 	public void LoadState() throws IOException {
-		Gson gson = new Gson();
-		try {
-			// Lire le contenu du fichier
+		String filechemin = config.getDbpath()+"/dm_save";
+		try {	
 			String json = new String(Files.readAllBytes(Paths.get(filechemin)));
-
-			// Désérialiser le JSON directement dans page_libre
-			page_libre = gson.fromJson(json, new TypeToken<List<PageID>>() {}.getType());
-
+			JSONArray jsonArray = new JSONArray(json);
+			page_libre.clear();
+			
+			for (int i = 0;i< jsonArray.length();i++) {
+				JSONObject pageObject = jsonArray.getJSONObject(i);
+				int fileIdx = pageObject.getInt("FileIdx");
+				int pageIdx = pageObject.getInt("PageIdx");
+				page_libre.add(new PageID(fileIdx, pageIdx));
+			}
 			System.out.println("Chargement réussi depuis " + filechemin);
-		} catch (IOException e) {
+		}catch(IOException e) {
 			System.err.println("Erreur lors du chargement du fichier " + filechemin);
-			e.printStackTrace();
+            e.printStackTrace();
 		}
 	}
-
 }
