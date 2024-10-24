@@ -9,11 +9,14 @@ public class Relation {
 	
 	
 	
-	
 	public Relation(String nom, int nbColonnes) {
 		this.nom = nom;
 		this.nbColonnes = nbColonnes;
 		this.colonnes = new ArrayList<>(this.nbColonnes);
+	}
+
+	public void initialiserListeColonne(ColInfo c){
+		this.colonnes.add(c);
 	}
 
 
@@ -69,12 +72,10 @@ public class Relation {
 		int totalBytesRead = 0;
 	        int numberOfColumns = nbColonnes;
 	
-	        // Assurez-vous que la liste de valeurs du record est vide
-	        record.getValues().clear();
-	
-	        for (int i = 0; i < numberOfColumns; i++) {
+	        for (ColInfo colonne : colonnes) {
+				int index =0;
 	            
-	            String columnType = typeColonne;
+	            String columnType = colonne.getTypeColonne() ;;
 	
 	            // Déplace le curseur à la position spécifiée
 	            buff.position(pos + totalBytesRead);
@@ -83,31 +84,32 @@ public class Relation {
 	                case "INT":
 	                    // Lire un int depuis le buffer
 	                    int intValue = buff.getInt();
-	                    record.getValues().add(intValue);
+						String xText = Integer.toString(intValue);
+	                    record.addValue(index, xText);
 	                    totalBytesRead += Integer.BYTES;
 	                    break;
 	
 	                case "FLOAT":
 	                    // Lire un float depuis le buffer
 	                    float floatValue = buff.getFloat();
-	                    record.getValues().add(floatValue);
+						String leFloat = Float.toString(floatValue);
+	                    record.addValue(index, leFloat);
 	                    totalBytesRead += Float.BYTES;
 	                    break;
 	
 	                case "STRING":
-	                    // Lire une chaîne de caractères
-	                    // Supposons que la longueur de la chaîne soit connue ou précédemment stockée
-	                    // Ici, nous allons lire jusqu'à un certain nombre de caractères
+	                    
 	                    byte[] stringBytes = new byte[100]; // Par exemple, taille maximale de 100 caractères
 	                    buff.get(stringBytes);
 	                    String stringValue = new String(stringBytes).trim(); // Trimer pour enlever les espaces
-	                    record.getValues().add(stringValue);
+	                    record.addValue(index, stringValue);
 	                    totalBytesRead += stringBytes.length; // Incrémente par la taille lue
 	                    break;
 	
 	                default:
 	                    throw new IllegalArgumentException("Type de colonne non supporté: " + columnType);
 	            }
+				index++;
 	        }
 	
 	        return totalBytesRead;
