@@ -122,5 +122,31 @@ public class Relation {
 	        return totalBytesRead;
 	}
 		
+	public void addDataPage() {
+		
+	}
 	
+	public PageID getFreeDataPageId(int sizeRecord) {
+		
+	}
+	
+	public RecordId writeRecordToDataPage (Record record, PageID pageId) {
+		
+	}
+	
+	public ArrayList<PageID> getRecordsInDataPage(PageID PageId) {
+		
+	}
+	 
+	public ArrayList<PageID> getDataPages(){
+		
+	}
+	
+	public RecordId InsertRecord (Record record) {
+		
+	}
+		
+	public ArrayList<PageID> GetAllRecords(){
+		
+	}
 }
