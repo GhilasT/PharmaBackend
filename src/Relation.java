@@ -1,4 +1,4 @@
-import java.nio.Buffer;
+import java.nio.ByteBuffer;
 
 public class Relation {
 	private String nom;
@@ -9,7 +9,7 @@ public class Relation {
 	
 	
 	
-	public int writeRecordToBuffer(Record record, Buffer buff, int pos) {
+	public int writeRecordToBuffer(Record record, ByteBuffer buff, int pos) {
 		int totalBytesWritten = 0;
 
         for (int i = 0; i < record.getSize(); i++) {
