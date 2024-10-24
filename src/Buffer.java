@@ -50,7 +50,9 @@ public class Buffer {
         }
     }
 
-
+    public void setPinCount(int n) {
+    	pinCount = n;
+    }
     public boolean isDirty() {
         return dirty;
     }
