@@ -1,24 +1,22 @@
 import java.util.ArrayList;
 
 public class Record {
-    private ArrayList<Object> values; // Liste des valeurs du tuple
+    // Liste des valeurs du tuple
+    private ArrayList<String> listeInfo;
 
-    public Record(ArrayList<Object> values) {
-        this.values = values;
+    
+
+    public Record(){
+        this.listeInfo = new ArrayList<>();
     }
 
-    // Méthode pour obtenir la taille du record
     public int getSize() {
-        return values.size();
+        return listeInfo.size();
     }
 
-    // Méthode pour obtenir une valeur à un index donné
-    public Object getValue(int index) {
-        return values.get(index);
+    public String getValue(int index) {
+        return listeInfo.get(index);
     }
 
-    // Méthode pour obtenir toutes les valeurs
-    public ArrayList<Object> getValues() {
-        return values;
-    }
+
 }
