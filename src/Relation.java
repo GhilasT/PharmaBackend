@@ -1,34 +1,32 @@
 import java.nio.ByteBuffer;
+import java.util.ArrayList;
 
 public class Relation {
 	private String nom;
 	private int nbColonnes;
-	private String nomColonne;
-	private String typeColonne;
-	private PageId headerPageId ;
-	private DiskManager diskManager;
-	private BufferManager bufferManager;
-	public Relation(String n, int nbc,String nc,String tc, PageId h,DiskManager d, BufferManager b){
-		this.nom=n;
-		this.nbcColonne=nbc;
-		this.nomColonne=nc;
-		this.typeColonne=tc;
-		this.headerPageId=h;
-		this.diskManager=d;
-		this.bufferManager=b;
+	
+	private ArrayList<ColInfo> colonnes;
+	
+	
+	
+	
+	public Relation(String nom, int nbColonnes) {
+		this.nom = nom;
+		this.nbColonnes = nbColonnes;
+		this.colonnes = new ArrayList<>(this.nbColonnes);
 	}
-	
-	
-	
-	
-	
+
+
+
 	public int writeRecordToBuffer(Record record, ByteBuffer buff, int pos) {
 		int totalBytesWritten = 0;
-
-	        for (int i = 0; i < record.getSize(); i++) {
+			
+	        for (ColInfo colonne : colonnes ) {
+				int index =0;
+				
 	            
-	            String columnType = typeColonne;
-	            Object value = record.getValue(i);
+	            String columnType = colonne.getTypeColonne() ;
+	        	String nom = colonne.getNomColonne();
 	
 	            // Déplace le curseur à la position spécifiée
 	            buff.position(pos + totalBytesWritten);
@@ -36,21 +34,21 @@ public class Relation {
 	            switch (columnType) {
 	                case "INT":
 	                    // Convertir en int et écrire dans le buffer
-	                    int intValue = Integer.parseInt(value.toString());
+	                    int intValue = Integer.parseInt(record.getValue(index));
 	                    buff.putInt(intValue);
 	                    totalBytesWritten += Integer.BYTES;
 	                    break;
 	
 	                case "FLOAT":
 	                    // Convertir en float et écrire dans le buffer
-	                    float floatValue = Float.parseFloat(value.toString());
+	                    float floatValue = Float.parseFloat(record.getValue(index));
 	                    buff.putFloat(floatValue);
 	                    totalBytesWritten += Float.BYTES;
 	                    break;
 	
 	                case "STRING":
 	                    // Écrire la chaîne de caractères
-	                    String stringValue = value.toString();
+	                    String stringValue = record.getValue(index);
 	                    byte[] stringBytes = stringValue.getBytes();
 	                    buff.put(stringBytes);
 	                    totalBytesWritten += stringBytes.length;
@@ -59,6 +57,7 @@ public class Relation {
 	                default:
 	                    throw new IllegalArgumentException("Type de colonne non supporté: " + columnType);
 	            }
+				index++;
 	        }
 	
 	        return totalBytesWritten;
