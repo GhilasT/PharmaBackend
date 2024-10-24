@@ -18,5 +18,9 @@ public class Record {
         return listeInfo.get(index);
     }
 
+    public void addValue(int index, String element){
+        this.listeInfo.add(index, element);
+    }
+
 
 }
