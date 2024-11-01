@@ -2,6 +2,7 @@ import java.io.*;
 public class PageID {
 	private int FileIdx;
 	private int PageIdx;
+	private int Pagesize;
 	public PageID(int fileIdx, int pageIdx) {
 		FileIdx = fileIdx;
 		PageIdx = pageIdx;
@@ -22,6 +23,18 @@ public class PageID {
 	public void setPageIdx(int pageIdx) {
 		PageIdx = pageIdx;
 	}
+
+	public void setPagesize(int pagesize) {
+		Pagesize = pagesize;
+	}
+
+	public int getPagesize() {
+		return Pagesize;
+	}
+
+	
+
+	
 	
 	
 

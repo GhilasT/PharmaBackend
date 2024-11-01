@@ -45,6 +45,7 @@ public class DiskManager {
 		PageID page = new PageID(this.Xfichier, this.indicPage);
 		this.indicPage++;
 		this.tailleActuFich += this.config.getPagesize();
+		page.setPagesize(this.config.getPagesize());
 		return page;
 
 	}
@@ -60,14 +61,14 @@ public class DiskManager {
 		file.readFully(Page2);
 		// verifie que le buffer est vide pour recevoir les données
 		buff.clear();
-		buff.put(Page2);																		// transfere les données du tableau d'octet Page dans le ByteBuffer buff
-		buff.flip();																		// assure du bon lancement à la prochaine utilisation de buff (remet le curseur à 0)
+		buff.put(Page2);
+		buff.flip();
 		file.close();
 	}
 
 	public void WritePage(PageID Page, ByteBuffer buff) throws Exception {
 		String path="F"+Page.getFileIdx()+".rsdb";
-		RandomAccessFile file = new RandomAccessFile(path,"rw");			// ouvre le fichier en mode ecriture
+		RandomAccessFile file = new RandomAccessFile(path,"rw");
 		file.seek(Page.getFileIdx()*config.getPagesize());
 		byte[] page = new byte[config.getPagesize()];
 		// transfère les données du ByteBuffer buff dans le tableau d'octet Byte

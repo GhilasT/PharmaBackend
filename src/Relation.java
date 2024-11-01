@@ -1,5 +1,6 @@
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
+import javax.swing.text.html.HTMLDocument;
 
 public class Relation {
 	private String nom;
@@ -106,11 +107,11 @@ public class Relation {
 	
 	                case "STRING":
 	                    
-	                    byte[] stringBytes = new byte[100]; // Par exemple, taille maximale de 100 caractères
+	                    byte[] stringBytes = new byte[100]; 
 	                    buff.get(stringBytes);
-	                    String stringValue = new String(stringBytes).trim(); // Trimer pour enlever les espaces
+	                    String stringValue = new String(stringBytes).trim();
 	                    record.addValue(index, stringValue);
-	                    totalBytesRead += stringBytes.length; // Incrémente par la taille lue
+	                    totalBytesRead += stringBytes.length;
 	                    break;
 	
 	                default:
@@ -121,15 +122,25 @@ public class Relation {
 	
 	        return totalBytesRead;
 	}
-		
+	
 	public void addDataPage() {
-		
+		PageID PageVide = this.diskManager.AllocPage();
+		 // créer un buffer pour la nouvelle page vide
+		ByteBuffer dataPageBuffer = ByteBuffer.allocate(PageVide.getPagesize());
+		dataPageBuffer.putInt(PageVide.getPageIdx()); 
+ 
+		int espacelibre = PageVide.getPagesize() ;
+		PageDirectory.addPage(PageVide, espacelibre);
+ 
 	}
 	
 	public PageID getFreeDataPageId(int sizeRecord) {
-		
+		return PageDirectory.findPageWithSpace(sizeRecord);
+   		 
 	}
 	
+
+	//           à finir
 	public RecordId writeRecordToDataPage (Record record, PageID pageId) {
 		
 	}
