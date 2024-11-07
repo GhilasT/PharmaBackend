@@ -148,75 +148,106 @@ public class Relation {
 
 	//           à finir
 	public RecordId writeRecordToDataPage (Record record, PageID pageId) throws Exception {
-		ByteBuffer buffer = bufferManager.GetPage(pageId);
+    		ByteBuffer buffer = bufferManager.GetPage(pageId);
 
-    // Step 2: Determine the position for the new record from the free space pointer
+    		// Étape 2 : Déterminer la position pour le nouvel enregistrement à partir du pointeur d'espace libre
     		int recordPosition = findNextFreeSpace(buffer);
 
-    // Step 3: Write the record data to the buffer
-		int bytesWritten = writeRecordToBuffer(record, buffer, recordPosition);
-	
-	    // Step 4: Update the slot directory with the new record's position and size
-		int slotCountOffset = buffer.capacity() - 4;
-	    	int slotCount = buffer.getInt(slotCountOffset); // Get current slot count
-		
-		int newSlotOffset = buffer.capacity() - 8 - (slotCount * 8); // Each slot entry is 8 bytes (4 bytes position + 4 bytes size)
-		buffer.putInt(newSlotOffset, recordPosition); // Record position
-		buffer.putInt(newSlotOffset + 4, bytesWritten); // Record size
-		
-		    // Step 5: Update the free space pointer and slot count in the slot directory
-		buffer.putInt(buffer.capacity() - 8, recordPosition + bytesWritten); // Update free space pointer
-		buffer.putInt(slotCountOffset, slotCount + 1); // Increment slot count
-		
-		    // Step 6: Mark the page as modified and return the RecordId
-		bufferManager.FreePage(pageId, true);
-		return new RecordId(pageId, slotCount); // Return the slot index as the record
+    		// Étape 3 : Écrire les données de l'enregistrement dans le tampon
+    		int bytesWritten = writeRecordToBuffer(record, buffer, recordPosition);
+
+    		// Étape 4 : Mettre à jour le répertoire des emplacements avec la position et la taille du nouvel enregistrement
+    		int slotCountOffset = buffer.capacity() - 4;
+    		int slotCount = buffer.getInt(slotCountOffset); // Obtenir le nombre d'emplacements actuel
+
+    		int newSlotOffset = buffer.capacity() - 8 - (slotCount * 8); // Chaque entrée d'emplacement fait 8 octets (4 octets pour la position + 4 octets pour la taille)
+   	 	buffer.putInt(newSlotOffset, recordPosition); // Position de l'enregistrement
+   		buffer.putInt(newSlotOffset + 4, bytesWritten); // Taille de l'enregistrement
+
+    		// Étape 5 : Mettre à jour le pointeur d'espace libre et le nombre d'emplacements dans le répertoire des emplacements
+    		buffer.putInt(buffer.capacity() - 8, recordPosition + bytesWritten); // Mettre à jour le pointeur d'espace libre
+    		buffer.putInt(slotCountOffset, slotCount + 1); // Incrémenter le nombre d'emplacements
+
+    		// Étape 6 : Marquer la page comme modifiée et retourner l'identifiant de l'enregistrement
+    		bufferManager.FreePage(pageId, true);
+    		return new RecordId(pageId, slotCount); // Retourner l'indice de l'emplacement comme identifiant de l'enregistrement
+}
+
 	    
 			
 		
 	}
-	
 	public ArrayList<PageID> getRecordsInDataPage(PageID PageId) {
 		ArrayList<Record> records = new ArrayList<>();
 
-	    // Step 1: Retrieve the buffer for the specified page
-		ByteBuffer buffer = bufferManager.GetPage(pageId);
+     		// Étape 1 : Récupérer le tampon pour la page spécifiée
+    		ByteBuffer buffer = bufferManager.GetPage(pageId);
+
+    		// Étape 2 : Lire les métadonnées du répertoire des emplacements à la fin de la page
+    		int slotCountOffset = buffer.capacity() - 4;
+    		int slotCount = buffer.getInt(slotCountOffset);
+
+    		// Étape 3 : Parcourir chaque emplacement dans le répertoire des emplacements pour récupérer les enregistrements
+    		for (int slotIndex = 0; slotIndex < slotCount; slotIndex++) {
+        	// Calculer le décalage pour les métadonnées de l'emplacement actuel (chaque emplacement fait 8 octets)
+        		int slotOffset = buffer.capacity() - 8 - (slotIndex * 8);
+        
+        		int recordPosition = buffer.getInt(slotOffset);
+        		int recordSize = buffer.getInt(slotOffset + 4);
+
+        		// Si la taille de l'enregistrement est 0, l'enregistrement a été supprimé ; le sauter
+        		if (recordSize == 0) continue;
+
+        		// Étape 4 : Extraire l'enregistrement du tampon en utilisant la position et la taille
+        		byte[] recordBytes = new byte[recordSize];
+        		buffer.position(recordPosition);
+       			buffer.get(recordBytes);
+
+        		// Convertir le tableau d'octets en un objet Record (en supposant qu'il existe un constructeur ou une méthode pour cela)
+        		Record record = Record.fromBytes(recordBytes);
+        
+        		// Ajouter l'enregistrement à la liste
+      	 	 	records.add(record);
+    		}
+
+    		// Étape 5 : Libérer la page après la lecture
+    		bufferManager.FreePage(pageId, false);  // Marquer la page comme non modifiée (false)
+
+    return records;
+}
+
 	
-	    // Step 2: Read metadata from the slot directory at the end of the page
-	    	int slotCountOffset = buffer.capacity() - 4;
-	    	int slotCount = buffer.getInt(slotCountOffset);
 	
-	    // Step 3: Iterate through each slot in the slot directory to retrieve records
-	    	for (int slotIndex = 0; slotIndex < slotCount; slotIndex++) {
-	        // Calculate the offset for the current slot's metadata (each slot has 8 bytes)
-	        int slotOffset = buffer.capacity() - 8 - (slotIndex * 8);
-	        
-	        int recordPosition = buffer.getInt(slotOffset);
-	        int recordSize = buffer.getInt(slotOffset + 4);
-	
-	        // If the recordSize is 0, the record has been deleted; skip it
-	        if (recordSize == 0) continue;
-	
-	        // Step 4: Extract the record from the buffer using the position and size
-	        byte[] recordBytes = new byte[recordSize];
-	        buffer.position(recordPosition);
-	        buffer.get(recordBytes);
-	
-	        // Convert byte array into a Record object (assuming a Record constructor or method for this)
-	        Record record = Record.fromBytes(recordBytes);
-	        
-	        // Add the record to the list
-	        records.add(record);
-	    	}
-	
-	    // Step 5: Free the page after reading
-	    	bufferManager.FreePage(pageId, false);  // Mark the page as not modified (false)
-	
-	    	return records;
-		
-	}
 	 
 	public ArrayList<PageID> getDataPages(){
+		ArrayList<PageID> pageIds = new ArrayList<>();
+
+	    // Étape 1 : Récupérer le buffer de la page d'en-tête depuis le BufferManager
+	    	ByteBuffer buffer = bufferManager.GetPage(headerPageId);
+	
+	    // Étape 2 : Lire le nombre de pages de données depuis la page d'en-tête
+	    	int pageCount = buffer.getInt(0); // Les 4 premiers octets contiennent le nombre de pages
+	
+	    // Étape 3 : Itérer sur chaque entrée dans la page d'en-tête pour récupérer les PageIDs
+		int offset = 4; // On commence après le nombre de pages (4 premiers octets)
+		for (int i = 0; i < pageCount; i++) {
+		// Lire l'index du fichier de PageID
+			int fileIdx = buffer.getInt(offset);
+		        
+		 // Lire l'index de la page de PageID
+			int pageIdx = buffer.getInt(offset + 4);
+		
+		// Créer un nouveau PageID et l'ajouter à la liste
+			pageIds.add(new PageID(fileIdx, pageIdx));
+	
+	        // Passer à l'entrée suivante dans l'en-tête (chaque entrée est de 12 octets : 8 pour PageID, 4 pour espace libre)
+	        	offset += 12;
+	    	}
+	
+	    	// Étape 4 : Libérer la page d'en-tête après lecture
+	    	bufferManager.FreePage(headerPageId, false); // Marquer la page comme non modifiée (false)
+
+    		return pageIds;
 		
 	}
 	
