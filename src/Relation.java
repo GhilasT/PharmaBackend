@@ -124,14 +124,18 @@ public class Relation {
 	}
 	
 	public void addDataPage() {
-		PageID PageVide = this.diskManager.AllocPage();
-		 // créer un buffer pour la nouvelle page vide
-		ByteBuffer dataPageBuffer = ByteBuffer.allocate(PageVide.getPagesize());
-		dataPageBuffer.putInt(PageVide.getPageIdx()); 
- 
-		int espacelibre = PageVide.getPagesize() ;
-		PageDirectory.addPage(PageVide, espacelibre);
- 
+		try {
+			ByteBuffer buff = this.bufferManager.GetPage(this.headerPageId);
+			//jai mis le contenur du headerpage dans le buffer
+			diskManager.ReadPage(this.headerPageId,buff);
+			PageID IDdatapage = this.diskManager.AllocPage();
+			byte[] Pagevide = new byte[IDdatapage.getPagesize()];
+			buff.put(Pagevide);
+
+		} catch (Exception e) {
+			e.getMessage();
+		}
+
 	}
 	
 	public PageID getFreeDataPageId(int sizeRecord) {
