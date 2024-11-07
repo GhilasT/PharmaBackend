@@ -171,7 +171,7 @@ public class Relation {
     		// Étape 6 : Marquer la page comme modifiée et retourner l'identifiant de l'enregistrement
     		bufferManager.FreePage(pageId, true);
     		return new RecordId(pageId, slotCount); // Retourner l'indice de l'emplacement comme identifiant de l'enregistrement
-}
+	}
 
 	    
 			
@@ -213,8 +213,8 @@ public class Relation {
     		// Étape 5 : Libérer la page après la lecture
     		bufferManager.FreePage(pageId, false);  // Marquer la page comme non modifiée (false)
 
-    return records;
-}
+    		return records;
+	}
 
 	
 	
