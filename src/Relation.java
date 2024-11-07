@@ -129,15 +129,19 @@ public class Relation {
 			//jai mis le contenur du headerpage dans le buffer
 			diskManager.ReadPage(this.headerPageId,buff);
 			PageID IDdatapage = this.diskManager.AllocPage();
-			byte[] Pagevide = new byte[IDdatapage.getPagesize()];
-			buff.put(Pagevide);
+			
+			byte[] p = new byte[3];
+			p[0]= (byte)IDdatapage.getFileIdx();
+			p[1]= (byte)IDdatapage.getPageIdx();
+			p[2]= (byte)IDdatapage.getPagesize();
+
+			buff.put(p);
 
 		} catch (Exception e) {
 			e.getMessage();
 		}
 
 	}
-	
 	public PageID getFreeDataPageId(int sizeRecord) {
 		return PageDirectory.findPageWithSpace(sizeRecord);
    		 
