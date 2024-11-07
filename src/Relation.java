@@ -251,11 +251,37 @@ public class Relation {
 		
 	}
 	
-	public RecordId InsertRecord (Record record) {
-		
-	}
-		
-	public ArrayList<PageID> GetAllRecords(){
-		
-	}
+	  public RecordId InsertRecord(Record record) {
+        	// 1. Trouver une page de données avec de l'espace libre
+        	PageID pageId = getFreeDataPageId(record.getSize());
+        	if (pageId == null) {
+            	// Si aucune page libre n'est trouvée, allouer une nouvelle page de données
+            	addDataPage();
+            	pageId = getFreeDataPageId(record.getSize());
+        	}
+
+        	// 2. Écrire l'enregistrement dans la page de données
+        	try {
+            		return writeRecordToDataPage(record, pageId);
+        	}catch (Exception e) {
+            		throw new RuntimeException("Erreur lors de l'insertion de l'enregistrement", e);
+        	}
+   	 }
+
+    // Méthode pour récupérer tous les enregistrements
+	public ArrayList<Record> GetAllRecords() {
+        	ArrayList<Record> allRecords = new ArrayList<>();
+
+        	// 1. Obtenez toutes les pages de données associées à la relation
+	        ArrayList<PageID> dataPages = getDataPages();
+
+        	// 2. Parcourez chaque page de données pour extraire les enregistrements
+        	for (PageID pageId : dataPages) {
+            		// 3. Récupérer les enregistrements présents dans la page
+            		ArrayList<Record> recordsInPage = getRecordsInDataPage(pageId);
+           		 allRecords.addAll(recordsInPage);
+        	}	
+
+        	return allRecords;
+    	}
 }
