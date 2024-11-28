@@ -39,4 +39,8 @@ public class DataBase {
 		return nom;
 	}
 	
+	public Map<String,Relation> getTables(){
+		return tables;
+	}
+	
 }
