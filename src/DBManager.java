@@ -1,4 +1,5 @@
 import java.util.*;
+import java.io.*;
 public class DBManager {
 	private DBConfig dbc;
 	private Map<String,DataBase> databases;
@@ -103,9 +104,75 @@ public class DBManager {
 		}
 	}
 	public void SaveState() {
+		try {
+	        File dbDirectory = new File(dbc.getDbPath());
+	        if (!dbDirectory.exists()) {
+	            dbDirectory.mkdirs();  // Crée le dossier s'il n'existe pas
+	        }
+
+	        File saveFile = new File(dbDirectory, "databases.save");
+	        try (BufferedWriter writer = new BufferedWriter(new FileWriter(saveFile))) {
+	            for (String dbName : databases.keySet()) {
+	                DataBase db = databases.get(dbName);
+	                writer.write("Database: " + dbName + "\n");
+
+	                // Sauvegarder les tables de la base de données
+	                for (String tableName : db.getTables().keySet()) {
+	                    Relation table = db.getTables().get(tableName);
+	                    writer.write("  Table: " + tableName + ", HeaderPageId: " + table.getHeaderPageId() + "\n");
+	                }
+	            }
+	            System.out.println("L'état des bases de données a été sauvegardé dans " + saveFile.getAbsolutePath());
+	        }
+
+	    } catch (IOException e) {
+	        e.printStackTrace();
+	        System.out.println("Erreur lors de la sauvegarde de l'état des bases de données.");
+	    }
 		
 	}
 	public void LoadState() {
+			  try {
+		        File saveFile = new File(dbc.getDbPath(), "databases.save");
+		        if (!saveFile.exists()) {
+		            System.out.println("Aucun fichier de sauvegarde trouvé.");
+		            return;
+		        }
+
+		        try (BufferedReader reader = new BufferedReader(new FileReader(saveFile))) {
+		            String line;
+		            DataBase currentDb = null;
+		            while ((line = reader.readLine()) != null) {
+		                if (line.startsWith("Database: ")) {
+		                    // Créer une nouvelle base de données
+		                    String dbName = line.substring(10).trim();
+		                    currentDb = new DataBase(dbName);
+		                    databases.put(dbName, currentDb);
+		                    System.out.println("Base de données chargée: " + dbName);
+		                } else if (line.startsWith("  Table: ")) {
+		                    // Charger une table
+		                    String[] parts = line.substring(10).split(", ");
+		                    String tableName = parts[0].substring(7).trim();
+		                    int headerPageId = Integer.parseInt(parts[1].substring(14).trim());
+
+		                    // Créer la table et l'ajouter à la base de données
+		                    if (currentDb != null) {
+		                        Relation table = new Relation(tableName, headerPageId);
+		                        currentDb.addDataBase(table);
+		                        System.out.println("Table chargée: " + tableName);
+		                    }
+		                }
+		            }
+		        }
+
+		    } catch (IOException e) {
+		        e.printStackTrace();
+		        System.out.println("Erreur lors du chargement de l'état des bases de données.");
+		    }
+		}
+		
+	}
+		
 		
 	}
 		
