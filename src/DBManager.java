@@ -20,42 +20,6 @@ public class DBManager {
 		
 		
 	}
-	/*public Buffer GetPage(PageID pageId) throws Exception {
-    if (buffListe.isEmpty()) {
-        throw new IllegalStateException("Aucun buffer n'a été initialisé dans BufferManager.");
-    }
-
-    // Vérifier si la page est déjà en mémoire
-    for (Buffer buffer : buffListe) {
-        if (buffer.getPageId() != null && buffer.getPageId().equals(pageId)) {
-            buffer.incrementPinCount(); // Marquer le buffer comme utilisé
-            return buffer;
-        }
-    }
-
-    // Trouver un buffer disponible pour le remplacement
-    Buffer bufferToReplace = findBufferToReplace();
-    if (bufferToReplace == null) {
-        throw new IOException("Aucun buffer libre disponible !");
-    }
-
-    // Si le buffer contient une page modifiée, l'écrire sur le disque avant le remplacement
-    if (bufferToReplace.isDirty()) {
-        disk.WritePage(bufferToReplace.getPageId(), ByteBuffer.wrap(bufferToReplace.getPageData()));
-    }
-
-    // Charger la nouvelle page depuis le disque dans un ByteBuffer temporaire
-    ByteBuffer tempBuffer = ByteBuffer.allocate(config.getPagesize());
-    disk.ReadPage(pageId, tempBuffer);
-
-    // Mettre à jour le buffer avec la nouvelle page
-    bufferToReplace.setPageData(tempBuffer.array());
-    bufferToReplace.setPageId(pageId);
-    bufferToReplace.setDirty(false);
-    bufferToReplace.incrementPinCount();
-
-    return bufferToReplace;
-}*/
 	public  void SetCurrentDatabase(String nombdd) {
 		DataBase db= databases.get(nombdd);
 		if(db==null) {
@@ -107,17 +71,36 @@ public class DBManager {
 		databases.remove(nombdd);
 		System.out.println("la base de données "+nombdd+"a été supprimer");
 	}
-	public void RemoveDataBaseFromCurrentDataBase() {
-		
+	public void RemoveTablesFromCurrentDataBase(String nomTable) {
+		if (currentDataBase != null) {
+			currentDataBase.removeTable(nomTable);
+		}
+		else {
+			System.out.println("la base de données actuelle n'existe pas");
+		}
 	}
 	public void RemoveDataBases() {
-		
+		if(currentDataBase != null) {
+			this.currentDataBase.removeAll();
+		}
+		else {
+			System.out.println("la base de données actuelle n'existe pas");
+		}
 	}
-	public void ListDataBases() {
-		
+	public void ListDataBases(){
+		for (String nomDB : databases.keySet()) {
+			System.out.println(nomDB + "\n");
+		}
 	}
 	public void ListTablesInCurrentDataBase() {
-		
+		if(currentDataBase != null) {
+			for (String nomTable : currentDataBase.getTables().keySet()) {
+				System.out.println(nomTable + "\n");
+			}
+		}
+		else {
+			System.out.println("la base de données actuelle n'existe pas");
+		}
 	}
 	public void SaveState() {
 		
