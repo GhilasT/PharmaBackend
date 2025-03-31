@@ -1,7 +1,5 @@
 package l3o2.pharmacie.api.model.dto.response;
 
-import l3o2.pharmacie.api.model.entity.PosteEmploye;
-import l3o2.pharmacie.api.model.entity.StatutContrat;
 import lombok.Builder;
 import lombok.Data;
 import java.util.Date;
@@ -23,8 +21,8 @@ public class PreparateurResponse {
     private String matricule;
     private Date dateEmbauche;
     private Double salaire;
-    private PosteEmploye poste;
-    private StatutContrat statutContrat;
+    private String poste;
+    private String statutContrat;
     private String diplome;
     private String emailPro;
 }

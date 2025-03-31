@@ -111,7 +111,4 @@ public class CisBdpm {
     // Liste des médicaments MITM (Médicaments d'Intérêt Thérapeutique Majeur)
     private List<CisMitm> medicamentsMitm = new ArrayList<>();
 
-
-
-
 }

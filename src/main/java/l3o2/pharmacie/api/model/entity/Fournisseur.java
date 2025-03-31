@@ -1,12 +1,12 @@
 package l3o2.pharmacie.api.model.entity;
 
 import java.util.List;
-import java.util.UUID;
-
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.DiscriminatorValue;
+import jakarta.persistence.Entity;
+import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
@@ -25,20 +25,11 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 // Permet d'utiliser le pattern Builder pour faciliter l'instanciation.
 @SuperBuilder
-public class Fournisseur {
-    @Getter
+public class Fournisseur extends Personne {
 
-    @Id
-    // Génèrer automatiquement un UUID comme identifiant unique
-    @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(nullable = false)
-
-    private UUID idFournisseur;
-
-
-    @Column(nullable = false)
+    @Column(nullable = true)
     // Nom de la société du fournisseur.
-    private String nomsociete;
+    private String societe;
 
     @Column(nullable = true)
     // Fonction ou rôle du fournisseur.
@@ -48,21 +39,15 @@ public class Fournisseur {
     // Numéro de fax du fournisseur (optionnel).
     private String fax;
 
-    @Column(nullable = false)
-    // Adresse email de la personne
-    private String email;
-
-    @Column(nullable = false)
-    // Numéro de téléphone
-    private String telephone;
-
-    @Column(nullable = false)
-
-    private String adresse;
-
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "fournisseur_id")
+    @OneToMany(mappedBy = "fournisseur")
+    // Liste des commandes associées au fournisseur.
     private List<Commande> commandes;
 
-
+    /**
+     * Ajoute une commande à la liste des commandes du fournisseur.
+     * @param commande La commande à ajouter.
+     */
+    public void ajouterCommande(Commande commande) {
+        commandes.add(commande);
+    }
 }

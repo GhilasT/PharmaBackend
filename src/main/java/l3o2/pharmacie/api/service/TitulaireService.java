@@ -11,8 +11,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
-import l3o2.pharmacie.api.model.entity.PosteEmploye;
-import l3o2.pharmacie.api.model.entity.Preparateur;
 
 import java.util.UUID;
 
@@ -42,19 +40,14 @@ public class TitulaireService {
                 .telephone(request.getTelephone().replaceAll("\\s+", ""))
                 .adresse(request.getAdresse().trim())
                 .emailPro(request.getEmailPro().trim())
-                .password(passwordEncoder.encode(request.getPassword()))
+                .password(passwordEncoder.encode(request.getPassword())) // Chiffrement du mot de passe
                 .dateEmbauche(request.getDateEmbauche())
                 .salaire(request.getSalaire())
                 .statutContrat(request.getStatutContrat())
                 .diplome(request.getDiplome() != null ? request.getDiplome().trim() : null)
                 .role(request.getRole().trim())
                 .numeroRPPS(request.getNumeroRPPS().trim())
-                .poste(request.getPoste())  // Assure-toi que tu passes le poste ici
                 .build();
-
-        // Génération du matricule
-        String baseMatricule = "TITULAIRE";
-        titulaire.generateMatricule(baseMatricule);
 
         try {
             return mapToResponse(titulaireRepository.save(titulaire));

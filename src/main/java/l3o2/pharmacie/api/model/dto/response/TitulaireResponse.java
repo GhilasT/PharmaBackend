@@ -1,11 +1,12 @@
 package l3o2.pharmacie.api.model.dto.response;
 
-import l3o2.pharmacie.api.model.entity.PosteEmploye;
-import l3o2.pharmacie.api.model.entity.StatutContrat;
 import lombok.Builder;
 import lombok.Data;
 import java.util.Date;
 import java.util.UUID;
+
+import l3o2.pharmacie.api.model.entity.PosteEmploye;
+import l3o2.pharmacie.api.model.entity.StatutContrat;
 
 /**
  * DTO représentant la réponse contenant les informations d'un titulaire.

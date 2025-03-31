@@ -28,11 +28,13 @@ public interface VenteRepository extends JpaRepository<Vente, UUID> {
      */
     List<Vente> findByClient_IdPersonne(UUID clientId);
 
-
-     // Recherche les ventes effectuées dans une période donnée.
-
-    List<Vente> findByDateVenteBetween(Date start, Date end);
-
+    /**
+     * Recherche les ventes effectuées dans une période donnée.
+     * @param dateDebut Date de début de la période.
+     * @param dateFin Date de fin de la période.
+     * @return Liste des ventes réalisées entre ces dates.
+     */
+    List<Vente> findByDateVenteBetween(Date dateDebut, Date dateFin);
 
     /**
      * Recherche les ventes par mode de paiement (ex: Espèces, Carte bancaire).

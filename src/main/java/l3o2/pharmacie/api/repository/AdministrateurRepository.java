@@ -14,7 +14,6 @@ import java.util.UUID;
 @Repository
 public interface AdministrateurRepository extends JpaRepository<Administrateur, UUID> {
 
-
     /**
      * Recherche des administrateurs par nom ou prénom (insensible à la casse).
      * @param nom Nom partiel ou complet de l'administrateur.
@@ -49,9 +48,7 @@ public interface AdministrateurRepository extends JpaRepository<Administrateur, 
      * @param emailPro Email professionnel de l'administrateur.
      * @return true si un administrateur avec cet email existe, sinon false.
      */
-
-
-
+    boolean existsByEmailPro(String emailPro);
     boolean existsByEmail(String email);
     boolean existsByMatricule(String matricule);
     void deleteByMatricule(String matricule);

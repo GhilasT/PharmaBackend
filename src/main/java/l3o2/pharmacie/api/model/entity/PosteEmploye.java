@@ -7,6 +7,5 @@ public enum PosteEmploye {
     TITULAIRE,
     PHARMACIEN_ADJOINT,
     PREPARATEUR,
-    APPRENTI,
-    ADMINISTRATEUR
+    APPRENTI
 }

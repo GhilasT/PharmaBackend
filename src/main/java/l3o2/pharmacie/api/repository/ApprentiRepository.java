@@ -41,5 +41,4 @@ public interface ApprentiRepository extends JpaRepository<Apprenti, UUID> {
      * @return Liste des apprentis enregistrés.
      */
     List<Apprenti> findAll();
-
 }

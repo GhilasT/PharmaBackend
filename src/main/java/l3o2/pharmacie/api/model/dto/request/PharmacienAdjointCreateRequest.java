@@ -58,5 +58,5 @@ public class PharmacienAdjointCreateRequest {
     private String emailPro;
     
     //TODO: Ajouter une méthode pour la génération automatique de matricule
-    //private String matricule;
+    private String matricule;
 }

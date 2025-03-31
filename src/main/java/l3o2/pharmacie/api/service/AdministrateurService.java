@@ -7,8 +7,6 @@ import l3o2.pharmacie.api.model.entity.Administrateur;
 import l3o2.pharmacie.api.repository.AdministrateurRepository;
 import lombok.RequiredArgsConstructor;
 import java.util.List;
-
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -28,17 +26,11 @@ public class AdministrateurService {
      * @param request Contient les informations de l'administrateur à créer.
      * @return L'administrateur créé sous forme de réponse DTO.
      */
-    private final EmployeService employeService;
     public AdministrateurResponse createAdministrateur(AdministrateurCreateRequest request) {
-        // Utiliser EmployeService pour vérifier l'email
-        if (employeService.existsByEmailPro(request.getEmailPro())) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Un administrateur avec cet email professionnel existe déjà.");
-        }
-        // Créer un administrateur
         Administrateur admin = Administrateur.builder()
                 .nom(request.getNom().trim())
                 .prenom(request.getPrenom().trim())
-                .email(request.getEmail().toLowerCase().trim()) // Email personnel
+                .email(request.getEmail().trim()) // Email personnel
                 .emailPro(request.getEmailPro().trim()) // Email professionnel
                 .telephone(request.getTelephone().trim())
                 .adresse(request.getAdresse().trim())
@@ -51,17 +43,7 @@ public class AdministrateurService {
                 .diplome(request.getDiplome()) // Diplôme éventuel
                 .build();
 
-        // Générer le matricule automatiquement en fonction du poste
-        String baseMatricule = admin.getPoste().toString(); // Exemple : "ADMIN"
-        admin.generateMatricule(baseMatricule); // Générer un matricule automatique
-
-        // Sauvegarder l'administrateur dans la base de données
-        try {
-            Administrateur savedAdmin = administrateurRepository.save(admin);
-            return mapToResponse(savedAdmin);
-        } catch (DataIntegrityViolationException e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Données dupliquées ou invalides");
-        }
+        return mapToResponse(administrateurRepository.save(admin));
     }
 
     /**

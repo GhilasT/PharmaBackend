@@ -16,7 +16,7 @@ public class CisCpdBdpm {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long id;  // Clé primaire auto-générée
 
     // Relation ManyToOne vers CisBdpm
     @ManyToOne(fetch = FetchType.LAZY)

@@ -22,36 +22,43 @@ public class ApprentiController {
 
     private final ApprentiService apprentiService;
 
-
-     //Crée un nouvel apprenti.
-
+    /**
+     * Crée un nouvel apprenti.
+     * @param request Données du nouvel apprenti.
+     * @return Réponse contenant les informations de l'apprenti créé.
+     */
     @PostMapping
     public ResponseEntity<ApprentiResponse> createApprenti(@Valid @RequestBody ApprentiCreateRequest request) {
         ApprentiResponse apprenti = apprentiService.createApprenti(request);
         return ResponseEntity.ok(apprenti);
     }
 
-
-     // Récupère la liste de tous les apprentis.
-
+    /**
+     * Récupère la liste de tous les apprentis.
+     * @return Liste des apprentis enregistrés.
+     */
     @GetMapping
     public ResponseEntity<List<ApprentiResponse>> getAllApprentis() {
         List<ApprentiResponse> apprentis = apprentiService.getAllApprentis();
         return ResponseEntity.ok(apprentis);
     }
 
-
-     //Récupère un apprenti par son ID.
-
+    /**
+     * Récupère un apprenti par son ID.
+     * @param id Identifiant UUID de l'apprenti.
+     * @return Apprenti correspondant à l'ID.
+     */
     @GetMapping("/{id}")
     public ResponseEntity<ApprentiResponse> getApprentiById(@PathVariable UUID id) {
         ApprentiResponse apprenti = apprentiService.getApprentiById(id);
         return ResponseEntity.ok(apprenti);
     }
 
-
-     //Supprime un apprenti par son ID.
-
+    /**
+     * Supprime un apprenti par son ID.
+     * @param id Identifiant UUID de l'apprenti à supprimer.
+     * @return Message de confirmation.
+     */
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteApprenti(@PathVariable UUID id) {
         apprentiService.deleteApprenti(id);

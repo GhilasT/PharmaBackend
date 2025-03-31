@@ -89,8 +89,8 @@ public class Medecin extends Personne {
     // Numéro SIRET du cabinet médical.
     private String siret;
 
-    // Date de dernière mise à jour des informations.
     @Column(nullable = false)
-    private LocalDate dateMiseAJour = LocalDate.now();
+    // Date de dernière mise à jour des informations.
+    private LocalDate dateMiseAJour;
 
 }

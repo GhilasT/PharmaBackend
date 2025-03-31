@@ -29,14 +29,8 @@ public class ApprentiService {
      * @param request Données de l'apprenti.
      * @return L'apprenti créé.
      */
-    private final EmployeService employeService;
-
     @Transactional
     public ApprentiResponse createApprenti(ApprentiCreateRequest request) {
-        // Utiliser EmployeService pour vérifier l'email
-        if (employeService.existsByEmailPro(request.getEmailPro())) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Un Apprenti avec cet email professionnel existe déjà.");
-        }
         Apprenti apprenti = Apprenti.builder()
                 .nom(request.getNom().trim())
                 .prenom(request.getPrenom().trim())
@@ -53,10 +47,6 @@ public class ApprentiService {
                 .password(request.getPassword())
                 .build();
 
-        // Générer le matricule automatiquement en fonction du poste
-        String baseMatricule = apprenti.getPoste().toString().substring(0, 5); // Exemple : "APPREN" -> "APPRE"
-        apprenti.generateMatricule(baseMatricule); // Générer un matricule automatique
-
         try {
             Apprenti savedApprenti = apprentiRepository.save(apprenti);
             return mapToResponse(savedApprenti);
@@ -64,7 +54,6 @@ public class ApprentiService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Données dupliquées ou invalides");
         }
     }
-
 
     /**
      * Récupère tous les apprentis.

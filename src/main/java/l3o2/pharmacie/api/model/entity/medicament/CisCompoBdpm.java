@@ -54,7 +54,7 @@ public class CisCompoBdpm {
     private String referenceDosage;
 
     @Column(name = "nature_composant")
-    @Pattern(regexp = "SA|ST", message = "La nature doit être 'SA' (principe actif) ou 'ST' (fraction thérapeutique)")
+    @Pattern(regexp = "SA|ST|FT", message = "La nature doit être 'SA' (principe actif) ou 'ST' (fraction thérapeutique) ou 'FT' (excipient)")
     // Nature du composant : SA = Substance Active, ST = Fraction Thérapeutique.
     private String natureComposant;
 

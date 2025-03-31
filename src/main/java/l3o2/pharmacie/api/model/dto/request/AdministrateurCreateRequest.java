@@ -5,7 +5,6 @@ import java.sql.Date;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
 import l3o2.pharmacie.api.model.entity.PosteEmploye;
 import l3o2.pharmacie.api.model.entity.StatutContrat;
 import lombok.AllArgsConstructor;
@@ -42,10 +41,8 @@ public class AdministrateurCreateRequest {
     private Date dateEmbauche;
     @NotNull
     private Double salaire;
-    @NotBlank(message = "Le poste est obligatoire")
-    @Pattern(regexp = "ADMINISTRATEUR", message = "Poste invalide pour un ADMINISTRATEUR")
+    @NotBlank 
     private PosteEmploye poste;
-
     @NotBlank 
     private StatutContrat statutContrat;
     private String diplome;

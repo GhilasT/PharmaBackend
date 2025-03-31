@@ -3,7 +3,6 @@ package l3o2.pharmacie.api.service;
 import l3o2.pharmacie.api.model.dto.request.PharmacienAdjointCreateRequest;
 import l3o2.pharmacie.api.model.dto.response.PharmacienAdjointResponse;
 import l3o2.pharmacie.api.model.entity.PharmacienAdjoint;
-import l3o2.pharmacie.api.repository.EmployeRepository;
 import l3o2.pharmacie.api.repository.PharmacienAdjointRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -22,22 +21,13 @@ import java.util.List;
 public class PharmacienAdjointService {
 
     private final PharmacienAdjointRepository pharmacienAdjointRepository;
-    private final EmployeRepository employeRepository;
-
 
     /**
      * Création d'un pharmacien adjoint en base de données.
      * @param request Contient les informations du pharmacien adjoint à créer.
      * @return Pharmacien adjoint créé sous forme de DTO.
      */
-    private final EmployeService employeService;
     public PharmacienAdjointResponse createPharmacienAdjoint(PharmacienAdjointCreateRequest request) {
-        // Vérifier si un pharmacien adjoint avec le même email professionnel existe déjà
-        if (employeService.existsByEmailPro (request.getEmailPro().trim())) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Un pharmacien adjoint avec cet email professionnel existe déjà.");
-        }
-
-        // Créer un pharmacien adjoint
         PharmacienAdjoint pharmacien = PharmacienAdjoint.builder()
                 .nom(request.getNom().trim())
                 .prenom(request.getPrenom().trim())
@@ -49,14 +39,11 @@ public class PharmacienAdjointService {
                 .salaire(request.getSalaire())
                 .poste(request.getPoste())
                 .statutContrat(request.getStatutContrat())
+                .diplome(request.getDiplome())
                 .emailPro(request.getEmailPro().trim())
+                .matricule(request.getMatricule().trim())
                 .build();
 
-        // Générer le matricule automatiquement en fonction du poste
-        String baseMatricule = pharmacien.getPoste().toString();
-        pharmacien.generateMatricule(baseMatricule);
-
-        // Sauvegarder le pharmacien adjoint dans la base de données
         try {
             PharmacienAdjoint savedPharmacien = pharmacienAdjointRepository.save(pharmacien);
             return mapToResponse(savedPharmacien);
@@ -64,7 +51,6 @@ public class PharmacienAdjointService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Données dupliquées ou invalides");
         }
     }
-
 
     /**
      * Convertit une entité PharmacienAdjoint en DTO PharmacienAdjointResponse.
@@ -88,15 +74,6 @@ public class PharmacienAdjointService {
                 .emailPro(entity.getEmailPro())
                 .build();
     }
-
-    public PharmacienAdjointResponse findByEmailPro(String emailPro) {
-        PharmacienAdjoint pharmacien = pharmacienAdjointRepository
-                .findByEmailPro(emailPro.trim())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
-                        "Aucun pharmacien adjoint trouvé avec l'email professionnel: " + emailPro));
-        return mapToResponse(pharmacien);
-    }
-
 
     /**
      * Récupère la liste de tous les pharmaciens adjoints.

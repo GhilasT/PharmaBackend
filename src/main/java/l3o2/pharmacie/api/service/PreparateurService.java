@@ -2,6 +2,7 @@ package l3o2.pharmacie.api.service;
 
 import l3o2.pharmacie.api.model.dto.request.PreparateurCreateRequest;
 import l3o2.pharmacie.api.model.dto.response.PreparateurResponse;
+import l3o2.pharmacie.api.model.entity.PosteEmploye;
 import l3o2.pharmacie.api.model.entity.Preparateur;
 import l3o2.pharmacie.api.repository.PreparateurRepository;
 import lombok.RequiredArgsConstructor;
@@ -29,14 +30,8 @@ public class PreparateurService {
      * @param request Données du préparateur.
      * @return Le préparateur créé.
      */
-    private final EmployeService employeService;
     @Transactional
     public PreparateurResponse createPreparateur(PreparateurCreateRequest request) {
-        // Vérifier si un Preparateur avec le même email professionnel existe déjà
-        if (employeService.existsByEmailPro (request.getEmailPro().trim())) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Un Preparateur adjoint avec cet email professionnel existe déjà.");
-        }
-        // Création de l'objet preparateur
         Preparateur preparateur = Preparateur.builder()
                 .nom(request.getNom().trim())
                 .prenom(request.getPrenom().trim())
@@ -45,19 +40,14 @@ public class PreparateurService {
                 .adresse(request.getAdresse() != null ? request.getAdresse().trim() : null)
                 .dateEmbauche(request.getDateEmbauche())
                 .salaire(request.getSalaire())
-                .poste(request.getPoste())
+                .poste(PosteEmploye.PREPARATEUR)
                 .statutContrat(request.getStatutContrat())
                 .diplome(request.getDiplome() != null ? request.getDiplome().trim() : null)
                 .emailPro(request.getEmailPro().trim())
                 .password(request.getPassword())
                 .build();
 
-        // Génération du matricule en fonction du poste
-        String baseMatricule = preparateur.getPoste().toString();  // Exemple : "PREPARATEUR"
-        preparateur.generateMatricule(baseMatricule);  // Génère automatiquement le matricule
-
         try {
-            // Sauvegarde du préparateur avec le matricule généré
             Preparateur savedPreparateur = preparateurRepository.save(preparateur);
             return mapToResponse(savedPreparateur);
         } catch (DataIntegrityViolationException e) {
@@ -117,8 +107,8 @@ public class PreparateurService {
                 .matricule(entity.getMatricule())
                 .dateEmbauche(entity.getDateEmbauche())
                 .salaire(entity.getSalaire())
-                .poste(entity.getPoste())
-                .statutContrat(entity.getStatutContrat())
+                .poste(entity.getPoste().toString())
+                .statutContrat(entity.getStatutContrat().toString())
                 .diplome(entity.getDiplome())
                 .emailPro(entity.getEmailPro())
                 .build();

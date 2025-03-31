@@ -1,6 +1,5 @@
 package l3o2.pharmacie.api.model.dto.response;
 
-import l3o2.pharmacie.api.model.entity.PosteEmploye;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -29,7 +28,6 @@ public class AdministrateurResponse {
     private String matricule;
     private LocalDate dateEmbauche;
     private Double salaire;
-    private PosteEmploye poste;
     private StatutContrat statutContrat;
     private String diplome;
     private String emailPro;

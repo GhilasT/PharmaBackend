@@ -31,7 +31,7 @@ public class ClientService {
      */
     public ClientResponse createClient(ClientCreateRequest request) {
         // Vérification de l'unicité de l'email
-        if (clientRepository.existsByEmail(request.getEmail())) {
+        if (clientRepository.findByEmail(request.getEmail().trim().toLowerCase()).isPresent()) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "L'email est déjà utilisé");
         }
 
@@ -40,7 +40,7 @@ public class ClientService {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Le téléphone est déjà utilisé");
         }
 
-        // Création de l'objet Client
+        // Création de l'objet Client (hérite de Personne)
         Client client = Client.builder()
                 .nom(request.getNom().trim())
                 .prenom(request.getPrenom().trim())
@@ -57,10 +57,6 @@ public class ClientService {
         } catch (DataIntegrityViolationException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Données dupliquées ou invalides");
         }
-    }
-
-    public boolean existsByEmail(String email) {
-        return clientRepository.existsByEmail(email.trim().toLowerCase());
     }
 
     /**
@@ -113,12 +109,5 @@ public class ClientService {
         Client client = clientRepository.findByEmail(email.trim().toLowerCase())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Client non trouvé"));
         return mapToResponse(client);
-    }
-    //supprimer un client
-    public void deleteClient(UUID id) {
-        if (!clientRepository.existsById(id)) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Client non trouvé");
-        }
-        clientRepository.deleteById(id);
     }
 }
