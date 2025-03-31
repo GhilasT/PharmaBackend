@@ -84,7 +84,7 @@ public class MedicamentService {
                 ));
 
         if (request.getCodeCip13() != null) {
-            CisCipBdpm pres = cisCipBdpmRepository.findById(request.getCodeCip13())
+            CisCipBdpm pres = cisCipBdpmRepository.findByCodeCip13(request.getCodeCip13())
                     .orElseThrow(() -> new ResponseStatusException(
                             HttpStatus.NOT_FOUND,
                             "CIP13 introuvable: " + request.getCodeCip13()

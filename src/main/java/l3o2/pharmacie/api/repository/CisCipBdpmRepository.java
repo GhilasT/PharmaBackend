@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface CisCipBdpmRepository extends JpaRepository<CisCipBdpm, String> {
+public interface CisCipBdpmRepository extends JpaRepository<CisCipBdpm, Long> {
     Optional<CisCipBdpm> findByCodeCip13(String codeCip13);
+    Optional<CisCipBdpm> findById(Long id);
 }
