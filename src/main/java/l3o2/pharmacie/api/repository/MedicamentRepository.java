@@ -18,14 +18,14 @@ import java.util.Optional;
  * Permet d'accéder aux données des médicaments stockés en pharmacie.
  */
 @Repository
-public interface MedicamentRepository extends JpaRepository<Medicament, Long> {
+public interface MedicamentRepository extends JpaRepository<StockMedicament, Long> {
 
     /**
      * Recherche un médicament par son identifiant unique.
      * @param id Identifiant du médicament.
      * @return Le médicament correspondant (s'il existe).
      */
-    Optional<Medicament> findById(Long id);
+    Optional<StockMedicament> findById(Long id);
 
     /**
      * Recherche un médicament par son numéro de lot.
