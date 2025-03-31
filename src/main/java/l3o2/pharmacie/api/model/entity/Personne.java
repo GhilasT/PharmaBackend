@@ -12,6 +12,7 @@ import jakarta.persistence.InheritanceType;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
@@ -35,6 +36,8 @@ import lombok.experimental.SuperBuilder;
 // Permet d'utiliser le pattern Builder pour les sous-classes.
 @SuperBuilder
 public abstract class Personne {
+    // le @Getter est une annotation Lombok qui genere des getters pour tous les champs non statiques de la classe
+    @Getter
 
     @Id
     // Génèrer automatiquement un UUID comme identifiant unique
@@ -62,7 +65,6 @@ public abstract class Personne {
     @Column(nullable = true)
     // Adresse postale (peut être null)
     private String adresse;
-
 
 
 }

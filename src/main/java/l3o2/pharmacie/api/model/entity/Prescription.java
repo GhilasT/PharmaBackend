@@ -1,6 +1,6 @@
 package l3o2.pharmacie.api.model.entity;
 
-import l3o2.pharmacie.api.model.entity.medicament.Medicament;
+import l3o2.pharmacie.api.model.entity.medicament.StockMedicament;
 import java.util.UUID;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -34,8 +34,9 @@ import lombok.NoArgsConstructor;
 public class Prescription {
 
     @Id
+    // Identifiant unique de l'Prescription (généré automatiquement)
     @GeneratedValue(strategy = GenerationType.UUID)
-    // Identifiant unique de la prescription.
+    @Column(nullable = false, updatable = false, unique = true)
     private UUID idPrescription;
 
     @Column(nullable = false)
@@ -52,7 +53,7 @@ public class Prescription {
 
     @OneToOne
     // Médicament associé à la prescription.
-    private Medicament medicament;
+    private StockMedicament medicament;
     @ManyToOne
     @JoinColumn(name = "id_ordonnance")
     private Ordonnance ordonnance;

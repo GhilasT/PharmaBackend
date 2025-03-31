@@ -1,5 +1,6 @@
 package l3o2.pharmacie.api.model.dto.response;
 
+import l3o2.pharmacie.api.model.entity.medicament.StockMedicament;
 import lombok.Builder;
 import lombok.Data;
 import java.util.Date;
@@ -17,9 +18,10 @@ public class VenteResponse {
     private UUID idVente;
     private Date dateVente;
     private String modePaiement;
-    private Float montantTotal;
-    private Float montantRembourse;
+    private double montantTotal;
+    private double montantRembourse;
     private UUID pharmacienAdjointId;
     private UUID clientId;
-    private List<UUID> medicamentIds;
+    private List<MedicamentResponse> medicamentIds;
+    private String notification;
 }

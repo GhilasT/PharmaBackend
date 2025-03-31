@@ -1,5 +1,6 @@
 package l3o2.pharmacie.api.model.entity;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -33,23 +34,22 @@ public class Commande {
 
     @Column(nullable = false)
     // Montant total de la commande.
-    private float montantTotal;
+    private BigDecimal montantTotal;
 
     @Column(nullable = false)
     // Statut de la commande (ex: En attente, Validée, Expédiée).
     private String statut;
 
-    @ManyToOne
-    @JoinColumn(name = "pharmacien_id", nullable = false)
-    // Pharmacien adjoint ayant passé la commande.
-    private PharmacienAdjoint pharmacienAdjoint;
+    @Column(name = "fournisseur_id", nullable = false)
+    private UUID fournisseurId;
 
-    @ManyToOne
-    @JoinColumn(name = "fournisseur_id", nullable = false)
-    // Fournisseur auprès duquel la commande a été passée.
-    private Fournisseur fournisseur;
+    @Column(name = "pharmacien_adjoint_id", nullable = false)
+    private UUID pharmacienAdjointId;
+
 
     @OneToMany(mappedBy = "commande", cascade = CascadeType.ALL, orphanRemoval = true)
     // Liste des lignes de commande associées à cette commande.
     private List<LigneCommande> ligneCommandes;
+
+
 }

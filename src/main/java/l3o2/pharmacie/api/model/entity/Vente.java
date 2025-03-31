@@ -1,11 +1,13 @@
 package l3o2.pharmacie.api.model.entity;
 
-import l3o2.pharmacie.api.model.entity.medicament.Medicament;
-import java.math.BigDecimal;
+//import l3o2.pharmacie.api.model.entity.medicament.Medicament;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 import jakarta.persistence.*;
+import l3o2.pharmacie.api.model.entity.medicament.MedicamentPanier;
+import l3o2.pharmacie.api.model.entity.medicament.StockMedicament;
 import lombok.*;
 
 /**
@@ -18,43 +20,39 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+
 public class Vente {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(nullable = false, updatable = false, unique = true)
-    private UUID idVente;  // Identifiant unique de la vente.
+    private UUID idVente;
+
+    @Column(nullable = false)
+
+    private double montantTotal;
+
+    @Column(nullable = false)
+    private String modePaiement;
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(nullable = false)
-    private Date dateVente;  // Date et heure de la vente.
-
-    @Column(nullable = false, precision = 10, scale = 2)
-    // pour garantir une précision optimale des valeurs "BigDecimal"
-    private BigDecimal montantTotal;  // Montant total de la vente (TTC).
+    private Date dateVente ;
 
     @Column(nullable = false)
-    private String modePaiement;  // Mode de paiement (ex: Carte, Espèces).
-
-    @Column(nullable = false, precision = 10, scale = 2)
-    private BigDecimal montantRembourse;  // Montant remboursé par la mutuelle.
+    private double montantRembourse;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "pharmacien_id", nullable = false)
-    private PharmacienAdjoint pharmacienAdjoint;  // Pharmacien ayant effectué la vente.
+    private PharmacienAdjoint pharmacienAdjoint;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "client_id", nullable = false)
-    private Client client;  // Client ayant effectué l'achat.
+    private Client client;
 
 
-    //  "CascadeType.ALL" pour Assure que les médicaments liés à une vente sont bien persistés automatiquement.
-    // "FetchType.LAZY" pour que client et phramcien ne seront chargés qu’en cas de besoin
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "ventes_medicaments",
-            joinColumns = @JoinColumn(name = "vente_id"),
-            inverseJoinColumns = @JoinColumn(name = "medicament_id")
-    )
-    private List<Medicament> medicaments;  // Liste des médicaments vendus.
+
+    @OneToMany(mappedBy = "vente", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<MedicamentPanier> medicamentsPanier;
+
 }

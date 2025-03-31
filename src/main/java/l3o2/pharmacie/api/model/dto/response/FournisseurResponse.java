@@ -11,10 +11,8 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 public class FournisseurResponse {
-    private UUID idPersonne;
-    private String societe;
-    private String nom;
-    private String prenom;
+    private UUID idFournisseur;
+    private String nomsociete;
     private String sujetFonction;
     private String telephone;
     private String fax;

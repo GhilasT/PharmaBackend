@@ -1,10 +1,8 @@
 package l3o2.pharmacie.api.model.entity;
 
 import java.util.List;
-import jakarta.persistence.DiscriminatorValue;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.OneToMany;
+
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -27,8 +25,7 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 public class PharmacienAdjoint extends Employe {
 
-    // Liste des commandes passées par le pharmacien adjoint + si un pharmacien adjoint est supprimé, ses commandes associées sont aussi supprimées
-    @OneToMany(mappedBy = "pharmacienAdjoint", cascade = CascadeType.ALL, orphanRemoval = true)
-
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "pharmacien_adjoint_id")
     private List<Commande> commandesPassees;
 }

@@ -4,6 +4,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
+import l3o2.pharmacie.api.model.entity.PosteEmploye;
 import l3o2.pharmacie.api.model.entity.StatutContrat;
 import lombok.Builder;
 import lombok.Data;
@@ -39,9 +40,6 @@ public class TitulaireCreateRequest {
     @NotBlank(message = "L'email professionnel est obligatoire")
     private String emailPro;
 
-    @NotBlank(message = "Le matricule est obligatoire")
-    private String matricule;
-
     @NotNull(message = "La date d'embauche est obligatoire")
     private Date dateEmbauche;
 
@@ -49,7 +47,9 @@ public class TitulaireCreateRequest {
     private Double salaire;
 
     @NotBlank(message = "Le poste est obligatoire")
-    private String poste;
+    @Pattern(regexp = "TITULAIRE", message = "Poste invalide pour un TITULAIRE")
+    private PosteEmploye poste;
+
 
     @NotBlank(message = "Le type de contrat est obligatoire")
     private StatutContrat statutContrat;

@@ -18,7 +18,7 @@ import java.util.Date;
 @SuperBuilder
 public class Employe extends Personne {
     @Column(nullable = false, unique = true, updatable = false)
-    private String matricule; // Matricule unique généré automatiquement
+    private String matricule;
 
     @Column(nullable = false)
     private Date dateEmbauche;
@@ -51,6 +51,16 @@ public class Employe extends Personne {
         if (this.password != null && !this.password.startsWith("EmployeResponseBuildera$")) {
             this.password = new BCryptPasswordEncoder().encode(this.password);
         }
+    }
+
+    /**
+     * Génère un matricule pour chaque employé en fonction de son poste.
+     * Le matricule est un préfixe suivi d'un numéro unique à 5 chiffres (ex: EMP-ADMIN-00001)
+     */
+    public void generateMatricule(String baseMatricule) {
+        String prefix = "EMP-" + baseMatricule.toUpperCase() + "-";
+        String suffix = String.format("%05d", (int) (Math.random() * 100000));
+        this.matricule = prefix + suffix;
     }
 
 }
