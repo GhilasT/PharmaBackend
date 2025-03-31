@@ -65,4 +65,8 @@ public class CisCipDispoSpec {
     @Column(name = "lien_ansm", columnDefinition = "TEXT")
     // Lien vers la page officielle ANSM pour plus d'informations.
     private String lienANSM;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "medicament_id", referencedColumnName = "id")
+    private StockMedicament stockMedicament;
 }
