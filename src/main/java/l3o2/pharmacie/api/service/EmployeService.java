@@ -6,6 +6,7 @@ import l3o2.pharmacie.api.model.dto.response.EmployeResponse;
 import l3o2.pharmacie.api.model.entity.Employe;
 import l3o2.pharmacie.api.repository.EmployeRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -23,8 +24,18 @@ public class EmployeService {
 
     private final EmployeRepository employeRepository;
     private final PasswordEncoder passwordEncoder;
+
+    // Ajoutez cette méthode pour vérifier si un employé existe avec cet email professionnel
+    public boolean existsByEmailPro(String emailPro) {
+        return employeRepository.existsByEmailPro(emailPro);  // Cette méthode est déjà définie dans le repository
+    }
     public EmployeResponse createEmploye(EmployeCreateRequest request) {
-        
+        // Vérifier si un employé avec le même email professionnel existe déjà
+        if (employeRepository.existsByEmailPro(request.getEmailPro())) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Un employé avec cet email professionnel existe déjà.");
+        }
+
+        // Créer un employé
         Employe employe = Employe.builder()
                 .nom(request.getNom())
                 .prenom(request.getPrenom())
@@ -40,6 +51,11 @@ public class EmployeService {
                 .diplome(request.getDiplome())
                 .build();
 
+        // Générer le matricule en fonction du poste de l'employé
+        String baseMatricule = employe.getPoste().toString();
+        employe.generateMatricule(baseMatricule);
+
+        // Enregistrer l'employé
         Employe savedEmploye = employeRepository.save(employe);
         return mapToResponse(savedEmploye);
     }
@@ -65,11 +81,22 @@ public class EmployeService {
         return mapToResponse(updatedEmploye);
     }
 
-    public void deleteEmploye(String matricule) {
-        Employe employe = employeRepository.findByMatricule(matricule)
-                .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Employé non trouvé"));
-        employeRepository.delete(employe);
+    /**
+     * Recherche un employé par son email professionnel et retourne l'employe
+     */
+    public Employe getEmployeByEmailPro(String emailPro) {
+        return employeRepository.findByEmailPro(emailPro)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Employé non trouvé avec cet email professionnel : " + emailPro));
     }
+
+    // et ici je retourne que le ID de l'employe
+
+    public UUID getEmployeIdByEmailPro(String emailPro) {
+        Employe employe = employeRepository.findByEmailPro(emailPro)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Employé non trouvé avec cet email professionnel : " + emailPro));
+        return employe.getIdPersonne();
+    }
+
 
 
     private void updateEmployeFields(Employe employe, EmployeUpdateRequest request) {
@@ -81,6 +108,16 @@ public class EmployeService {
         if (request.getAdresse() != null) employe.setAdresse(request.getAdresse());
         if (request.getSalaire() != null) employe.setSalaire(request.getSalaire());
         if (request.getStatutContrat() != null) employe.setStatutContrat(request.getStatutContrat());
+    }
+
+    public void deleteEmploye(String matricule) {
+        // Cherche l'employé par matricule dans toutes les sous-classes
+        Employe employe = employeRepository.findByMatricule(matricule)
+                .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Employé non trouvé avec matricule : " + matricule));
+
+        // Supprime l'employé
+        employeRepository.delete(employe);
+        System.out.println("Employé avec matricule '" + matricule + "' supprimé avec succès.");
     }
 
     private EmployeResponse mapToResponse(Employe employe) {

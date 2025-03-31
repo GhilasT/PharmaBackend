@@ -14,12 +14,11 @@ import java.util.UUID;
  */
 @Repository
 public interface MedecinRepository extends JpaRepository<Medecin, UUID> {
-
-    /**
-     * Recherche un médecin par son numéro RPPS (Répertoire Partagé des Professionnels de Santé).
-     * @param rpps Numéro RPPS unique du médecin.
-     * @return Médecin correspondant (s'il existe).
-     */
+        /**
+         * Recherche un médecin par son numéro RPPS (Répertoire Partagé des Professionnels de Santé).
+         * @param rpps Numéro RPPS unique du médecin.
+         * @return Médecin correspondant (s'il existe).
+         */
     Optional<Medecin> findByRpps(String rpps);
 
     /**

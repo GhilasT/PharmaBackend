@@ -29,6 +29,11 @@ public class FournisseurService {
      * @return FournisseurResponse contenant les informations du fournisseur créé.
      */
     public FournisseurResponse createFournisseur(FournisseurCreateRequest request) {
+        // Vérification de l'unicité de la société (avec Nomsociete)
+        if (fournisseurRepository.findByNomsociete(request.getNomsociete().trim()).isPresent()) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "La société est déjà utilisée par un autre fournisseur.");
+        }
+
         // Vérification de l'unicité de l'email
         if (fournisseurRepository.findByEmail(request.getEmail().trim().toLowerCase()).isPresent()) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "L'email est déjà utilisé par un autre fournisseur.");
@@ -39,24 +44,27 @@ public class FournisseurService {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Le téléphone est déjà utilisé par un autre fournisseur.");
         }
 
-        // Création de l'objet Fournisseur (hérite de Personne)
+        // Création du fournisseur
         Fournisseur fournisseur = Fournisseur.builder()
-                .societe(request.getSociete().trim())
+                .nomsociete(request.getNomsociete().trim())
                 .sujetFonction(request.getSujetFonction() != null ? request.getSujetFonction().trim() : null)
                 .fax(request.getFax() != null ? request.getFax().trim() : null)
-                .nom(request.getNom().trim())
-                .prenom(request.getPrenom().trim())
                 .email(request.getEmail().trim().toLowerCase())
                 .telephone(request.getTelephone().replaceAll("\\s+", ""))
                 .adresse(request.getAdresse().trim())
                 .build();
 
+        // Enregistrement du fournisseur
         try {
             Fournisseur savedFournisseur = fournisseurRepository.save(fournisseur);
             return mapToResponse(savedFournisseur);
         } catch (DataIntegrityViolationException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Erreur lors de l'enregistrement du fournisseur.");
         }
+    }
+
+    public boolean existsByEmail(String email) {
+        return fournisseurRepository.existsByEmail(email.trim().toLowerCase());
     }
 
     /**
@@ -112,15 +120,20 @@ public class FournisseurService {
      */
     private FournisseurResponse mapToResponse(Fournisseur entity) {
         return FournisseurResponse.builder()
-                .idPersonne(entity.getIdPersonne())
-                .societe(entity.getSociete())
+                .idFournisseur(entity.getIdFournisseur())
+                .nomsociete(entity.getNomsociete())
                 .sujetFonction(entity.getSujetFonction())
                 .fax(entity.getFax())
-                .nom(entity.getNom())
-                .prenom(entity.getPrenom())
                 .email(entity.getEmail())
                 .telephone(entity.getTelephone())
                 .adresse(entity.getAdresse())
                 .build();
+    }
+    //suprimer un fournisssseur
+    public void deleteFournisseur(UUID id) {
+        if (!fournisseurRepository.existsById(id)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Fournisseur non trouvé.");
+        }
+        fournisseurRepository.deleteById(id);
     }
 }

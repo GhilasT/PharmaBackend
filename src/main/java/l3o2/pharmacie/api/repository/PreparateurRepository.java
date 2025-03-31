@@ -41,4 +41,6 @@ public interface PreparateurRepository extends JpaRepository<Preparateur, UUID> 
      * @return Liste des préparateurs enregistrés.
      */
     List<Preparateur> findAll();
+
+
 }

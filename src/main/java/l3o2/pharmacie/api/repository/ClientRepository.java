@@ -75,4 +75,7 @@ public interface ClientRepository extends JpaRepository<Client, UUID> {
      * @return true si un client avec ce numéro existe, sinon false.
      */
     boolean existsByTelephone(String telephone);
+
+    // verfier si un client existe avec son id
+    boolean existsById(UUID id);
 }
