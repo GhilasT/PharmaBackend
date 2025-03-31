@@ -2,6 +2,7 @@ package l3o2.pharmacie.api.model.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import l3o2.pharmacie.api.model.entity.PosteEmploye;
 import l3o2.pharmacie.api.model.entity.StatutContrat;
 import lombok.Builder;
@@ -36,6 +37,7 @@ public class ApprentiCreateRequest {
     private Double salaire;
 
     @NotBlank(message = "Le poste est obligatoire")
+    @Pattern(regexp = "APPRENTI", message = "Poste invalide pour un APPRENTI")
     private PosteEmploye poste;
 
     @NotBlank(message = "Le statut du contrat est obligatoire")

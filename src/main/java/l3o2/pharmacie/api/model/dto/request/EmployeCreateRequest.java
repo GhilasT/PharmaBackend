@@ -43,7 +43,7 @@ public class EmployeCreateRequest {
     @NotBlank(message = "Le statut du contrat est obligatoire")
     private StatutContrat statutContrat;
 
-    private String diplome; // Optionnel
+    private String diplome;
 
     @NotBlank(message = "L'email professionnel est obligatoire")
     private String emailPro;
