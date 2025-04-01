@@ -26,7 +26,7 @@ public class Application {
         SpringApplication.run(Application.class, args);
     }
 
-    @Bean
+    /*@Bean
     @Transactional
     public CommandLineRunner initialDataLoader(PharmacienAdjointService pharmacienService,
                                                EmployeService employeService,
@@ -531,5 +531,5 @@ public class Application {
                 System.err.println(" Erreur lors de l'initialisation des données : " + e.getMessage());
             }
         };
-    }
+    }*/
 }

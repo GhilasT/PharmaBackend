@@ -1522,11 +1522,17 @@ public int importCisHasAsmr(String csvFilePath) {
         }
         return DATE_FORMAT_ISO.parse(dateStr);
     }
+/**
+ * Importe le stock depuis un fichier CSV.
+ * Cette méthode utilise une transaction Spring pour l'ensemble du processus,
+ * mais traite chaque ligne indépendamment pour éviter les problèmes de rollback.
+ * 
+ * @param csvFilePath Chemin du fichier CSV
+ * @return Nombre d'éléments importés avec succès
+ */
 @Transactional
 public int importStock(String csvFilePath) {
     log.info("Début de l'importation du stock depuis le fichier: {}", csvFilePath);
-    
-    boolean previousAutoFlushMode = HibernateSessionUtil.disableAutoFlush(entityManager);
     
     try {
         ClassPathResource resource = new ClassPathResource(csvFilePath);
@@ -1537,53 +1543,165 @@ public int importStock(String csvFilePath) {
             
             String[] line;
             int count = 0;
-            List<StockMedicament> batchStock = new ArrayList<>();
+            int errorCount = 0;
             
             while ((line = reader.readNext()) != null) {
                 try {
-                    String codeCip13 = line[0].trim();
-                    
-                    // Recherche de la présentation
-                    CisCipBdpm presentation = findOrCreateCisCipBdpm(codeCip13);
-                    
-                    // Création de l'entrée de stock
-                    StockMedicament stock = new StockMedicament();
-                    stock.setPresentation(presentation);
-                    stock.setQuantite(parseInteger(line[1]));
-                    stock.setNumeroLot(line[2]);
-                    stock.setDatePeremption(parseLocalDate(line[3]));
-                    stock.setDateMiseAJour(parseLocalDate(line[4]));
-                    stock.setSeuilAlerte(parseInteger(line[5]));
-                    stock.setEmplacement(line[6]);
-                    
-                    entityManager.persist(stock);
-                    batchStock.add(stock);
+                    // Traiter chaque ligne
+                    processStockLine(line);
                     count++;
                     
-                    // Batch processing
-                    if (count % 100 == 0) {
-                        HibernateSessionUtil.flushAndClear(entityManager);
-                        batchStock.clear();
+                    // Flush et clear après chaque ligne pour éviter l'accumulation en mémoire
+                    entityManager.flush();
+                    entityManager.clear();
+                    
+                    if (count % 50 == 0) {
                         log.info("Importation stock en cours: {} éléments traités", count);
                     }
                 } catch (Exception e) {
-                    log.warn("Erreur ligne {}: {}", count, String.join("|", line), e);
+                    errorCount++;
+                    log.warn("Erreur ligne {}: {} - {}", count + errorCount, String.join("|", line), e.getMessage());
+                    // Continuer avec la ligne suivante
                 }
             }
             
-            // Flush final
-            if (!batchStock.isEmpty()) {
-                HibernateSessionUtil.flushAndClear(entityManager);
-            }
-            
-            log.info("Importation stock terminée. {} éléments importés", count);
+            log.info("Importation stock terminée. {} éléments importés, {} erreurs", count, errorCount);
             return count;
         }
     } catch (IOException | CsvValidationException e) {
         log.error("Erreur d'importation", e);
         throw new RuntimeException("Échec import stock", e);
-    } finally {
-        HibernateSessionUtil.restoreAutoFlush(entityManager, previousAutoFlushMode);
+    }
+}
+
+/**
+ * Traite une ligne du fichier CSV de stock.
+ * Cette méthode utilise des requêtes JPQL et des opérations JPA
+ * compatibles avec la gestion des transactions de Spring.
+ * 
+ * @param line Ligne du fichier CSV
+ */
+public void processStockLine(String[] line) {
+    if (line == null || line.length < 7) {
+        throw new IllegalArgumentException("Format de ligne invalide");
+    }
+    
+    String codeCip13 = line[0].trim();
+    Integer quantite = parseInteger(line[1]);
+    String numeroLot = line[2];
+    LocalDate datePeremption = parseLocalDate(line[3]);
+    LocalDate dateMiseAJour = parseLocalDate(line[4]);
+    Integer seuilAlerte = parseInteger(line[5]);
+    String emplacement = line[6];
+    
+    try {
+        // 1. Vérifier si la présentation existe, sinon la créer
+        CisCipBdpm presentation = findOrCreatePresentationJpa(codeCip13);
+        
+        // 2. Vérifier si le stock existe déjà pour cette présentation et ce lot
+        StockMedicament existingStock = findStockJpa(presentation, numeroLot);
+        
+        if (existingStock != null) {
+            // 3a. Mettre à jour le stock existant
+            existingStock.setQuantite(quantite);
+            existingStock.setDatePeremption(datePeremption);
+            existingStock.setDateMiseAJour(dateMiseAJour);
+            existingStock.setSeuilAlerte(seuilAlerte);
+            existingStock.setEmplacement(emplacement);
+            entityManager.merge(existingStock);
+        } else {
+            // 3b. Créer une nouvelle entrée de stock
+            StockMedicament stock = new StockMedicament();
+            stock.setPresentation(presentation);
+            stock.setQuantite(quantite);
+            stock.setNumeroLot(numeroLot);
+            stock.setDatePeremption(datePeremption);
+            stock.setDateMiseAJour(dateMiseAJour);
+            stock.setSeuilAlerte(seuilAlerte);
+            stock.setEmplacement(emplacement);
+            
+            entityManager.persist(stock);
+        }
+        
+        // Flush explicite pour s'assurer que tout est bien enregistré
+        entityManager.flush();
+    } catch (Exception e) {
+        // Loguer l'erreur et la propager
+        log.error("Erreur lors du traitement de la ligne: {}", e.getMessage());
+        throw e;
+    }
+}
+
+/**
+ * Trouve ou crée une présentation CisCipBdpm en utilisant JPA.
+ * 
+ * @param codeCip13 Code CIP13 de la présentation
+ * @return Entité CisCipBdpm
+ */
+private CisCipBdpm findOrCreatePresentationJpa(String codeCip13) {
+    // Rechercher d'abord si la présentation existe déjà
+    try {
+        return entityManager.createQuery(
+            "SELECT c FROM CisCipBdpm c WHERE c.codeCip13 = :code", CisCipBdpm.class)
+            .setParameter("code", codeCip13)
+            .getSingleResult();
+    } catch (jakarta.persistence.NoResultException e) {
+        // Si la présentation n'existe pas, la créer avec son médicament parent
+        String codeCis = codeCip13.substring(0, 7); // Extraction code CIS
+        
+        // Rechercher d'abord si le médicament existe
+        CisBdpm cisBdpm;
+        try {
+            cisBdpm = entityManager.createQuery(
+                "SELECT c FROM CisBdpm c WHERE c.codeCis = :code", CisBdpm.class)
+                .setParameter("code", codeCis)
+                .getSingleResult();
+        } catch (jakarta.persistence.NoResultException ex) {
+            // Créer le médicament s'il n'existe pas
+            cisBdpm = new CisBdpm();
+            cisBdpm.setCodeCis(codeCis);
+            cisBdpm.setDenomination("Médicament temporaire " + codeCis);
+            cisBdpm.setFormePharmaceutique("Inconnue");
+            cisBdpm.setVoiesAdministration("Non spécifiée");
+            cisBdpm.setStatutAMM("Non spécifié");
+            cisBdpm.setTypeProcedureAMM("Non spécifié");
+            cisBdpm.setEtatCommercialisation("Non spécifié");
+            cisBdpm.setDateAMM(new Date());
+            entityManager.persist(cisBdpm);
+            entityManager.flush();
+        }
+        
+        // Créer la présentation
+        CisCipBdpm newCip = new CisCipBdpm();
+        newCip.setCisBdpm(cisBdpm);
+        newCip.setCodeCip13(codeCip13);
+        newCip.setCodeCip7(codeCis); // Utiliser le code CIS comme CIP7 temporaire
+        newCip.setLibellePresentation("Présentation temporaire " + codeCip13);
+        newCip.setEtatCommercialisation("Inconnu");
+        entityManager.persist(newCip);
+        entityManager.flush();
+        
+        return newCip;
+    }
+}
+
+/**
+ * Recherche un stock existant pour une présentation et un lot donnés en utilisant JPA.
+ * 
+ * @param presentation Présentation du médicament
+ * @param numeroLot Numéro de lot
+ * @return Entité StockMedicament ou null si non trouvée
+ */
+private StockMedicament findStockJpa(CisCipBdpm presentation, String numeroLot) {
+    try {
+        return entityManager.createQuery(
+            "SELECT s FROM StockMedicament s WHERE s.presentation.id = :presId AND s.numeroLot = :lot", 
+            StockMedicament.class)
+            .setParameter("presId", presentation.getId())
+            .setParameter("lot", numeroLot)
+            .getSingleResult();
+    } catch (jakarta.persistence.NoResultException e) {
+        return null;
     }
 }
 
@@ -1608,6 +1726,7 @@ private CisCipBdpm findOrCreateCisCipBdpm(String codeCip13) {
         newCip.setLibellePresentation("Présentation temporaire " + codeCip13);
         newCip.setEtatCommercialisation("Inconnu");
         entityManager.persist(newCip);
+        entityManager.flush(); // Ajout d'un flush explicite pour générer l'ID
         
         return newCip;
     }
@@ -1628,6 +1747,7 @@ private CisBdpm findOrCreateCisBdpm(String codeCis) {
         newCis.setFormePharmaceutique("Inconnue");
         newCis.setDateAMM(new Date());
         entityManager.persist(newCis);
+        entityManager.flush(); // Ajout d'un flush explicite pour générer l'ID
         
         return newCis;
     }

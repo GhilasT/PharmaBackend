@@ -2,7 +2,7 @@ spring:
   application:
     name: pharmacie
   datasource:
-    url: jdbc:postgresql://localhost:5432/pharmacie_db
+    url: jdbc:postgresql://localhost:5434/pharmacie_db
     username: dev
     password: dev
     driver-class-name: org.postgresql.Driver

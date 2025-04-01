@@ -31,32 +31,27 @@ public class MedicamentController {
     }
 
     // recuperer un medicament  à partir de son ID
-    @GetMapping("/{id}")
+    @GetMapping("/id/{id}")
     public MedicamentResponse getOne(@PathVariable Long id) {
         return medicamentService.getMedicamentById(id);
     }
 
-    // recuperer la liste des medicament
-    @GetMapping
-    public List<MedicamentResponse> getAll() {
-        return medicamentService.getAll();
-    }
 
     // maitre a jour
-    @PutMapping("/{id}")
+    @PutMapping("/id/{id}")
     public MedicamentResponse update(@PathVariable Long id, @RequestBody MedicamentRequest request) {
         return medicamentService.updateMedicament(id, request);
     }
 
     // supprimer
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/id/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long id) {
         medicamentService.deleteMedicament(id);
     }
 
     // vérifier si ordonnance est requise
-    @GetMapping("/{id}/ordonnance")
+    @GetMapping("/id/{id}/ordonnance")
     public boolean checkOrdonnance(@PathVariable Long id) {
         return medicamentService.isOrdonnanceRequise(id);
     }
