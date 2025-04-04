@@ -4,6 +4,7 @@ import l3o2.pharmacie.api.model.dto.request.AdministrateurCreateRequest;
 import l3o2.pharmacie.api.model.dto.request.AdministrateurUpdateRequest;
 import l3o2.pharmacie.api.model.dto.response.AdministrateurResponse;
 import l3o2.pharmacie.api.model.entity.Administrateur;
+import l3o2.pharmacie.api.model.entity.PosteEmploye;
 import l3o2.pharmacie.api.repository.AdministrateurRepository;
 import lombok.RequiredArgsConstructor;
 import java.util.List;
@@ -48,7 +49,7 @@ public class AdministrateurService {
                 .dateEmbauche(request.getDateEmbauche())
                 .salaire(request.getSalaire())
                 .statutContrat(request.getStatutContrat())
-                .poste(request.getPoste()) // Poste spécifique
+                .poste(PosteEmploye.ADMINISTRATEUR) // Poste spécifique
                 .diplome(request.getDiplome()) // Diplôme éventuel
                 .build();
 

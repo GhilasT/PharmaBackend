@@ -42,11 +42,9 @@ public class AdministrateurCreateRequest {
     private Date dateEmbauche;
     @NotNull
     private Double salaire;
-    @NotBlank(message = "Le poste est obligatoire")
-    @Pattern(regexp = "ADMINISTRATEUR", message = "Poste invalide pour un ADMINISTRATEUR")
+
     private PosteEmploye poste;
 
-    @NotBlank 
     private StatutContrat statutContrat;
     private String diplome;
     @NotBlank 
