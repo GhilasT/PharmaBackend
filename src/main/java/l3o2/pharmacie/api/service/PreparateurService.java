@@ -1,7 +1,9 @@
 package l3o2.pharmacie.api.service;
 
 import l3o2.pharmacie.api.model.dto.request.PreparateurCreateRequest;
+import l3o2.pharmacie.api.model.dto.request.PreparateurUpdateRequest;
 import l3o2.pharmacie.api.model.dto.response.PreparateurResponse;
+import l3o2.pharmacie.api.model.entity.PosteEmploye;
 import l3o2.pharmacie.api.model.entity.Preparateur;
 import l3o2.pharmacie.api.repository.PreparateurRepository;
 import lombok.RequiredArgsConstructor;
@@ -45,7 +47,7 @@ public class PreparateurService {
                 .adresse(request.getAdresse() != null ? request.getAdresse().trim() : null)
                 .dateEmbauche(request.getDateEmbauche())
                 .salaire(request.getSalaire())
-                .poste(request.getPoste())
+                .poste(PosteEmploye.PREPARATEUR)
                 .statutContrat(request.getStatutContrat())
                 .diplome(request.getDiplome() != null ? request.getDiplome().trim() : null)
                 .emailPro(request.getEmailPro().trim())
@@ -123,4 +125,39 @@ public class PreparateurService {
                 .emailPro(entity.getEmailPro())
                 .build();
     }
+    public PreparateurResponse updatePreparateur(UUID id, PreparateurUpdateRequest request) {
+    Preparateur preparateur = preparateurRepository.findById(id)
+        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Préparateur non trouvé"));
+
+    // Mise à jour des champs
+    if (request.getNom() != null) preparateur.setNom(request.getNom().trim());
+    if (request.getPrenom() != null) preparateur.setPrenom(request.getPrenom().trim());
+    if (request.getEmail() != null) preparateur.setEmail(request.getEmail().toLowerCase().trim());
+    if (request.getTelephone() != null) preparateur.setTelephone(request.getTelephone().replaceAll("\\s+", ""));
+    if (request.getAdresse() != null) preparateur.setAdresse(request.getAdresse().trim());
+    if (request.getPassword() != null) preparateur.setPassword(request.getPassword());
+    if (request.getDateEmbauche() != null) preparateur.setDateEmbauche(request.getDateEmbauche());
+    if (request.getSalaire() != null) preparateur.setSalaire(request.getSalaire());
+    if (request.getPoste() != null) preparateur.setPoste(request.getPoste());
+    if (request.getStatutContrat() != null) preparateur.setStatutContrat(request.getStatutContrat());
+    if (request.getDiplome() != null) preparateur.setDiplome(request.getDiplome());
+    
+    if (request.getEmailPro() != null) {
+        if (!preparateur.getEmailPro().equals(request.getEmailPro()) 
+            && employeService.existsByEmailPro(request.getEmailPro().trim())) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Email professionnel déjà utilisé");
+        }
+        preparateur.setEmailPro(request.getEmailPro().trim());
+    }
+
+    Preparateur updated = preparateurRepository.save(preparateur);
+    return mapToResponse(updated);
+}
+
+public List<PreparateurResponse> searchPreparateurs(String searchTerm) {
+    String normalizedTerm = searchTerm.toLowerCase().trim();
+    return preparateurRepository.searchByNomPrenom(normalizedTerm).stream()
+        .map(this::mapToResponse)
+        .toList();
+}
 }

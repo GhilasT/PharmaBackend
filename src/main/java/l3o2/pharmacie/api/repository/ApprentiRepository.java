@@ -2,6 +2,8 @@ package l3o2.pharmacie.api.repository;
 
 import l3o2.pharmacie.api.model.entity.Apprenti;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -42,4 +44,9 @@ public interface ApprentiRepository extends JpaRepository<Apprenti, UUID> {
      */
     List<Apprenti> findAll();
 
+    @Query("SELECT a FROM Apprenti a WHERE " +
+       "LOWER(a.nom) LIKE LOWER(CONCAT('%', :term, '%')) OR " +
+       "LOWER(a.prenom) LIKE LOWER(CONCAT('%', :term, '%')) OR " +
+       "LOWER(CONCAT(a.nom, ' ', a.prenom)) LIKE LOWER(CONCAT('%', :term, '%'))")
+    List<Apprenti> searchByTerm(@Param("term") String term);
 }

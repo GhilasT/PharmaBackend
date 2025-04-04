@@ -1,6 +1,7 @@
 package l3o2.pharmacie.api.service;
 
 import l3o2.pharmacie.api.model.dto.request.PharmacienAdjointCreateRequest;
+import l3o2.pharmacie.api.model.dto.request.PharmacienAdjointUpdateRequest;
 import l3o2.pharmacie.api.model.dto.response.PharmacienAdjointResponse;
 import l3o2.pharmacie.api.model.entity.PharmacienAdjoint;
 import l3o2.pharmacie.api.repository.EmployeRepository;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Service gérant la logique métier des pharmaciens adjoints.
@@ -107,4 +109,46 @@ public class PharmacienAdjointService {
                 .map(this::mapToResponse)
                 .toList();
     }
+public void deletePharmacienAdjoint(UUID id) {
+    if (!pharmacienAdjointRepository.existsById(id)) {
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Pharmacien adjoint non trouvé");
+    }
+    pharmacienAdjointRepository.deleteById(id);
+}
+
+public PharmacienAdjointResponse updatePharmacienAdjoint(UUID id, PharmacienAdjointUpdateRequest request) {
+    PharmacienAdjoint pharmacien = pharmacienAdjointRepository.findById(id)
+        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Pharmacien adjoint non trouvé"));
+
+    // Mise à jour des champs
+    if (request.getNom() != null) pharmacien.setNom(request.getNom().trim());
+    if (request.getPrenom() != null) pharmacien.setPrenom(request.getPrenom().trim());
+    if (request.getEmail() != null) pharmacien.setEmail(request.getEmail().toLowerCase().trim());
+    if (request.getTelephone() != null) pharmacien.setTelephone(request.getTelephone().replaceAll("\\s+", ""));
+    if (request.getAdresse() != null) pharmacien.setAdresse(request.getAdresse().trim());
+    if (request.getPassword() != null) pharmacien.setPassword(request.getPassword());
+    if (request.getDateEmbauche() != null) pharmacien.setDateEmbauche(request.getDateEmbauche());
+    if (request.getSalaire() != null) pharmacien.setSalaire(request.getSalaire());
+    if (request.getPoste() != null) pharmacien.setPoste(request.getPoste());
+    if (request.getStatutContrat() != null) pharmacien.setStatutContrat(request.getStatutContrat());
+    if (request.getDiplome() != null) pharmacien.setDiplome(request.getDiplome());
+    
+    if (request.getEmailPro() != null) {
+        if (!pharmacien.getEmailPro().equals(request.getEmailPro()) 
+            && employeService.existsByEmailPro(request.getEmailPro().trim())) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Email professionnel déjà utilisé");
+        }
+        pharmacien.setEmailPro(request.getEmailPro().trim());
+    }
+
+    PharmacienAdjoint updated = pharmacienAdjointRepository.save(pharmacien);
+    return mapToResponse(updated);
+}
+
+public List<PharmacienAdjointResponse> searchPharmaciensAdjoints(String searchTerm) {
+    String normalizedTerm = searchTerm.toLowerCase().trim();
+    return pharmacienAdjointRepository.searchByNomPrenom(normalizedTerm).stream()
+        .map(this::mapToResponse)
+        .toList();
+}
 }

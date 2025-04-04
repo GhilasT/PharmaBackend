@@ -1,6 +1,7 @@
 package l3o2.pharmacie.api.controller;
 
 import l3o2.pharmacie.api.model.dto.request.ApprentiCreateRequest;
+import l3o2.pharmacie.api.model.dto.request.ApprentiUpdateRequest;
 import l3o2.pharmacie.api.model.dto.response.ApprentiResponse;
 import l3o2.pharmacie.api.service.ApprentiService;
 import lombok.RequiredArgsConstructor;
@@ -64,4 +65,19 @@ public class ApprentiController {
         apprentiService.deleteApprenti(id);
         return ResponseEntity.ok("Apprenti supprimé avec succès.");
     }
+
+    @PutMapping("/{id}")
+public ResponseEntity<ApprentiResponse> updateApprenti(
+        @PathVariable UUID id,
+        @Valid @RequestBody ApprentiUpdateRequest request) {
+    ApprentiResponse updatedApprenti = apprentiService.updateApprenti(id, request);
+    return ResponseEntity.ok(updatedApprenti);
+}
+
+@GetMapping("/search")
+public ResponseEntity<List<ApprentiResponse>> searchApprentis(
+        @RequestParam String term) {
+    List<ApprentiResponse> results = apprentiService.searchApprentis(term);
+    return ResponseEntity.ok(results);
+}
 }

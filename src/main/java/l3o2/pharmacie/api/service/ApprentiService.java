@@ -1,8 +1,10 @@
 package l3o2.pharmacie.api.service;
 
 import l3o2.pharmacie.api.model.dto.request.ApprentiCreateRequest;
+import l3o2.pharmacie.api.model.dto.request.ApprentiUpdateRequest;
 import l3o2.pharmacie.api.model.dto.response.ApprentiResponse;
 import l3o2.pharmacie.api.model.entity.Apprenti;
+import l3o2.pharmacie.api.model.entity.PosteEmploye;
 import l3o2.pharmacie.api.repository.ApprentiRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -45,7 +47,7 @@ public class ApprentiService {
                 .adresse(request.getAdresse() != null ? request.getAdresse().trim() : null)
                 .dateEmbauche(request.getDateEmbauche())
                 .salaire(request.getSalaire())
-                .poste(request.getPoste())
+                .poste(PosteEmploye.APPRENTI)
                 .statutContrat(request.getStatutContrat())
                 .diplome(request.getDiplome() != null ? request.getDiplome().trim() : null)
                 .ecole(request.getEcole().trim())
@@ -125,4 +127,47 @@ public class ApprentiService {
                 .emailPro(entity.getEmailPro())
                 .build();
     }
+    // Méthode de mise à jour
+@Transactional
+public ApprentiResponse updateApprenti(UUID id, ApprentiUpdateRequest request) {
+    Apprenti existing = apprentiRepository.findById(id)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Apprenti non trouvé"));
+
+    if (request.getNom() != null) existing.setNom(request.getNom().trim());
+    if (request.getPrenom() != null) existing.setPrenom(request.getPrenom().trim());
+    if (request.getEmail() != null) existing.setEmail(request.getEmail().toLowerCase().trim());
+    if (request.getTelephone() != null) existing.setTelephone(request.getTelephone().replaceAll("\\s+", ""));
+    if (request.getAdresse() != null) existing.setAdresse(request.getAdresse().trim());
+    if (request.getDateEmbauche() != null) existing.setDateEmbauche(request.getDateEmbauche());
+    if (request.getSalaire() != null) existing.setSalaire(request.getSalaire());
+    if (request.getPoste() != null) existing.setPoste(request.getPoste());
+    if (request.getStatutContrat() != null) existing.setStatutContrat(request.getStatutContrat());
+    if (request.getDiplome() != null) existing.setDiplome(request.getDiplome().trim());
+    if (request.getEcole() != null) existing.setEcole(request.getEcole().trim());
+    if (request.getPassword() != null) existing.setPassword(request.getPassword());
+
+    // Vérification de l'email professionnel
+    if (request.getEmailPro() != null && !request.getEmailPro().equals(existing.getEmailPro())) {
+        if (employeService.existsByEmailPro(request.getEmailPro())) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Email professionnel déjà utilisé");
+        }
+        existing.setEmailPro(request.getEmailPro().trim());
+    }
+
+    try {
+        Apprenti updated = apprentiRepository.save(existing);
+        return mapToResponse(updated);
+    } catch (DataIntegrityViolationException e) {
+        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Données invalides");
+    }
+}
+
+@Transactional(readOnly = true)
+public List<ApprentiResponse> searchApprentis(String term) {
+    String searchTerm = term.toLowerCase();
+    List<Apprenti> apprentis = apprentiRepository.searchByTerm("%" + searchTerm + "%");
+    return apprentis.stream()
+            .map(this::mapToResponse)
+            .collect(Collectors.toList());
+}
 }

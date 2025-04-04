@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
 import java.time.LocalDate;
 import java.util.UUID;
 
@@ -27,7 +28,7 @@ public class AdministrateurResponse {
 
     // Employe
     private String matricule;
-    private LocalDate dateEmbauche;
+    private Date dateEmbauche;
     private Double salaire;
     private PosteEmploye poste;
     private StatutContrat statutContrat;

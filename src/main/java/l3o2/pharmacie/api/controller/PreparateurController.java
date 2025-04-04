@@ -1,6 +1,7 @@
 package l3o2.pharmacie.api.controller;
 
 import l3o2.pharmacie.api.model.dto.request.PreparateurCreateRequest;
+import l3o2.pharmacie.api.model.dto.request.PreparateurUpdateRequest;
 import l3o2.pharmacie.api.model.dto.response.PreparateurResponse;
 import l3o2.pharmacie.api.service.PreparateurService;
 import lombok.RequiredArgsConstructor;
@@ -59,4 +60,19 @@ public class PreparateurController {
         preparateurService.deletePreparateur(id);
         return ResponseEntity.noContent().build();
     }
+
+    @PutMapping("/{id}")
+public ResponseEntity<PreparateurResponse> updatePreparateur(
+        @PathVariable UUID id,
+        @Valid @RequestBody PreparateurUpdateRequest request) {
+    PreparateurResponse response = preparateurService.updatePreparateur(id, request);
+    return ResponseEntity.ok(response);
+}
+
+@GetMapping("/search")
+public ResponseEntity<List<PreparateurResponse>> searchPreparateurs(
+        @RequestParam String term) {
+    List<PreparateurResponse> responses = preparateurService.searchPreparateurs(term);
+    return ResponseEntity.ok(responses);
+}
 }

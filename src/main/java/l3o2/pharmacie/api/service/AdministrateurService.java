@@ -122,6 +122,7 @@ public class AdministrateurService {
         if (request.getSalaire() != null) admin.setSalaire(request.getSalaire());
         if (request.getStatutContrat() != null) admin.setStatutContrat(request.getStatutContrat());
         if (request.getDiplome() != null) admin.setDiplome(request.getDiplome());
+        
 
         return mapToResponse(administrateurRepository.save(admin));
     }
@@ -157,6 +158,8 @@ public class AdministrateurService {
                 .salaire(entity.getSalaire())
                 .statutContrat(entity.getStatutContrat())
                 .diplome(entity.getDiplome())
+                .dateEmbauche(entity.getDateEmbauche())
+                .poste(entity.getPoste()) // Poste spécifique
                 .build();
     }
 }
