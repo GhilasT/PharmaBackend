@@ -30,6 +30,4 @@ public class AdministrateurUpdateRequest {
     // Champ spécifique à Administrateur
     private String role;
     
-    // TODO : Password devrait être dans un DTO dédié
-    private String password;
 }

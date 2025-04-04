@@ -7,6 +7,7 @@ import l3o2.pharmacie.api.model.entity.Administrateur;
 import l3o2.pharmacie.api.repository.AdministrateurRepository;
 import lombok.RequiredArgsConstructor;
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -106,9 +107,9 @@ public class AdministrateurService {
      * @return L'administrateur mis à jour sous forme de DTO.
      * @throws ResponseStatusException si l'administrateur n'est pas trouvé.
      */
-    public AdministrateurResponse updateAdministrateur(String matricule, AdministrateurUpdateRequest request) {
-        Administrateur admin = administrateurRepository.findByMatricule(matricule)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Administrateur non trouvé"));
+    public AdministrateurResponse updateAdministrateur(UUID id, AdministrateurUpdateRequest request) {
+        Administrateur admin = administrateurRepository.findById(id) // Recherche par UUID
+        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Administrateur non trouvé"));
 
         if (request.getNom() != null) admin.setNom(request.getNom().trim());
         if (request.getPrenom() != null) admin.setPrenom(request.getPrenom().trim());
@@ -129,12 +130,12 @@ public class AdministrateurService {
      * @param matricule Matricule unique de l'administrateur à supprimer.
      * @throws ResponseStatusException si l'administrateur n'existe pas.
      */
-    public void deleteAdministrateur(String matricule) {
-        if (!administrateurRepository.existsByMatricule(matricule)) {
+    public void deleteAdministrateur(UUID id) {
+        if (!administrateurRepository.existsById(id)) { // Vérification par UUID
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Administrateur non trouvé");
         }
-        administrateurRepository.deleteByMatricule(matricule);
-    }
+        administrateurRepository.deleteById(id); // Suppression par UUID
+    }   
 
     /**
      * Convertit une entité Administrateur en DTO AdministrateurResponse.

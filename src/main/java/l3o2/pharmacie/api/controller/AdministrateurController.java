@@ -7,6 +7,8 @@ import l3o2.pharmacie.api.service.AdministrateurService;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
+import java.util.UUID;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +17,7 @@ import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/administrateurs")
+@CrossOrigin(origins = "*")
 @RequiredArgsConstructor
 public class AdministrateurController {
 
@@ -40,16 +43,15 @@ public class AdministrateurController {
     
     @PutMapping("/{id}")
     public ResponseEntity<AdministrateurResponse> updateAdministrateur(
-        @PathVariable String id,
-            @Valid @RequestBody AdministrateurUpdateRequest request) {
+        @PathVariable UUID id,
+        @Valid @RequestBody AdministrateurUpdateRequest request) {
         AdministrateurResponse updatedAdmin = administrateurService.updateAdministrateur(id, request);
         return ResponseEntity.ok(updatedAdmin);
     }
     
-
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteAdministrateur(@PathVariable String matricule) {
-        administrateurService.deleteAdministrateur(matricule);
+    public ResponseEntity<Void> deleteAdministrateur(@PathVariable("id") UUID id) {
+        administrateurService.deleteAdministrateur(id);
         return ResponseEntity.noContent().build();
     }
     @GetMapping("/search")
