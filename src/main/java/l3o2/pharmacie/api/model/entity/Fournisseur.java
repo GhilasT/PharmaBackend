@@ -38,7 +38,7 @@ public class Fournisseur {
 
     @Column(nullable = false)
     // Nom de la société du fournisseur.
-    private String nomsociete;
+    private String nomSociete;
 
     @Column(nullable = true)
     // Fonction ou rôle du fournisseur.

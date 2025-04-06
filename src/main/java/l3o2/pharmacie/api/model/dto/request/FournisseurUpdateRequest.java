@@ -1,9 +1,7 @@
 package l3o2.pharmacie.api.model.dto.request;
 
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,24 +11,16 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class FournisseurCreateRequest {
-
-    @NotBlank(message = "Le nom de la société est obligatoire")
+public class FournisseurUpdateRequest {
     private String nomSociete;
-
-
     private String sujetFonction;
-
-    @NotBlank(message = "Le téléphone est obligatoire")
+    
+    @Pattern(regexp = "^(\\+?[0-9\\s-]{6,15})$", message = "Le numéro de téléphone doit contenir entre 6 et 15 chiffres")
     private String telephone;
-
-
+    
     private String fax;
-
-    @NotBlank(message = "L'adresse est obligatoire")
     private String adresse;
-
-    @NotBlank(message = "L'email est obligatoire")
+    
     @Email(message = "L'email doit être valide")
     private String email;
 }

@@ -34,7 +34,7 @@ public class PharmacienAdjointCreateRequest {
 
     // Champs de Employe
     @NotBlank(message = "Le mot de passe est obligatoire")
-    @Size(min = 8, message = "Le mot de passe doit contenir au moins 8 caractères")
+    @Size(min = 6, message = "Le mot de passe doit contenir au moins 8 caractères")
     private String password;
 
     @NotNull(message = "La date d'embauche est obligatoire")
@@ -44,11 +44,8 @@ public class PharmacienAdjointCreateRequest {
     @Positive(message = "Le salaire doit être positif")
     private Double salaire;
 
-    @NotBlank(message = "Le poste est obligatoire")
-    @Pattern(regexp = "PHARMACIEN_ADJOINT", message = "Poste invalide pour un pharmacien adjoint")
     private PosteEmploye poste;
 
-    @NotBlank(message = "Le statut du contrat est obligatoire")
     private StatutContrat statutContrat;
 
     private String diplome; // Optionnel

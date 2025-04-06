@@ -12,7 +12,7 @@ import java.util.UUID;
 @AllArgsConstructor
 public class FournisseurResponse {
     private UUID idFournisseur;
-    private String nomsociete;
+    private String nomSociete;
     private String sujetFonction;
     private String telephone;
     private String fax;

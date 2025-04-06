@@ -2,6 +2,8 @@ package l3o2.pharmacie.api.repository;
 
 import l3o2.pharmacie.api.model.entity.Medecin;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -70,4 +72,13 @@ public interface MedecinRepository extends JpaRepository<Medecin, UUID> {
      * @return true si un médecin avec cet email existe, sinon false.
      */
     boolean existsByEmail(String email);
+
+
+    @Query("SELECT m FROM Medecin m WHERE " +
+       "LOWER(CONCAT(m.prenom, ' ', m.nom)) LIKE LOWER(CONCAT('%', :query, '%')) OR " +
+       "LOWER(CONCAT(m.nom, ' ', m.prenom)) LIKE LOWER(CONCAT('%', :query, '%')) OR " +
+       "LOWER(m.nom) LIKE LOWER(CONCAT('%', :query, '%')) OR " +
+       "LOWER(m.prenom) LIKE LOWER(CONCAT('%', :query, '%'))")
+    List<Medecin> searchByNomPrenomCombinaison(@Param("query") String query);
+    
 }

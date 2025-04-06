@@ -95,7 +95,10 @@ public class MedecinService {
         if (query == null || query.trim().isEmpty()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Le paramètre de recherche ne peut pas être vide.");
         }
-        return medecinRepository.findByNomContainsIgnoreCaseOrPrenomContainsIgnoreCase(query, query)
+        
+        String cleanedQuery = query.trim().toLowerCase().replaceAll("\\s+", " ");
+        
+        return medecinRepository.searchByNomPrenomCombinaison(cleanedQuery)
                 .stream()
                 .map(this::mapToResponse)
                 .toList();

@@ -36,11 +36,8 @@ public class PreparateurCreateRequest {
     @NotNull(message = "Le salaire est obligatoire")
     private Double salaire;
 
-    @NotBlank(message = "Le poste est obligatoire")
-    @Pattern(regexp = "PREPARATEUR", message = "Poste invalide pour un PREPARATEUR")
     private PosteEmploye poste;
 
-    @NotBlank(message = "Le statut du contrat est obligatoire")
     private StatutContrat statutContrat;
 
     private String diplome;

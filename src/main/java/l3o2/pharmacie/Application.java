@@ -26,7 +26,7 @@ public class Application {
         SpringApplication.run(Application.class, args);
     }
 
-    /*@Bean
+    @Bean
     @Transactional
     public CommandLineRunner initialDataLoader(PharmacienAdjointService pharmacienService,
                                                EmployeService employeService,
@@ -47,7 +47,7 @@ public class Application {
                                                CommandeService commandeService) {
         return args -> {
             try {
-
+/* 
                 //  Ajouter un pharmacien adjoint
 
                 UUID pharmacienAdjointId = null;
@@ -168,7 +168,7 @@ public class Application {
                 }
 
                 // Ajouter un apprenti
-                String emailProApprenti = "apprenti.pro@example.com";
+                */String emailProApprenti = "apprenti.pro@example.com";
                 if (!employeService.existsByEmailPro(emailProApprenti)) {
                     ApprentiCreateRequest requestApprenti = ApprentiCreateRequest.builder()
                             .nom("Apprenti")
@@ -189,7 +189,7 @@ public class Application {
                 } else {
                     System.out.println("!! Apprenti avec email pro '" + emailProApprenti + "' existe déjà.");
                 }
-
+/* 
                 // Ajouter un préparateur
                 String emailProPrepa = "preparateur.pro@example.com";
                 if (!employeService.existsByEmailPro(emailProPrepa)) {
@@ -255,7 +255,7 @@ public class Application {
                 String emailFournisseur = "fournisseur@example.com";
                 if (!fournisseurService.existsByEmail(emailFournisseur)) {
                     FournisseurCreateRequest requestFournisseur = FournisseurCreateRequest.builder()
-                            .nomsociete("Fournisseur Test")
+                            .nomSociete("Fournisseur Test")
                             .email(emailFournisseur)
                             .telephone("0612345689")
                             .adresse("10 Rue des Fournisseurs")
@@ -526,10 +526,10 @@ public class Application {
                 employeService.getAllEmployes().forEach(employe -> {
                     System.out.println(employe.getNom() + " " + employe.getPrenom() + " - " + employe.getEmailPro());
                 });
-
+*/
             } catch (Exception e) {
                 System.err.println(" Erreur lors de l'initialisation des données : " + e.getMessage());
             }
         };
-    }*/
+    }
 }

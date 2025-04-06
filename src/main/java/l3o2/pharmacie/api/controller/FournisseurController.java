@@ -1,6 +1,7 @@
 package l3o2.pharmacie.api.controller;
 
 import l3o2.pharmacie.api.model.dto.request.FournisseurCreateRequest;
+import l3o2.pharmacie.api.model.dto.request.FournisseurUpdateRequest;
 import l3o2.pharmacie.api.model.dto.response.FournisseurResponse;
 import l3o2.pharmacie.api.service.FournisseurService;
 import lombok.RequiredArgsConstructor;
@@ -49,4 +50,22 @@ public class FournisseurController {
         FournisseurResponse fournisseur = fournisseurService.getFournisseurByTelephone(telephone);
         return ResponseEntity.ok(fournisseur);
     }
+    @PutMapping("/{id}")
+public ResponseEntity<FournisseurResponse> updateFournisseur(
+        @PathVariable UUID id,
+        @Valid @RequestBody FournisseurUpdateRequest request) {
+    FournisseurResponse response = fournisseurService.updateFournisseur(id, request);
+    return ResponseEntity.ok(response);
+}
+
+@DeleteMapping("/{id}")
+public ResponseEntity<Void> deleteFournisseur(@PathVariable UUID id) {
+    fournisseurService.deleteFournisseur(id);
+    return ResponseEntity.noContent().build();
+}
+@GetMapping("/search")
+public ResponseEntity<List<FournisseurResponse>> searchFournisseurs(
+        @RequestParam(name = "q") String query) {
+    return ResponseEntity.ok(fournisseurService.searchFournisseurs(query));
+}
 }
