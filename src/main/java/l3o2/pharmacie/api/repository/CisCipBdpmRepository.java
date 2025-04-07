@@ -10,4 +10,6 @@ import java.util.Optional;
 public interface CisCipBdpmRepository extends JpaRepository<CisCipBdpm, Long> {
     Optional<CisCipBdpm> findByCodeCip13(String codeCip13);
     Optional<CisCipBdpm> findById(Long id);
+    //Ajout pour rechercher par code CIS
+    Optional<CisCipBdpm> findFirstByCisBdpm_CodeCis(String codeCis);
 }

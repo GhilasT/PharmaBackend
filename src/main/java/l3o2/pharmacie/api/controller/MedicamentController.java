@@ -80,7 +80,15 @@ public ResponseEntity<Map<String, Object>> getPage(
         "totalElements", resultPage.getTotalElements()
     ));
 }
-    
+
+@GetMapping("/search/all")
+public ResponseEntity<List<StockMedicamentDTO>> searchAllMedicaments(
+    @RequestParam(required = false) String searchTerm
+) {
+    List<StockMedicamentDTO> results = stockMedicamentService.searchAllMedicaments(searchTerm);
+    return ResponseEntity.ok(results);
+}
+
     /**
      * Recherche des médicaments par terme de recherche.
      * 

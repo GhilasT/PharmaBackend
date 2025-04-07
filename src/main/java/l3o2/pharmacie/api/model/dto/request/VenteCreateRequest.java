@@ -26,7 +26,7 @@ public class VenteCreateRequest {
     private UUID clientId;
 
     @NotNull(message = "La liste des médicaments est obligatoire")
-    private List<MedicamentPanier> medicaments;
+    private List<MedicamentPanierRequest> medicaments;
 
     @NotNull(message = "La date Vente est obligatoire")
     private Date dateVente;
@@ -39,4 +39,6 @@ public class VenteCreateRequest {
 
     @NotNull(message = "Le montant remboursé est obligatoire")
     private double montantRembourse;
+
+    private boolean ordonnanceAjoutee;
 }

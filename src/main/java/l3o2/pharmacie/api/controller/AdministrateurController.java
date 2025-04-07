@@ -49,6 +49,7 @@ public class AdministrateurController {
         return ResponseEntity.ok(updatedAdmin);
     }
     
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteAdministrateur(@PathVariable("id") UUID id) {
         administrateurService.deleteAdministrateur(id);

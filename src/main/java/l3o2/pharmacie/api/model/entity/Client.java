@@ -33,10 +33,5 @@ public class Client extends Personne {
     // Mutuelle associée au client (optionnel).
     private String mutuelle;
 
-    /**
-     * Effectuer l'achat de médicaments par un client.
-     */
-    public void acheterMedicament() {
-        System.out.println("Effectuer un achat de medicaments.");
-    }
+
 }

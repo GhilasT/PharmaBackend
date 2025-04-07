@@ -19,17 +19,16 @@ public class ClientCreateRequest {
     @NotBlank(message = "Le prénom ne peut pas être vide")
     private String prenom;
 
-    @NotBlank(message = "L'email ne peut pas être vide")
-    @Email(message = "Email invalide")
+
     private String email;
 
     @NotBlank(message = "Le numéro de téléphone ne peut pas être vide")
     private String telephone;
 
-    @NotBlank(message = "L'adresse ne peut pas être vide")
+
     private String adresse;
 
-    @Size(min = 6, message = "Le mot de passe doit contenir au moins 6 caractères")
+
     private String password;
 
     private String numeroSecu;

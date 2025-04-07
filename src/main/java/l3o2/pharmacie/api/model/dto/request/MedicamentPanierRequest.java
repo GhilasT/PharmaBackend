@@ -10,6 +10,6 @@ import java.util.UUID;
 @Builder
 public class MedicamentPanierRequest {
 
-    private Long id;
+    private String codeCip13;
     private int quantite;
 }

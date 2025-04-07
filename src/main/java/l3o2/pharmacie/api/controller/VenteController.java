@@ -18,9 +18,12 @@ public class VenteController {
 
     private final VenteService venteService;
 
+
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public VenteResponse createVente(@RequestBody VenteCreateRequest request) {
+        System.out.println("📥 Vente reçue : " + request);
+        request.getMedicaments().forEach(m -> System.out.println("📦 Médicament reçu - CodeCIS: " + m.getCodeCip13() + ", Quantité: " + m.getQuantite()));
         return venteService.createVente(request);
     }
 
@@ -39,4 +42,6 @@ public class VenteController {
     public void deleteVente(@PathVariable UUID id) {
         venteService.delete(id);
     }
+
+
 }

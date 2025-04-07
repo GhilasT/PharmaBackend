@@ -51,4 +51,6 @@ public interface MedicamentRepository extends JpaRepository<StockMedicament, Lon
     "LOWER(s.presentation.libellePresentation) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR " +
     "LOWER(s.presentation.cisBdpm.codeCis) LIKE LOWER(CONCAT('%', :searchTerm, '%'))")
 Page<StockMedicament> searchByLibelleOrCodeCIS(@Param("searchTerm") String searchTerm, Pageable pageable);
+
+    Optional<StockMedicament> findTopByPresentation_CodeCip13OrderByDateMiseAJourDesc(String codeCip13);
 }

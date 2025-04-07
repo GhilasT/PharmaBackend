@@ -28,55 +28,71 @@ public class StockMedicamentService {
     public Page<StockMedicamentDTO> getMedicamentsPagines(int page) {
         Pageable pageable = PageRequest.of(page, PAGE_SIZE);
         return stockMedicamentRepository.findAll(pageable)
-            .map(this::convertToStockMedicamentDTO);
+                .map(this::convertToStockMedicamentDTO);
+    }
+
+    public List<StockMedicamentDTO> searchAllMedicaments(String searchTerm) {
+        Pageable limit = PageRequest.of(0, 20); // Limite à 50 résultats
+        Page<StockMedicament> stockPage;
+
+        if (StringUtils.hasText(searchTerm)) {
+            stockPage = stockMedicamentRepository.searchByLibelleOrCodeCIS(searchTerm.toLowerCase(), limit);
+        } else {
+            stockPage = stockMedicamentRepository.findAll(limit);
+        }
+
+        return stockPage.getContent()
+                .stream()
+                .map(this::convertToStockMedicamentDTO)
+                .collect(Collectors.toList());
     }
 
     // Méthode pour la recherche paginée
     public Page<StockMedicamentDTO> searchMedicamentsPagines(String searchTerm, int page) {
         Pageable pageable = PageRequest.of(page, PAGE_SIZE);
+        System.out.println("Recherche dans le backend : [" + searchTerm + "] (page " + page + ")");
+
         Page<StockMedicament> stockPage;
-    
+
         if (searchTerm == null || searchTerm.isBlank()) {
             stockPage = stockMedicamentRepository.findAll(pageable);
         } else {
             stockPage = stockMedicamentRepository.searchByLibelleOrCodeCIS(searchTerm.toLowerCase(), pageable);
         }
-    
+
         return stockPage.map(this::convertToStockMedicamentDTO);
     }
-    
 
     // Conversion d'une entité vers DTO
     private StockMedicamentDTO convertToStockMedicamentDTO(StockMedicament stock) {
         CisBdpm cisBdpm = stock.getPresentation().getCisBdpm();
         CisCipBdpm cisCipBdpm = stock.getPresentation();
-        
+
         String codeCIS = cisBdpm.getCodeCis();
         String libelle = cisCipBdpm.getLibellePresentation();
         String denomination = cisBdpm.getDenomination();
+        String codeCip13 = cisCipBdpm.getCodeCip13();
 
         String dosage = "Aucun";
         String reference = "Aucun";
         List<CisCompoBdpm> compositions = cisBdpm.getCompositions();
-        
+
         if (!compositions.isEmpty()) {
             List<CisCompoBdpm> substancesActives = compositions.stream()
-                .filter(comp -> "SA".equals(comp.getNatureComposant()))
-                .collect(Collectors.toList());
-            
-                if (!substancesActives.isEmpty()) {
-                    CisCompoBdpm composition = substancesActives.get(0);
-                    dosage = StringUtils.hasText(composition.getDosage()) ? 
-                            composition.getDosage() : "Aucun";
-                    reference = StringUtils.hasText(composition.getReferenceDosage()) ? 
-                            composition.getReferenceDosage() : "Aucun";
-                }
+                    .filter(comp -> "SA".equals(comp.getNatureComposant()))
+                    .collect(Collectors.toList());
+
+            if (!substancesActives.isEmpty()) {
+                CisCompoBdpm composition = substancesActives.get(0);
+                dosage = StringUtils.hasText(composition.getDosage()) ? composition.getDosage() : "Aucun";
+                reference = StringUtils.hasText(composition.getReferenceDosage()) ? composition.getReferenceDosage()
+                        : "Aucun";
+            }
         }
 
-        String surOrdonnance = cisBdpm.getConditionsPrescription().isEmpty() ? 
-            "Sans" : "Avec";
+        String surOrdonnance = cisBdpm.getConditionsPrescription().isEmpty() ? "Sans" : "Avec";
         int stockQuantite = stock.getQuantite() != null ? stock.getQuantite() : 0;
-        
+
         // Récupération des informations de prix, agrément et remboursement
         java.math.BigDecimal prixHT = cisCipBdpm.getPrixHT();
         java.math.BigDecimal prixTTC = cisCipBdpm.getPrixTTC();
@@ -85,24 +101,26 @@ public class StockMedicamentService {
         String tauxRemboursement = cisCipBdpm.getTauxRemboursement();
 
         return StockMedicamentDTO.builder()
-            .codeCIS(codeCIS)
-            .libelle(libelle)
-            .denomination(denomination)
-            .dosage(dosage)
-            .reference(reference)
-            .surOrdonnance(surOrdonnance)
-            .stock(stockQuantite)
-            .prixHT(prixHT)
-            .prixTTC(prixTTC)
-            .taxe(taxe)
-            .agrementCollectivites(agrementCollectivites)
-            .tauxRemboursement(tauxRemboursement)
-            .build();
+                .codeCIS(codeCIS)
+                .libelle(libelle)
+                .denomination(denomination)
+                .dosage(dosage)
+                .reference(reference)
+                .surOrdonnance(surOrdonnance)
+                .stock(stockQuantite)
+                .prixHT(prixHT)
+                .prixTTC(prixTTC)
+                .taxe(taxe)
+                .agrementCollectivites(agrementCollectivites)
+                .tauxRemboursement(tauxRemboursement)
+                .codeCip13(codeCip13)
+                .build();
     }
+
     public Page<StockMedicamentDTO> searchByLibelleOrCodeCIS(String searchTerm, int page) {
         Pageable pageable = PageRequest.of(page, PAGE_SIZE);
         Page<StockMedicament> stockPage = stockMedicamentRepository.searchByLibelleOrCodeCIS(searchTerm, pageable);
         return stockPage.map(this::convertToStockMedicamentDTO);
     }
-    
+
 }
