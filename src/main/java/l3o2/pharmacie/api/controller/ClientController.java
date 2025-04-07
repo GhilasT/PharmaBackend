@@ -13,6 +13,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/client")
+@CrossOrigin(origins = "*")
 @RequiredArgsConstructor
 public class ClientController {
 
