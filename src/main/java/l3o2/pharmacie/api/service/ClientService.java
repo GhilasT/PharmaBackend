@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -30,22 +31,31 @@ public class ClientService {
      * @return ClientResponse contenant les informations du client créé.
      */
     public ClientResponse createClient(ClientCreateRequest request) {
-        // Vérification de l'unicité de l'email
-        if (clientRepository.existsByEmail(request.getEmail())) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "L'email est déjà utilisé");
+        // Normalisation du téléphone
+        String normalizedTelephone = request.getTelephone().trim().replaceAll("\\s+", "");
+
+        // Vérification par téléphone : s'il existe déjà, retourner le client existant
+        Optional<Client> clientOpt = clientRepository.findByTelephone(normalizedTelephone);
+        if (clientOpt.isPresent()) {
+            return mapToResponse(clientOpt.get());
         }
 
-        // Vérification de l'unicité du téléphone
-        if (clientRepository.findByTelephone(request.getTelephone().trim()).isPresent()) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Le téléphone est déjà utilisé");
+        // Traitement de l'email (non obligatoire)
+        String normalizedEmail = null;
+        if (request.getEmail() != null && !request.getEmail().trim().isEmpty()) {
+            normalizedEmail = request.getEmail().trim().toLowerCase();
+            // Vérification de l'unicité de l'email
+            if (clientRepository.existsByEmail(normalizedEmail)) {
+                throw new ResponseStatusException(HttpStatus.CONFLICT, "L'email est déjà utilisé");
+            }
         }
 
         // Création de l'objet Client
         Client client = Client.builder()
                 .nom(request.getNom().trim())
                 .prenom(request.getPrenom().trim())
-                .email(request.getEmail().trim().toLowerCase())
-                .telephone(request.getTelephone().replaceAll("\\s+", ""))
+                .email(normalizedEmail)  // email peut être null
+                .telephone(normalizedTelephone)
                 .adresse(request.getAdresse().trim())
                 .numeroSecu(request.getNumeroSecu() != null ? request.getNumeroSecu().toUpperCase().trim() : null)
                 .mutuelle(request.getMutuelle() != null ? request.getMutuelle().toUpperCase().trim() : null)
@@ -120,5 +130,11 @@ public class ClientService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Client non trouvé");
         }
         clientRepository.deleteById(id);
+    }
+
+    public ClientResponse getClientByTelephone(String telephone) {
+        Client client = clientRepository.findByTelephone(telephone.trim())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Client non trouvé"));
+        return mapToResponse(client);
     }
 }

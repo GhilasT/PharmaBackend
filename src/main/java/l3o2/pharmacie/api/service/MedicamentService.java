@@ -14,6 +14,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -157,5 +158,19 @@ public class MedicamentService {
                 .seuilAlerte(medicament.getSeuilAlerte())
                 .emplacement(medicament.getEmplacement())
                 .build();
+    }
+
+    public StockMedicament findLatestStockByCodeCip13(String codeCip13) {
+        return medicamentRepository.findTopByPresentation_CodeCip13OrderByDateMiseAJourDesc(codeCip13)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "Aucun medicamantstock trouvé pour le code CIP13 : " + codeCip13
+                ));
+    }
+
+    public Optional<String> getCodeCip13FromCodeCis(String codeCis) {
+        return cisCipBdpmRepository
+                .findFirstByCisBdpm_CodeCis(codeCis)
+                .map(CisCipBdpm::getCodeCip13);
     }
 }

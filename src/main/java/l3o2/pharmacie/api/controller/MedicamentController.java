@@ -87,7 +87,7 @@ public ResponseEntity<Map<String, Object>> getPage(
      * @param searchTerm Terme de recherche (optionnel)
      * @return Liste des médicaments correspondant au terme de recherche
      */
-    @GetMapping("/search/{page}")
+    @GetMapping("/directsearch/{page}")
     public ResponseEntity<Map<String, Object>> searchByLibelleOrCodeCIS(
         @RequestParam String searchTerm, 
         @PathVariable int page

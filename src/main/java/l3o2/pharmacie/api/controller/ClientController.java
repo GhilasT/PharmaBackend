@@ -2,13 +2,16 @@ package l3o2.pharmacie.api.controller;
 
 import l3o2.pharmacie.api.model.dto.request.ClientCreateRequest;
 import l3o2.pharmacie.api.model.dto.response.ClientResponse;
+import l3o2.pharmacie.api.model.entity.Client;
 import l3o2.pharmacie.api.service.ClientService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @RestController
@@ -43,5 +46,11 @@ public class ClientController {
         return new ResponseEntity<>(clientResponse, HttpStatus.OK);
     }
 
+
+    @GetMapping("/telephone/{telephone}")
+    public ResponseEntity<ClientResponse> getClientByTelephone(@PathVariable String telephone) {
+        ClientResponse clientResponse = clientService.getClientByTelephone(telephone);
+        return new ResponseEntity<>(clientResponse, HttpStatus.OK);
+    }
 
 }

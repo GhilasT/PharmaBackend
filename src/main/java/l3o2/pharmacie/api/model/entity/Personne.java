@@ -54,7 +54,7 @@ public abstract class Personne {
     // Prenom de la personne
     private String prenom;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     // Adresse email de la personne
     private String email;
 

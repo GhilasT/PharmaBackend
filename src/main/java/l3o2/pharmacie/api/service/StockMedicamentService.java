@@ -34,6 +34,8 @@ public class StockMedicamentService {
     // Méthode pour la recherche paginée
     public Page<StockMedicamentDTO> searchMedicamentsPagines(String searchTerm, int page) {
         Pageable pageable = PageRequest.of(page, PAGE_SIZE);
+        System.out.println("Recherche dans le backend : [" + searchTerm + "] (page " + page + ")");
+
         Page<StockMedicament> stockPage;
     
         if (searchTerm == null || searchTerm.isBlank()) {
