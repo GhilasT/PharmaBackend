@@ -3,6 +3,7 @@ package l3o2.pharmacie.api.controller;
 import l3o2.pharmacie.api.service.CsvImportService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,6 +16,7 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/api/import")
+@CrossOrigin(origins = "*")
 @RequiredArgsConstructor
 public class ImportController {
 

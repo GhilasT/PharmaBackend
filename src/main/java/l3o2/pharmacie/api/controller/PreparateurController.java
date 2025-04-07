@@ -17,6 +17,7 @@ import java.util.UUID;
  */
 @RestController
 @RequestMapping("/api/preparateurs")
+@CrossOrigin(origins = "*")
 @RequiredArgsConstructor
 public class PreparateurController {
 

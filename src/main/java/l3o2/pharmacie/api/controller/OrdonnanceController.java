@@ -17,6 +17,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/ordonnances")
+@CrossOrigin(origins = "*")
 @RequiredArgsConstructor
 public class OrdonnanceController {
 /*
