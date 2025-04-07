@@ -1,0 +1,22 @@
+spring:
+  application:
+    name: pharmacie
+  datasource:
+    url: jdbc:postgresql://localhost:5434/pharmacie_db
+    username: dev
+    password: dev
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    database: postgresql
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+        jdbc:
+          lob:
+            non_contextual_creation: true
