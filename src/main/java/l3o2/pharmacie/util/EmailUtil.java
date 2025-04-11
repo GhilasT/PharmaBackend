@@ -11,7 +11,6 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class EmailUtil {
 
-    private final PharmacienAdjointRepository pharmacienAdjointRepository; //TODO nono jose
     private final PharmacienAdjointService pharmacienAdjointService;
 
     public String commandeToHtmlEmail(CommandeResponse commande) {
@@ -20,7 +19,7 @@ public class EmailUtil {
         sb
                 .append("<h1>Commande - ref. ").append(commande.getReference()).append("</h1>")
                 .append("<p> Date de commande : ").append(commande.getDateCommande()).append(".</p>")
-                .append("<p> Commande effectué par ").append(pharmacienAdjointRepository.findById(commande.getPharmacienAdjointId()).get().getPrenom()).append(" ").append(pharmacienAdjointRepository.findById(commande.getPharmacienAdjointId()).get().getNom() ).append(".<p>")
+                .append("<p> Commande effectué par ").append(pharmacienAdjointService.findById(commande.getPharmacienAdjointId()).getPrenom()).append(" ").append(pharmacienAdjointService.findById(commande.getPharmacienAdjointId()).getNom()).append(".<p>")
                 .append("<p> Montant total: ").append(commande.getMontantTotal()).append("- EUR.</p>");
 
 
