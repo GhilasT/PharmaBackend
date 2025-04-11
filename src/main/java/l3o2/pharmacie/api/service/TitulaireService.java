@@ -14,6 +14,7 @@ import org.springframework.web.server.ResponseStatusException;
 import l3o2.pharmacie.api.model.entity.PosteEmploye;
 import l3o2.pharmacie.api.model.entity.Preparateur;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -42,14 +43,14 @@ public class TitulaireService {
                 .telephone(request.getTelephone().replaceAll("\\s+", ""))
                 .adresse(request.getAdresse().trim())
                 .emailPro(request.getEmailPro().trim())
-                .password(passwordEncoder.encode(request.getPassword()))
+                .password(passwordEncoder.encode(request.getPassword())) //TODO : j'ai un doute, je crois que cela ne marche pas, qu'il ne faut pas encore l'encoder, ou alors c'est refait apres et donc doubler
                 .dateEmbauche(request.getDateEmbauche())
                 .salaire(request.getSalaire())
                 .statutContrat(request.getStatutContrat())
                 .diplome(request.getDiplome() != null ? request.getDiplome().trim() : null)
-                .role(request.getRole().trim())
                 .numeroRPPS(request.getNumeroRPPS().trim())
                 .poste(request.getPoste())  // Assure-toi que tu passes le poste ici
+                .permissions(List.of("ADMINISTRER","COMMANDER","VENDRE","GERER_ADMIN")) //liste permissions backend
                 .build();
 
         // Génération du matricule
@@ -105,7 +106,6 @@ public class TitulaireService {
                 .salaire(entity.getSalaire())
                 .statutContrat(entity.getStatutContrat())
                 .diplome(entity.getDiplome())
-                .role(entity.getRole())
                 .numeroRPPS(entity.getNumeroRPPS())
                 .build();
     }

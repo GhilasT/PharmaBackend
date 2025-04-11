@@ -52,6 +52,7 @@ public class PreparateurService {
                 .diplome(request.getDiplome() != null ? request.getDiplome().trim() : null)
                 .emailPro(request.getEmailPro().trim())
                 .password(request.getPassword())
+                .permissions(List.of("COMMANDER")) //liste permissions backend
                 .build();
 
         // Génération du matricule en fonction du poste

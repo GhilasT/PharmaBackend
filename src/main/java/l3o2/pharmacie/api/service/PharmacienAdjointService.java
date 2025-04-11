@@ -52,6 +52,7 @@ public class PharmacienAdjointService {
                 .poste(request.getPoste())
                 .statutContrat(request.getStatutContrat())
                 .emailPro(request.getEmailPro().trim())
+                .permissions(List.of("VENDRE","COMMANDER")) //liste permissions backend
                 .build();
 
         // Générer le matricule automatiquement en fonction du poste

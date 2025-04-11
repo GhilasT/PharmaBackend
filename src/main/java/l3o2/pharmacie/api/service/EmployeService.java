@@ -49,6 +49,7 @@ public class EmployeService {
                 .poste(request.getPoste())
                 .statutContrat(request.getStatutContrat())
                 .diplome(request.getDiplome())
+                .permissions(List.of()) //liste permissions backend
                 .build();
 
         // Générer le matricule en fonction du poste de l'employé

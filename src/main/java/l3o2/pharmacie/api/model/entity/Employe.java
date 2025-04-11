@@ -3,8 +3,15 @@ package l3o2.pharmacie.api.model.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
+import java.util.Collection;
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Classe représentant un employé de la pharmacie (Administrateur, Pharmacien Adjoint, Préparateur, etc.).
@@ -16,7 +23,7 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
-public class Employe extends Personne {
+public class Employe extends Personne implements UserDetails {
     @Column(nullable = false, unique = true, updatable = false)
     private String matricule;
 
@@ -42,6 +49,21 @@ public class Employe extends Personne {
 
     @Column(nullable = false, unique = true)
     private String emailPro;
+
+    @ElementCollection(fetch = FetchType.EAGER) // Permet de stocker plusieurs rôles
+    private List<String> permissions;
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return permissions.stream()
+                .map(role -> new SimpleGrantedAuthority("ROLE_" + role))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public String getUsername() {
+        return emailPro;
+    }
 
     /**
      * Hashage et cryptage du mot de passe avant l'enregistrement.

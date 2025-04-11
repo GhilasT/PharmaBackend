@@ -23,7 +23,7 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 // Permet d'utiliser le pattern Builder pour faciliter l'instanciation.
 @SuperBuilder
-public class Titulaire extends Administrateur {
+public class Titulaire extends Employe {
 
     @Column(nullable = false, unique = true)
     // Numéro RPPS du pharmacien titulaire (obligatoire et unique).

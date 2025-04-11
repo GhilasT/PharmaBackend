@@ -53,6 +53,7 @@ public class ApprentiService {
                 .ecole(request.getEcole().trim())
                 .emailPro(request.getEmailPro().trim())
                 .password(request.getPassword())
+                .permissions(List.of("COMMANDER")) //liste permissions backend
                 .build();
 
         // Générer le matricule automatiquement en fonction du poste

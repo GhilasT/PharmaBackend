@@ -51,6 +51,7 @@ public class AdministrateurService {
                 .statutContrat(request.getStatutContrat())
                 .poste(PosteEmploye.ADMINISTRATEUR) // Poste spécifique
                 .diplome(request.getDiplome()) // Diplôme éventuel
+                .permissions(List.of("ADMINISTRER","COMMANDER")) //liste permissions backend
                 .build();
 
         // Générer le matricule automatiquement en fonction du poste
@@ -103,7 +104,7 @@ public class AdministrateurService {
 
     /**
      * Met à jour un administrateur existant.
-     * @param matricule Matricule de l'administrateur à mettre à jour.
+     * @param id ID de l'administrateur à mettre à jour.
      * @param request Contient les champs à modifier.
      * @return L'administrateur mis à jour sous forme de DTO.
      * @throws ResponseStatusException si l'administrateur n'est pas trouvé.
@@ -129,7 +130,7 @@ public class AdministrateurService {
 
     /**
      * Supprime un administrateur par son matricule.
-     * @param matricule Matricule unique de l'administrateur à supprimer.
+     * @param id ID unique de l'administrateur à supprimer.
      * @throws ResponseStatusException si l'administrateur n'existe pas.
      */
     public void deleteAdministrateur(UUID id) {
