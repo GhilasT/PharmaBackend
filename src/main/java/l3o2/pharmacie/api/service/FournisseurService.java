@@ -1,5 +1,11 @@
 package l3o2.pharmacie.api.service;
 
+import l3o2.pharmacie.api.exceptions.DuplicateEmailException;
+import l3o2.pharmacie.api.exceptions.DuplicateSocieteException;
+import l3o2.pharmacie.api.exceptions.DuplicateTelephoneException;
+import l3o2.pharmacie.api.exceptions.InvalidDataException;
+import l3o2.pharmacie.api.exceptions.InvalidOperationException;
+import l3o2.pharmacie.api.exceptions.ResourceNotFoundException;
 import l3o2.pharmacie.api.model.dto.request.FournisseurCreateRequest;
 import l3o2.pharmacie.api.model.dto.request.FournisseurUpdateRequest;
 import l3o2.pharmacie.api.model.dto.response.FournisseurResponse;
@@ -11,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import l3o2.pharmacie.api.exceptions.InvalidParameterException;
 import java.util.List;
 import java.util.UUID;
 
@@ -33,20 +40,17 @@ public class FournisseurService {
     public FournisseurResponse createFournisseur(FournisseurCreateRequest request) {
         // Vérification de l'unicité de la société (avec Nomsociete)
         if (fournisseurRepository.findByNomSociete(request.getNomSociete().trim()).isPresent()) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT,
-                    "La société est déjà utilisée par un autre fournisseur.");
+            throw new DuplicateSocieteException(request.getNomSociete().trim());
         }
 
         // Vérification de l'unicité de l'email
         if (fournisseurRepository.findByEmail(request.getEmail().trim().toLowerCase()).isPresent()) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT,
-                    "L'email est déjà utilisé par un autre fournisseur.");
+            throw new DuplicateEmailException(request.getEmail());
         }
 
         // Vérification de l'unicité du téléphone
         if (fournisseurRepository.findByTelephone(request.getTelephone().trim()).isPresent()) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT,
-                    "Le téléphone est déjà utilisé par un autre fournisseur.");
+            throw new DuplicateTelephoneException(request.getTelephone().trim());
         }
 
         // Création du fournisseur
@@ -64,21 +68,20 @@ public class FournisseurService {
             Fournisseur savedFournisseur = fournisseurRepository.save(fournisseur);
             return mapToResponse(savedFournisseur);
         } catch (DataIntegrityViolationException e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                    "Erreur lors de l'enregistrement du fournisseur.");
+            throw new InvalidDataException("Erreur lors de la création du fournisseur : " + e.getMessage());
         }
     }
 
     public FournisseurResponse updateFournisseur(UUID id, FournisseurUpdateRequest request) {
         Fournisseur existing = fournisseurRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Fournisseur non trouvé."));
+                        .orElseThrow(() -> new ResourceNotFoundException("Fournisseur","id",id));   
+
 
         if (request.getNomSociete() != null) {
             String newNomSociete = request.getNomSociete().trim();
             if (!newNomSociete.equals(existing.getNomSociete())) {
                 if (fournisseurRepository.findByNomSociete(newNomSociete).isPresent()) {
-                    throw new ResponseStatusException(HttpStatus.CONFLICT,
-                            "La société est déjà utilisée par un autre fournisseur.");
+                    throw new DuplicateSocieteException(newNomSociete);
                 }
                 existing.setNomSociete(newNomSociete);
             }
@@ -88,8 +91,7 @@ public class FournisseurService {
             String newEmail = request.getEmail().trim().toLowerCase();
             if (!newEmail.equals(existing.getEmail())) {
                 if (fournisseurRepository.findByEmail(newEmail).isPresent()) {
-                    throw new ResponseStatusException(HttpStatus.CONFLICT,
-                            "L'email est déjà utilisé par un autre fournisseur.");
+                    throw new DuplicateEmailException(newEmail);
                 }
                 existing.setEmail(newEmail);
             }
@@ -99,8 +101,7 @@ public class FournisseurService {
             String newTelephone = request.getTelephone().replaceAll("\\s+", "");
             if (!newTelephone.equals(existing.getTelephone())) {
                 if (fournisseurRepository.findByTelephone(newTelephone).isPresent()) {
-                    throw new ResponseStatusException(HttpStatus.CONFLICT,
-                            "Le téléphone est déjà utilisé par un autre fournisseur.");
+                    throw new DuplicateTelephoneException(newTelephone);
                 }
                 existing.setTelephone(newTelephone);
             }
@@ -122,7 +123,7 @@ public class FournisseurService {
             Fournisseur updated = fournisseurRepository.save(existing);
             return mapToResponse(updated);
         } catch (DataIntegrityViolationException e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Erreur lors de la mise à jour du fournisseur.");
+            throw new InvalidDataException("Erreur lors de la mise à jour du fournisseur : " + e.getMessage());
         }
     }
 
@@ -151,8 +152,8 @@ public class FournisseurService {
     public FournisseurResponse getFournisseurById(UUID id) {
         return fournisseurRepository.findById(id)
                 .map(this::mapToResponse)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Fournisseur non trouvé."));
-    }
+                .orElseThrow(() -> new ResourceNotFoundException("Fournisseur","id",id));   
+            }
 
     /**
      * Recherche un fournisseur par son email.
@@ -164,8 +165,7 @@ public class FournisseurService {
     public FournisseurResponse getFournisseurByEmail(String email) {
         return fournisseurRepository.findByEmail(email.trim().toLowerCase())
                 .map(this::mapToResponse)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
-                        "Fournisseur non trouvé avec cet email."));
+                .orElseThrow(() -> new DuplicateEmailException(email.trim()));
     }
 
     /**
@@ -178,8 +178,7 @@ public class FournisseurService {
     public FournisseurResponse getFournisseurByTelephone(String telephone) {
         return fournisseurRepository.findByTelephone(telephone.trim())
                 .map(this::mapToResponse)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
-                        "Fournisseur non trouvé avec ce téléphone."));
+                .orElseThrow(() -> new DuplicateTelephoneException(telephone.trim()));
     }
 
     /**
@@ -203,14 +202,15 @@ public class FournisseurService {
     // suprimer un fournisssseur
     public void deleteFournisseur(UUID id) {
         if (!fournisseurRepository.existsById(id)) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Fournisseur non trouvé.");
+            throw new ResourceNotFoundException("Fournisseur","id",id);   
+
         }
         fournisseurRepository.deleteById(id);
     }
 
     public List<FournisseurResponse> searchFournisseurs(String query) {
         if (query == null || query.trim().isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Le paramètre de recherche ne peut pas être vide.");
+            throw new InvalidParameterException("Le paramètre de recherche ne peut pas être vide.");
         }
         
         return fournisseurRepository.searchFournisseurs(query.trim().toLowerCase())

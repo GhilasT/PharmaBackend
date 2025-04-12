@@ -1,5 +1,7 @@
 package l3o2.pharmacie.api.service;
 
+import l3o2.pharmacie.api.exceptions.DuplicateEmailProException;
+import l3o2.pharmacie.api.exceptions.ResourceNotFoundException;
 import l3o2.pharmacie.api.model.dto.request.EmployeCreateRequest;
 import l3o2.pharmacie.api.model.dto.request.EmployeUpdateRequest;
 import l3o2.pharmacie.api.model.dto.response.EmployeResponse;
@@ -25,14 +27,16 @@ public class EmployeService {
     private final EmployeRepository employeRepository;
     private final PasswordEncoder passwordEncoder;
 
-    // Ajoutez cette méthode pour vérifier si un employé existe avec cet email professionnel
+    // Ajoutez cette méthode pour vérifier si un employé existe avec cet email
+    // professionnel
     public boolean existsByEmailPro(String emailPro) {
-        return employeRepository.existsByEmailPro(emailPro);  // Cette méthode est déjà définie dans le repository
+        return employeRepository.existsByEmailPro(emailPro); // Cette méthode est déjà définie dans le repository
     }
+
     public EmployeResponse createEmploye(EmployeCreateRequest request) {
         // Vérifier si un employé avec le même email professionnel existe déjà
         if (employeRepository.existsByEmailPro(request.getEmailPro())) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Un employé avec cet email professionnel existe déjà.");
+            throw new DuplicateEmailProException(request.getEmailPro());
         }
 
         // Créer un employé
@@ -69,13 +73,12 @@ public class EmployeService {
     public EmployeResponse getEmployeById(UUID id) {
         return employeRepository.findById(id)
                 .map(this::mapToResponse)
-                .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Employé non trouvé"));
+                .orElseThrow(() -> new ResourceNotFoundException("Employé", "id", id));
     }
 
     public EmployeResponse updateEmploye(UUID id, EmployeUpdateRequest request) {
         Employe employe = employeRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Employé non trouvé"));
-
+                .orElseThrow(() -> new ResourceNotFoundException("Employé", "id", id));
         updateEmployeFields(employe, request);
         Employe updatedEmploye = employeRepository.save(employe);
         return mapToResponse(updatedEmploye);
@@ -86,34 +89,41 @@ public class EmployeService {
      */
     public Employe getEmployeByEmailPro(String emailPro) {
         return employeRepository.findByEmailPro(emailPro)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Employé non trouvé avec cet email professionnel : " + emailPro));
+                .orElseThrow(() -> new ResourceNotFoundException("Employé", "Email Pro", emailPro));
     }
 
     // et ici je retourne que le ID de l'employe
 
     public UUID getEmployeIdByEmailPro(String emailPro) {
         Employe employe = employeRepository.findByEmailPro(emailPro)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Employé non trouvé avec cet email professionnel : " + emailPro));
+                .orElseThrow(() -> new ResourceNotFoundException("Employé", "Email Pro", emailPro));
         return employe.getIdPersonne();
     }
 
-
-
     private void updateEmployeFields(Employe employe, EmployeUpdateRequest request) {
-        if (request.getNom() != null) employe.setNom(request.getNom());
-        if (request.getPrenom() != null) employe.setPrenom(request.getPrenom());
-        if (request.getEmail() != null) employe.setEmail(request.getEmail());
-        if (request.getEmailPro() != null) employe.setEmailPro(request.getEmailPro());
-        if (request.getTelephone() != null) employe.setTelephone(request.getTelephone());
-        if (request.getAdresse() != null) employe.setAdresse(request.getAdresse());
-        if (request.getSalaire() != null) employe.setSalaire(request.getSalaire());
-        if (request.getStatutContrat() != null) employe.setStatutContrat(request.getStatutContrat());
+        if (request.getNom() != null)
+            employe.setNom(request.getNom());
+        if (request.getPrenom() != null)
+            employe.setPrenom(request.getPrenom());
+        if (request.getEmail() != null)
+            employe.setEmail(request.getEmail());
+        if (request.getEmailPro() != null)
+            employe.setEmailPro(request.getEmailPro());
+        if (request.getTelephone() != null)
+            employe.setTelephone(request.getTelephone());
+        if (request.getAdresse() != null)
+            employe.setAdresse(request.getAdresse());
+        if (request.getSalaire() != null)
+            employe.setSalaire(request.getSalaire());
+        if (request.getStatutContrat() != null)
+            employe.setStatutContrat(request.getStatutContrat());
     }
 
     public void deleteEmploye(String matricule) {
         // Cherche l'employé par matricule dans toutes les sous-classes
         Employe employe = employeRepository.findByMatricule(matricule)
-                .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Employé non trouvé avec matricule : " + matricule));
+        .orElseThrow(() -> new ResourceNotFoundException("Employé","Matricule",matricule));   
+
 
         // Supprime l'employé
         employeRepository.delete(employe);

@@ -1,5 +1,8 @@
 package l3o2.pharmacie.api.service;
 
+import l3o2.pharmacie.api.exceptions.DuplicateEmailProException;
+import l3o2.pharmacie.api.exceptions.InvalidDataException;
+import l3o2.pharmacie.api.exceptions.ResourceNotFoundException;
 import l3o2.pharmacie.api.model.dto.request.ApprentiCreateRequest;
 import l3o2.pharmacie.api.model.dto.request.ApprentiUpdateRequest;
 import l3o2.pharmacie.api.model.dto.response.ApprentiResponse;
@@ -28,6 +31,7 @@ public class ApprentiService {
 
     /**
      * Création d'un apprenti.
+     * 
      * @param request Données de l'apprenti.
      * @return L'apprenti créé.
      */
@@ -37,7 +41,7 @@ public class ApprentiService {
     public ApprentiResponse createApprenti(ApprentiCreateRequest request) {
         // Utiliser EmployeService pour vérifier l'email
         if (employeService.existsByEmailPro(request.getEmailPro())) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Un Apprenti avec cet email professionnel existe déjà.");
+            throw new DuplicateEmailProException(request.getEmailPro());
         }
         Apprenti apprenti = Apprenti.builder()
                 .nom(request.getNom().trim())
@@ -63,13 +67,14 @@ public class ApprentiService {
             Apprenti savedApprenti = apprentiRepository.save(apprenti);
             return mapToResponse(savedApprenti);
         } catch (DataIntegrityViolationException e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Données dupliquées ou invalides");
+            throw new InvalidDataException("Données invalides ou contraintes violées");
+
         }
     }
 
-
     /**
      * Récupère tous les apprentis.
+     * 
      * @return Liste des apprentis.
      */
     @Transactional(readOnly = true)
@@ -82,30 +87,34 @@ public class ApprentiService {
 
     /**
      * Récupère un apprenti par son ID.
+     * 
      * @param id ID de l'apprenti.
      * @return L'apprenti correspondant.
      */
     @Transactional(readOnly = true)
     public ApprentiResponse getApprentiById(UUID id) {
         Apprenti apprenti = apprentiRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Apprenti non trouvé"));
+                .orElseThrow(() -> new ResourceNotFoundException("Apprenti", "id", id));
         return mapToResponse(apprenti);
     }
 
     /**
      * Suppression d'un apprenti.
+     * 
      * @param id ID de l'apprenti.
      */
     @Transactional
     public void deleteApprenti(UUID id) {
         if (!apprentiRepository.existsById(id)) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Apprenti non trouvé");
+            throw new ResourceNotFoundException("Apprenti", "id", id);
+
         }
         apprentiRepository.deleteById(id);
     }
 
     /**
      * Conversion d'une entité Apprenti en DTO.
+     * 
      * @param entity L'entité à convertir.
      * @return Le DTO correspondant.
      */
@@ -127,47 +136,60 @@ public class ApprentiService {
                 .emailPro(entity.getEmailPro())
                 .build();
     }
+
     // Méthode de mise à jour
-@Transactional
-public ApprentiResponse updateApprenti(UUID id, ApprentiUpdateRequest request) {
-    Apprenti existing = apprentiRepository.findById(id)
-            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Apprenti non trouvé"));
+    @Transactional
+    public ApprentiResponse updateApprenti(UUID id, ApprentiUpdateRequest request) {
+        Apprenti existing = apprentiRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Apprenti", "id", id));
 
-    if (request.getNom() != null) existing.setNom(request.getNom().trim());
-    if (request.getPrenom() != null) existing.setPrenom(request.getPrenom().trim());
-    if (request.getEmail() != null) existing.setEmail(request.getEmail().toLowerCase().trim());
-    if (request.getTelephone() != null) existing.setTelephone(request.getTelephone().replaceAll("\\s+", ""));
-    if (request.getAdresse() != null) existing.setAdresse(request.getAdresse().trim());
-    if (request.getDateEmbauche() != null) existing.setDateEmbauche(request.getDateEmbauche());
-    if (request.getSalaire() != null) existing.setSalaire(request.getSalaire());
-    if (request.getPoste() != null) existing.setPoste(request.getPoste());
-    if (request.getStatutContrat() != null) existing.setStatutContrat(request.getStatutContrat());
-    if (request.getDiplome() != null) existing.setDiplome(request.getDiplome().trim());
-    if (request.getEcole() != null) existing.setEcole(request.getEcole().trim());
-    if (request.getPassword() != null) existing.setPassword(request.getPassword());
+        if (request.getNom() != null)
+            existing.setNom(request.getNom().trim());
+        if (request.getPrenom() != null)
+            existing.setPrenom(request.getPrenom().trim());
+        if (request.getEmail() != null)
+            existing.setEmail(request.getEmail().toLowerCase().trim());
+        if (request.getTelephone() != null)
+            existing.setTelephone(request.getTelephone().replaceAll("\\s+", ""));
+        if (request.getAdresse() != null)
+            existing.setAdresse(request.getAdresse().trim());
+        if (request.getDateEmbauche() != null)
+            existing.setDateEmbauche(request.getDateEmbauche());
+        if (request.getSalaire() != null)
+            existing.setSalaire(request.getSalaire());
+        if (request.getPoste() != null)
+            existing.setPoste(request.getPoste());
+        if (request.getStatutContrat() != null)
+            existing.setStatutContrat(request.getStatutContrat());
+        if (request.getDiplome() != null)
+            existing.setDiplome(request.getDiplome().trim());
+        if (request.getEcole() != null)
+            existing.setEcole(request.getEcole().trim());
+        if (request.getPassword() != null)
+            existing.setPassword(request.getPassword());
 
-    // Vérification de l'email professionnel
-    if (request.getEmailPro() != null && !request.getEmailPro().equals(existing.getEmailPro())) {
-        if (employeService.existsByEmailPro(request.getEmailPro())) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Email professionnel déjà utilisé");
+        // Vérification de l'email professionnel
+        if (request.getEmailPro() != null && !request.getEmailPro().equals(existing.getEmailPro())) {
+            if (employeService.existsByEmailPro(request.getEmailPro())) {
+                throw new DuplicateEmailProException(request.getEmailPro());
+            }
+            existing.setEmailPro(request.getEmailPro().trim());
         }
-        existing.setEmailPro(request.getEmailPro().trim());
+
+        try {
+            Apprenti updated = apprentiRepository.save(existing);
+            return mapToResponse(updated);
+        } catch (DataIntegrityViolationException e) {
+            throw new InvalidDataException("Données invalides ou contraintes violées");
+        }
     }
 
-    try {
-        Apprenti updated = apprentiRepository.save(existing);
-        return mapToResponse(updated);
-    } catch (DataIntegrityViolationException e) {
-        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Données invalides");
+    @Transactional(readOnly = true)
+    public List<ApprentiResponse> searchApprentis(String term) {
+        String searchTerm = term.toLowerCase();
+        List<Apprenti> apprentis = apprentiRepository.searchByTerm("%" + searchTerm + "%");
+        return apprentis.stream()
+                .map(this::mapToResponse)
+                .collect(Collectors.toList());
     }
-}
-
-@Transactional(readOnly = true)
-public List<ApprentiResponse> searchApprentis(String term) {
-    String searchTerm = term.toLowerCase();
-    List<Apprenti> apprentis = apprentiRepository.searchByTerm("%" + searchTerm + "%");
-    return apprentis.stream()
-            .map(this::mapToResponse)
-            .collect(Collectors.toList());
-}
 }

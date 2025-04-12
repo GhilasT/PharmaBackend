@@ -1,5 +1,8 @@
 package l3o2.pharmacie.api.service;
 
+import l3o2.pharmacie.api.exceptions.DuplicateEmailException;
+import l3o2.pharmacie.api.exceptions.InvalidDataException;
+import l3o2.pharmacie.api.exceptions.ResourceNotFoundException;
 import l3o2.pharmacie.api.model.dto.request.ClientCreateRequest;
 import l3o2.pharmacie.api.model.dto.response.ClientResponse;
 import l3o2.pharmacie.api.model.entity.Client;
@@ -27,6 +30,7 @@ public class ClientService {
 
     /**
      * Création d'un nouveau client.
+     * 
      * @param request Données du client à créer.
      * @return ClientResponse contenant les informations du client créé.
      */
@@ -46,7 +50,7 @@ public class ClientService {
             normalizedEmail = request.getEmail().trim().toLowerCase();
             // Vérification de l'unicité de l'email
             if (clientRepository.existsByEmail(normalizedEmail)) {
-                throw new ResponseStatusException(HttpStatus.CONFLICT, "L'email est déjà utilisé");
+                throw new DuplicateEmailException(normalizedEmail);
             }
         }
 
@@ -54,7 +58,7 @@ public class ClientService {
         Client client = Client.builder()
                 .nom(request.getNom().trim())
                 .prenom(request.getPrenom().trim())
-                .email(normalizedEmail)  // email peut être null
+                .email(normalizedEmail) // email peut être null
                 .telephone(normalizedTelephone)
                 .adresse(request.getAdresse().trim())
                 .numeroSecu(request.getNumeroSecu() != null ? request.getNumeroSecu().toUpperCase().trim() : null)
@@ -65,7 +69,7 @@ public class ClientService {
             Client clientSaved = clientRepository.save(client);
             return mapToResponse(clientSaved);
         } catch (DataIntegrityViolationException e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Données dupliquées ou invalides");
+            throw new InvalidDataException("Données invalides ou contraintes violées");
         }
     }
 
@@ -75,6 +79,7 @@ public class ClientService {
 
     /**
      * Conversion d'un Client en ClientResponse (DTO).
+     * 
      * @param entity Client à convertir.
      * @return ClientResponse.
      */
@@ -93,6 +98,7 @@ public class ClientService {
 
     /**
      * Récupère tous les clients enregistrés.
+     * 
      * @return Liste des clients sous forme de ClientResponse.
      */
     public List<ClientResponse> getAllClients() {
@@ -103,38 +109,41 @@ public class ClientService {
 
     /**
      * Recherche un client par son ID.
+     * 
      * @param id Identifiant UUID du client.
      * @return ClientResponse si trouvé.
      * @throws ResponseStatusException si le client n'est pas trouvé.
      */
     public ClientResponse getClientById(UUID id) {
         Client client = clientRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Client non trouvé"));
+                .orElseThrow(() -> new ResourceNotFoundException("Client", "id", id));
         return mapToResponse(client);
     }
 
     /**
      * Recherche un client par son email.
+     * 
      * @param email Email du client.
      * @return ClientResponse si trouvé.
      * @throws ResponseStatusException si le client n'est pas trouvé.
      */
     public ClientResponse getClientByEmail(String email) {
         Client client = clientRepository.findByEmail(email.trim().toLowerCase())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Client non trouvé"));
+                .orElseThrow(() -> new ResourceNotFoundException("Client", "email", email));
         return mapToResponse(client);
     }
-    //supprimer un client
+
+    // supprimer un client
     public void deleteClient(UUID id) {
         if (!clientRepository.existsById(id)) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Client non trouvé");
+            throw new ResourceNotFoundException("Client", "id", id);
         }
         clientRepository.deleteById(id);
     }
 
     public ClientResponse getClientByTelephone(String telephone) {
         Client client = clientRepository.findByTelephone(telephone.trim())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Client non trouvé"));
+                .orElseThrow(() -> new ResourceNotFoundException("Client", "telephone", telephone));
         return mapToResponse(client);
     }
 }

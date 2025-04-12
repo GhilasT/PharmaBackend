@@ -1,5 +1,8 @@
 package l3o2.pharmacie.api.service;
 
+import l3o2.pharmacie.api.exceptions.DuplicateRPPSException;
+import l3o2.pharmacie.api.exceptions.InvalidDataException;
+import l3o2.pharmacie.api.exceptions.ResourceNotFoundException;
 import l3o2.pharmacie.api.model.dto.request.TitulaireCreateRequest;
 import l3o2.pharmacie.api.model.dto.response.TitulaireResponse;
 import l3o2.pharmacie.api.model.entity.Titulaire;
@@ -26,13 +29,14 @@ public class TitulaireService {
 
     /**
      * Crée un pharmacien titulaire avec toutes les informations nécessaires.
+     * 
      * @param request Données du titulaire.
      * @return TitulaireResponse avec les détails du titulaire créé.
      */
     @Transactional
     public TitulaireResponse createTitulaire(TitulaireCreateRequest request) {
         if (titulaireRepository.existsByNumeroRPPS(request.getNumeroRPPS())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Un titulaire avec ce RPPS existe déjà.");
+            throw new DuplicateRPPSException(request.getNumeroRPPS());
         }
 
         Titulaire titulaire = Titulaire.builder()
@@ -49,7 +53,7 @@ public class TitulaireService {
                 .diplome(request.getDiplome() != null ? request.getDiplome().trim() : null)
                 .role(request.getRole().trim())
                 .numeroRPPS(request.getNumeroRPPS().trim())
-                .poste(request.getPoste())  // Assure-toi que tu passes le poste ici
+                .poste(request.getPoste()) // Assure-toi que tu passes le poste ici
                 .build();
 
         // Génération du matricule
@@ -59,35 +63,38 @@ public class TitulaireService {
         try {
             return mapToResponse(titulaireRepository.save(titulaire));
         } catch (DataIntegrityViolationException e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Données dupliquées ou invalides.");
+            throw new InvalidDataException("Données invalides ou contraintes violées");
         }
     }
 
     /**
      * Récupère le titulaire actuel.
+     * 
      * @return TitulaireResponse avec toutes les informations.
      */
     @Transactional(readOnly = true)
     public TitulaireResponse getTitulaire() {
         Titulaire titulaire = titulaireRepository.findAll().stream().findFirst()
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Titulaire non trouvé"));
+                .orElseThrow(() -> new ResourceNotFoundException("Titulaire", "enregistré", "aucun"));
         return mapToResponse(titulaire);
     }
 
     /**
      * Supprime un titulaire par son identifiant.
+     * 
      * @param id Identifiant du titulaire.
      */
     @Transactional
     public void deleteTitulaire(UUID id) {
         if (!titulaireRepository.existsById(id)) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Titulaire non trouvé.");
+            throw new ResourceNotFoundException("Titulaire", "id", id);
         }
         titulaireRepository.deleteById(id);
     }
 
     /**
      * Convertit une entité Titulaire en DTO TitulaireResponse.
+     * 
      * @param entity L'entité Titulaire.
      * @return DTO contenant toutes les informations.
      */

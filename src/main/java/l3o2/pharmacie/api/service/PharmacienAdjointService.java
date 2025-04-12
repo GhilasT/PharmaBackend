@@ -1,5 +1,8 @@
 package l3o2.pharmacie.api.service;
 
+import l3o2.pharmacie.api.exceptions.DuplicateEmailProException;
+import l3o2.pharmacie.api.exceptions.InvalidDataException;
+import l3o2.pharmacie.api.exceptions.ResourceNotFoundException;
 import l3o2.pharmacie.api.model.dto.request.PharmacienAdjointCreateRequest;
 import l3o2.pharmacie.api.model.dto.request.PharmacienAdjointUpdateRequest;
 import l3o2.pharmacie.api.model.dto.response.PharmacienAdjointResponse;
@@ -17,7 +20,8 @@ import java.util.UUID;
 
 /**
  * Service gérant la logique métier des pharmaciens adjoints.
- * Il fournit des méthodes pour la création, récupération et gestion des pharmaciens adjoints.
+ * Il fournit des méthodes pour la création, récupération et gestion des
+ * pharmaciens adjoints.
  */
 @Service
 @RequiredArgsConstructor
@@ -26,17 +30,19 @@ public class PharmacienAdjointService {
     private final PharmacienAdjointRepository pharmacienAdjointRepository;
     private final EmployeRepository employeRepository;
 
-
     /**
      * Création d'un pharmacien adjoint en base de données.
+     * 
      * @param request Contient les informations du pharmacien adjoint à créer.
      * @return Pharmacien adjoint créé sous forme de DTO.
      */
     private final EmployeService employeService;
+
     public PharmacienAdjointResponse createPharmacienAdjoint(PharmacienAdjointCreateRequest request) {
-        // Vérifier si un pharmacien adjoint avec le même email professionnel existe déjà
-        if (employeService.existsByEmailPro (request.getEmailPro().trim())) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Un pharmacien adjoint avec cet email professionnel existe déjà.");
+        // Vérifier si un pharmacien adjoint avec le même email professionnel existe
+        // déjà
+        if (employeService.existsByEmailPro(request.getEmailPro().trim())) {
+            throw new DuplicateEmailProException(request.getEmailPro());
         }
 
         // Créer un pharmacien adjoint
@@ -63,13 +69,13 @@ public class PharmacienAdjointService {
             PharmacienAdjoint savedPharmacien = pharmacienAdjointRepository.save(pharmacien);
             return mapToResponse(savedPharmacien);
         } catch (DataIntegrityViolationException e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Données dupliquées ou invalides");
+            throw new InvalidDataException("Données invalides ou contraintes violées");
         }
     }
 
-
     /**
      * Convertit une entité PharmacienAdjoint en DTO PharmacienAdjointResponse.
+     * 
      * @param entity L'entité PharmacienAdjoint.
      * @return L'objet DTO contenant les informations du pharmacien adjoint.
      */
@@ -94,14 +100,14 @@ public class PharmacienAdjointService {
     public PharmacienAdjointResponse findByEmailPro(String emailPro) {
         PharmacienAdjoint pharmacien = pharmacienAdjointRepository
                 .findByEmailPro(emailPro.trim())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
-                        "Aucun pharmacien adjoint trouvé avec l'email professionnel: " + emailPro));
+                .orElseThrow(() -> new ResourceNotFoundException("PharmacienAdjoint", "Email Pro", emailPro));
+
         return mapToResponse(pharmacien);
     }
 
-
     /**
      * Récupère la liste de tous les pharmaciens adjoints.
+     * 
      * @return Liste de DTOs représentant les pharmaciens adjoints.
      */
     public List<PharmacienAdjointResponse> getAllPharmaciensAdjoints() {
@@ -109,46 +115,59 @@ public class PharmacienAdjointService {
                 .map(this::mapToResponse)
                 .toList();
     }
-public void deletePharmacienAdjoint(UUID id) {
-    if (!pharmacienAdjointRepository.existsById(id)) {
-        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Pharmacien adjoint non trouvé");
-    }
-    pharmacienAdjointRepository.deleteById(id);
-}
 
-public PharmacienAdjointResponse updatePharmacienAdjoint(UUID id, PharmacienAdjointUpdateRequest request) {
-    PharmacienAdjoint pharmacien = pharmacienAdjointRepository.findById(id)
-        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Pharmacien adjoint non trouvé"));
+    public void deletePharmacienAdjoint(UUID id) {
+        if (!pharmacienAdjointRepository.existsById(id)) {
+            throw new ResourceNotFoundException("PharmacienAdjoint", "id", id);
 
-    // Mise à jour des champs
-    if (request.getNom() != null) pharmacien.setNom(request.getNom().trim());
-    if (request.getPrenom() != null) pharmacien.setPrenom(request.getPrenom().trim());
-    if (request.getEmail() != null) pharmacien.setEmail(request.getEmail().toLowerCase().trim());
-    if (request.getTelephone() != null) pharmacien.setTelephone(request.getTelephone().replaceAll("\\s+", ""));
-    if (request.getAdresse() != null) pharmacien.setAdresse(request.getAdresse().trim());
-    if (request.getPassword() != null) pharmacien.setPassword(request.getPassword());
-    if (request.getDateEmbauche() != null) pharmacien.setDateEmbauche(request.getDateEmbauche());
-    if (request.getSalaire() != null) pharmacien.setSalaire(request.getSalaire());
-    if (request.getPoste() != null) pharmacien.setPoste(request.getPoste());
-    if (request.getStatutContrat() != null) pharmacien.setStatutContrat(request.getStatutContrat());
-    if (request.getDiplome() != null) pharmacien.setDiplome(request.getDiplome());
-    
-    if (request.getEmailPro() != null) {
-        if (!pharmacien.getEmailPro().equals(request.getEmailPro()) 
-            && employeService.existsByEmailPro(request.getEmailPro().trim())) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Email professionnel déjà utilisé");
         }
-        pharmacien.setEmailPro(request.getEmailPro().trim());
+        pharmacienAdjointRepository.deleteById(id);
     }
 
-    PharmacienAdjoint updated = pharmacienAdjointRepository.save(pharmacien);
-    return mapToResponse(updated);
-}
+    public PharmacienAdjointResponse updatePharmacienAdjoint(UUID id, PharmacienAdjointUpdateRequest request) {
+        PharmacienAdjoint pharmacien = pharmacienAdjointRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("PharmacienAdjoint", "id", id));
 
-public List<PharmacienAdjointResponse> searchPharmaciensAdjoints(String searchTerm) {
-    String normalizedTerm = searchTerm.toLowerCase().trim();
-    return pharmacienAdjointRepository.searchByNomPrenom(normalizedTerm).stream()
-        .map(this::mapToResponse)
-        .toList();
-}
+        // Mise à jour des champs
+        if (request.getNom() != null)
+            pharmacien.setNom(request.getNom().trim());
+        if (request.getPrenom() != null)
+            pharmacien.setPrenom(request.getPrenom().trim());
+        if (request.getEmail() != null)
+            pharmacien.setEmail(request.getEmail().toLowerCase().trim());
+        if (request.getTelephone() != null)
+            pharmacien.setTelephone(request.getTelephone().replaceAll("\\s+", ""));
+        if (request.getAdresse() != null)
+            pharmacien.setAdresse(request.getAdresse().trim());
+        if (request.getPassword() != null)
+            pharmacien.setPassword(request.getPassword());
+        if (request.getDateEmbauche() != null)
+            pharmacien.setDateEmbauche(request.getDateEmbauche());
+        if (request.getSalaire() != null)
+            pharmacien.setSalaire(request.getSalaire());
+        if (request.getPoste() != null)
+            pharmacien.setPoste(request.getPoste());
+        if (request.getStatutContrat() != null)
+            pharmacien.setStatutContrat(request.getStatutContrat());
+        if (request.getDiplome() != null)
+            pharmacien.setDiplome(request.getDiplome());
+
+        if (request.getEmailPro() != null) {
+            if (!pharmacien.getEmailPro().equals(request.getEmailPro())
+                    && employeService.existsByEmailPro(request.getEmailPro().trim())) {
+                throw new DuplicateEmailProException(request.getEmailPro());
+            }
+            pharmacien.setEmailPro(request.getEmailPro().trim());
+        }
+
+        PharmacienAdjoint updated = pharmacienAdjointRepository.save(pharmacien);
+        return mapToResponse(updated);
+    }
+
+    public List<PharmacienAdjointResponse> searchPharmaciensAdjoints(String searchTerm) {
+        String normalizedTerm = searchTerm.toLowerCase().trim();
+        return pharmacienAdjointRepository.searchByNomPrenom(normalizedTerm).stream()
+                .map(this::mapToResponse)
+                .toList();
+    }
 }
