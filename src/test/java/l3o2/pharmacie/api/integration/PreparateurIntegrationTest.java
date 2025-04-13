@@ -16,6 +16,8 @@ import org.springframework.test.context.ActiveProfiles;
 
 import l3o2.pharmacie.api.model.dto.request.PreparateurCreateRequest;
 import l3o2.pharmacie.api.model.dto.response.PreparateurResponse;
+import l3o2.pharmacie.api.model.entity.PosteEmploye;
+import l3o2.pharmacie.api.model.entity.StatutContrat;
 import l3o2.pharmacie.api.repository.EmployeRepository;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -48,6 +50,10 @@ class PreparateurIntegrationTest {
         request.setDateEmbauche(new Date());
         request.setSalaire(2500.0);
         request.setPassword("password123");
+        request.setAdresse("123 Rue de la Pharmacie");
+        request.setStatutContrat(StatutContrat.CDI);
+        request.setDiplome("BTS Pharmacie");
+        request.setPoste(PosteEmploye.PREPARATEUR);
         
         ResponseEntity<PreparateurResponse> response = restTemplate.postForEntity(
                 "/api/preparateurs", request, PreparateurResponse.class);
