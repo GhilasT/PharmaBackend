@@ -3,11 +3,17 @@ package l3o2.pharmacie.api.model.dto.request;
 import jakarta.validation.constraints.*;
 import l3o2.pharmacie.api.model.entity.PosteEmploye;
 import l3o2.pharmacie.api.model.entity.StatutContrat;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import java.sql.Date;
+import java.util.Date;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class PharmacienAdjointUpdateRequest {
     private String nom;
     private String prenom;

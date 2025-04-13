@@ -11,6 +11,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.context.ActiveProfiles;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -42,7 +43,7 @@ class AdministrateurRepositoryTest {
                 .role("SUPER_ADMIN")
                 .telephone("123456789")
                 .adresse("123 Rue de la Pharmacie")
-                .dateEmbauche(java.sql.Date.valueOf("2023-01-01"))
+                .dateEmbauche(new Date())
                 .salaire(5000.0)
                 .password("password")
                 .statutContrat(StatutContrat.CDI)
@@ -57,7 +58,7 @@ class AdministrateurRepositoryTest {
                 .matricule("ADMIN-456")
                 .telephone("012345678")
                 .adresse("123 Rue de la Pharmacie")
-                .dateEmbauche(java.sql.Date.valueOf("2023-01-01"))
+                .dateEmbauche(new Date())
                 .salaire(5000.0)
                 .statutContrat(StatutContrat.CDI)
                 .poste(PosteEmploye.ADMINISTRATEUR)
