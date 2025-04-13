@@ -14,6 +14,15 @@ C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\controller\Pharmac
 C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\controller\PreparateurController.java
 C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\controller\TitulaireController.java
 C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\controller\VenteController.java
+C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\exceptions\DuplicateEmailException.java
+C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\exceptions\DuplicateEmailProException.java
+C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\exceptions\DuplicateRPPSException.java
+C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\exceptions\DuplicateSocieteException.java
+C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\exceptions\DuplicateTelephoneException.java
+C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\exceptions\InvalidDataException.java
+C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\exceptions\InvalidOperationException.java
+C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\exceptions\InvalidParameterException.java
+C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\exceptions\ResourceNotFoundException.java
 C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\handler\GlobalExceptionHandler.java
 C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\model\dto\request\AdministrateurCreateRequest.java
 C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\model\dto\request\AdministrateurUpdateRequest.java

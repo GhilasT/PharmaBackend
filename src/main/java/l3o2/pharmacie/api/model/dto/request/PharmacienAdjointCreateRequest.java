@@ -53,7 +53,4 @@ public class PharmacienAdjointCreateRequest {
     @NotBlank(message = "L'email professionnel est obligatoire")
     @Email(message = "Format d'email professionnel invalide")
     private String emailPro;
-    
-    //TODO: Ajouter une méthode pour la génération automatique de matricule
-    private String matricule;
-}
+    }

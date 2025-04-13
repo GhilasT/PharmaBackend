@@ -16,6 +16,8 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Profile;
+
 import  l3o2.pharmacie.api.model.entity.medicament.*;
 import l3o2.pharmacie.api.model.entity.medicament.MedicamentPanier;
 
@@ -28,6 +30,7 @@ public class Application {
 
     @Bean
     @Transactional
+    @Profile("!test") // Ne pas exécuter ce code lors des tests
     public CommandLineRunner initialDataLoader(PharmacienAdjointService pharmacienService,
                                                EmployeService employeService,
                                                CsvImportService csvImportService,

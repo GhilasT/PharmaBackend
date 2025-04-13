@@ -145,6 +145,7 @@ class AdministrateurServiceTest {
                 .role("SUPER_ADMIN")
                 .dateEmbauche(Date.valueOf("2023-01-01"))
                 .salaire(5000.0)
+                .adresse("123 Rue de la Pharmacie")
                 .statutContrat(StatutContrat.CDI)
                 .telephone("123456789")
                 .build();
@@ -158,6 +159,7 @@ class AdministrateurServiceTest {
                 .prenom("John")
                 .email("john@example.com")
                 .poste(PosteEmploye.ADMINISTRATEUR)
+                .adresse("123 Rue de la Pharmacie")
                 .build();
     }
 

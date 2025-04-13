@@ -29,6 +29,7 @@ l3o2\pharmacie\api\controller\ApprentiController.class
 l3o2\pharmacie\api\model\entity\Titulaire$TitulaireBuilderImpl.class
 l3o2\pharmacie\api\model\entity\medicament\MedicamentPanier.class
 l3o2\pharmacie\api\model\entity\medicament\CisHasAsmr.class
+l3o2\pharmacie\api\exceptions\DuplicateSocieteException.class
 l3o2\pharmacie\api\model\entity\Fournisseur$FournisseurBuilderImpl.class
 l3o2\pharmacie\api\model\entity\medicament\CisCpdBdpm.class
 l3o2\pharmacie\api\model\dto\request\ApprentiUpdateRequest.class
@@ -39,10 +40,12 @@ l3o2\pharmacie\api\model\entity\medicament\Medicament.class
 l3o2\pharmacie\api\model\dto\request\PharmacienAdjointUpdateRequest.class
 l3o2\pharmacie\api\model\dto\request\AdministrateurUpdateRequest$AdministrateurUpdateRequestBuilder.class
 l3o2\pharmacie\api\model\entity\Personne$PersonneBuilder.class
+l3o2\pharmacie\api\exceptions\InvalidDataException.class
 l3o2\pharmacie\api\model\entity\Personne.class
 l3o2\pharmacie\api\model\dto\request\CommandeCreateRequest$CommandeCreateRequestBuilder.class
 l3o2\pharmacie\api\model\dto\request\FournisseurUpdateRequest$FournisseurUpdateRequestBuilder.class
 l3o2\pharmacie\api\model\entity\medicament\CisCipBdpm.class
+l3o2\pharmacie\api\exceptions\InvalidOperationException.class
 l3o2\pharmacie\api\model\dto\response\PreparateurResponse$PreparateurResponseBuilder.class
 l3o2\pharmacie\api\controller\ClientController.class
 l3o2\pharmacie\api\controller\VenteController.class
@@ -65,7 +68,9 @@ l3o2\pharmacie\api\model\dto\request\MedecinCreateRequest$MedecinCreateRequestBu
 l3o2\pharmacie\api\service\OrdonnanceService.class
 l3o2\pharmacie\api\controller\MedecinController.class
 l3o2\pharmacie\api\controller\MedicamentController.class
+l3o2\pharmacie\api\exceptions\DuplicateTelephoneException.class
 l3o2\pharmacie\api\model\entity\Vente.class
+l3o2\pharmacie\api\handler\GlobalExceptionHandler$ErrorResponse.class
 l3o2\pharmacie\api\model\dto\request\ApprentiUpdateRequest$ApprentiUpdateRequestBuilder.class
 l3o2\pharmacie\api\model\dto\request\OrdonnanceCreateRequest$OrdonnanceCreateRequestBuilder.class
 l3o2\pharmacie\api\service\CommandeService.class
@@ -117,6 +122,7 @@ l3o2\pharmacie\api\model\entity\Prescription$PrescriptionBuilder.class
 l3o2\pharmacie\api\model\entity\medicament\TypeGenerique.class
 l3o2\pharmacie\api\model\entity\Employe$EmployeBuilderImpl.class
 l3o2\pharmacie\api\repository\ClientRepository.class
+l3o2\pharmacie\api\exceptions\InvalidParameterException.class
 l3o2\pharmacie\api\model\dto\response\PharmacienAdjointResponse.class
 l3o2\pharmacie\api\model\dto\response\MedecinResponse$MedecinResponseBuilder.class
 l3o2\pharmacie\api\model\dto\response\AdministrateurResponse$AdministrateurResponseBuilder.class
@@ -133,6 +139,7 @@ l3o2\pharmacie\api\model\dto\response\TitulaireResponse$TitulaireResponseBuilder
 l3o2\pharmacie\api\service\MedicamentService.class
 l3o2\pharmacie\api\service\CisCipBdpmService.class
 l3o2\pharmacie\api\repository\TitulaireRepository.class
+l3o2\pharmacie\api\exceptions\DuplicateRPPSException.class
 l3o2\pharmacie\api\model\dto\request\FournisseurCreateRequest.class
 l3o2\pharmacie\api\model\entity\Titulaire$TitulaireBuilder.class
 l3o2\pharmacie\api\model\entity\medicament\CisCompoBdpm.class
@@ -145,6 +152,8 @@ l3o2\pharmacie\api\model\dto\request\MedicamentRequest.class
 l3o2\pharmacie\api\controller\OrdonnanceController.class
 l3o2\pharmacie\api\util\HibernateSessionUtil.class
 l3o2\pharmacie\api\model\dto\response\FournisseurResponse.class
+l3o2\pharmacie\api\exceptions\DuplicateEmailException.class
+l3o2\pharmacie\api\exceptions\ResourceNotFoundException.class
 l3o2\pharmacie\api\model\entity\Medecin$MedecinBuilder.class
 l3o2\pharmacie\api\service\StockMedicamentService.class
 l3o2\pharmacie\api\service\VenteService.class
@@ -156,6 +165,7 @@ l3o2\pharmacie\api\model\entity\Administrateur.class
 l3o2\pharmacie\api\controller\FournisseurController.class
 l3o2\pharmacie\api\service\CsvImportService.class
 l3o2\pharmacie\api\repository\VenteRepository.class
+l3o2\pharmacie\api\exceptions\DuplicateEmailProException.class
 l3o2\pharmacie\api\model\entity\Fournisseur$FournisseurBuilder.class
 l3o2\pharmacie\api\repository\OrdonnanceRepository.class
 l3o2\pharmacie\api\model\dto\request\PreparateurUpdateRequest.class

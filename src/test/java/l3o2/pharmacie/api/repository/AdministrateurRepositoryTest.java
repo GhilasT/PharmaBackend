@@ -2,11 +2,14 @@ package l3o2.pharmacie.api.repository;
 
 import l3o2.pharmacie.api.model.entity.Administrateur;
 import l3o2.pharmacie.api.model.entity.PosteEmploye;
+import l3o2.pharmacie.api.model.entity.StatutContrat;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.util.List;
 import java.util.Optional;
@@ -15,6 +18,7 @@ import java.util.UUID;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
+@ActiveProfiles("test") // Activation explicite du profil "test"s
 class AdministrateurRepositoryTest {
 
     @Autowired
@@ -36,6 +40,12 @@ class AdministrateurRepositoryTest {
                 .emailPro("john.pro@pharma.com")
                 .matricule("ADMIN-123")
                 .role("SUPER_ADMIN")
+                .telephone("123456789")
+                .adresse("123 Rue de la Pharmacie")
+                .dateEmbauche(java.sql.Date.valueOf("2023-01-01"))
+                .salaire(5000.0)
+                .password("password")
+                .statutContrat(StatutContrat.CDI)
                 .poste(PosteEmploye.ADMINISTRATEUR)
                 .build();
 
@@ -45,8 +55,15 @@ class AdministrateurRepositoryTest {
                 .email("jane@example.com")
                 .emailPro("jane.admin@pharma.com")
                 .matricule("ADMIN-456")
+                .telephone("012345678")
+                .adresse("123 Rue de la Pharmacie")
+                .dateEmbauche(java.sql.Date.valueOf("2023-01-01"))
+                .salaire(5000.0)
+                .statutContrat(StatutContrat.CDI)
+                .poste(PosteEmploye.ADMINISTRATEUR)
                 .role("GESTIONNAIRE")
                 .poste(PosteEmploye.ADMINISTRATEUR)
+                .password("123456")
                 .build();
 
         entityManager.persist(admin1);
@@ -58,10 +75,10 @@ class AdministrateurRepositoryTest {
     void findByNomContainsIgnoreCaseOrPrenomContainsIgnoreCase_ShouldReturnMatchingAdmins() {
         // When: Recherche par nom ou prénom (insensible à la casse)
         List<Administrateur> result1 = administrateurRepository
-                .findByNomContainsIgnoreCaseOrPrenomContainsIgnoreCase("doe", "");
+                .findByNomContainsIgnoreCaseOrPrenomContainsIgnoreCase("doe", null);
         
         List<Administrateur> result2 = administrateurRepository
-                .findByNomContainsIgnoreCaseOrPrenomContainsIgnoreCase("", "JOH");
+                .findByNomContainsIgnoreCaseOrPrenomContainsIgnoreCase(null, "JOH");
         
         List<Administrateur> result3 = administrateurRepository
                 .findByNomContainsIgnoreCaseOrPrenomContainsIgnoreCase("mit", "xyz");

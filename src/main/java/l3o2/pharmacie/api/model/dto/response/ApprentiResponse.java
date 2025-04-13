@@ -1,7 +1,11 @@
 package l3o2.pharmacie.api.model.dto.response;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
+
 import java.util.Date;
 import java.util.UUID;
 
@@ -13,6 +17,8 @@ import l3o2.pharmacie.api.model.entity.StatutContrat;
  */
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class ApprentiResponse {
 
     private UUID idPersonne;

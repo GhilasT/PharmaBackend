@@ -1,1 +1,5 @@
 pharmacie\ApplicationTests.class
+l3o2\pharmacie\ApplicationTests.class
+l3o2\pharmacie\api\controller\AdministrateurControllerTest.class
+l3o2\pharmacie\api\service\AdministrateurServiceTest.class
+l3o2\pharmacie\api\repository\AdministrateurRepositoryTest.class
