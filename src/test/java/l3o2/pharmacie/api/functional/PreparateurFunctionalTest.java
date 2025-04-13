@@ -25,6 +25,7 @@ import org.springframework.test.context.ActiveProfiles;
 import l3o2.pharmacie.api.model.dto.request.PreparateurCreateRequest;
 import l3o2.pharmacie.api.model.dto.request.PreparateurUpdateRequest;
 import l3o2.pharmacie.api.model.dto.response.PreparateurResponse;
+import l3o2.pharmacie.api.model.entity.PosteEmploye;
 import l3o2.pharmacie.api.model.entity.StatutContrat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -62,6 +63,7 @@ public class PreparateurFunctionalTest {
         request.setSalaire(2800.0);
         request.setStatutContrat(StatutContrat.CDD);
         request.setDiplome("CAP Pharmacie");
+        request.setPoste(PosteEmploye.PREPARATEUR);
 
         ResponseEntity<PreparateurResponse> response = restTemplate.postForEntity(
                 baseUrl, request, PreparateurResponse.class);
