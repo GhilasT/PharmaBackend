@@ -46,11 +46,15 @@ public class ClientController {
         return new ResponseEntity<>(clientResponse, HttpStatus.OK);
     }
 
-
     @GetMapping("/telephone/{telephone}")
     public ResponseEntity<ClientResponse> getClientByTelephone(@PathVariable String telephone) {
         ClientResponse clientResponse = clientService.getClientByTelephone(telephone);
         return new ResponseEntity<>(clientResponse, HttpStatus.OK);
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteClient(@PathVariable UUID id) {
+        clientService.deleteClient(id);
+        return ResponseEntity.ok().build();
+    }
 }
