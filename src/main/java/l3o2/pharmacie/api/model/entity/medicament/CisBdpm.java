@@ -3,7 +3,11 @@ package l3o2.pharmacie.api.model.entity.medicament;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -17,6 +21,9 @@ import java.util.List;
 @Table(name = "cis_bdpm")
 // Génère automatiquement les getters, setters et les méthodes toString, equals, hashCode
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class CisBdpm {
 
     @Id
