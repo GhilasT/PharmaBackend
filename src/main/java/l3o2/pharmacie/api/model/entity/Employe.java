@@ -47,11 +47,11 @@ public class Employe extends Personne {
      * Hashage et cryptage du mot de passe avant l'enregistrement.
      */
     @PrePersist
-    private void hashPassword() {
-        if (this.password != null && !this.password.startsWith("EmployeResponseBuildera$")) {
-            this.password = new BCryptPasswordEncoder().encode(this.password);
-        }
+private void hashPassword() {
+    if (this.password != null && !this.password.startsWith("$2a$")) { // Vérifie le préfixe BCrypt
+        this.password = new BCryptPasswordEncoder().encode(this.password);
     }
+}
 
     /**
      * Génère un matricule pour chaque employé en fonction de son poste.

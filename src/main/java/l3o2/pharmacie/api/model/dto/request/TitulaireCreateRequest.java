@@ -6,8 +6,10 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import l3o2.pharmacie.api.model.entity.PosteEmploye;
 import l3o2.pharmacie.api.model.entity.StatutContrat;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
@@ -16,6 +18,8 @@ import java.util.Date;
  * Contient les champs nécessaires à l'enregistrement d'un titulaire.
  */
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
 public class TitulaireCreateRequest {
 
