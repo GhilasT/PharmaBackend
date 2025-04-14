@@ -42,5 +42,14 @@ public class MedicamentPanier {
     public void decrementerStock() {
         stockMedicament.setQuantite(stockMedicament.getQuantite() - quantite);
     }
+    @Override
+    public String toString() {
+        return "MedicamentPanier{" +
+                "idMedicamentPanier=" + idMedicamentPanier +
+                ", stockMedicament=" + (stockMedicament != null ? stockMedicament.getId() : null) +
+                ", quantite=" + quantite +
+                ", vente=" + (vente != null ? vente.getIdVente() : null) +
+                '}';
+    }
 }
 

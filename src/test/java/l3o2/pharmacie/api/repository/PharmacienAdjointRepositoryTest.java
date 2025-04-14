@@ -10,6 +10,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.context.ActiveProfiles;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -38,7 +39,7 @@ class PharmacienAdjointRepositoryTest {
                 .emailPro("john.pro@pharma.com")
                 .telephone("123456789")
                 .adresse("123 Rue de la Pharmacie")
-                .dateEmbauche(java.sql.Date.valueOf("2023-01-01"))
+                .dateEmbauche(new Date())
                 .salaire(4000.0)
                 .password("password")
                 .statutContrat(StatutContrat.CDI)
@@ -53,7 +54,7 @@ class PharmacienAdjointRepositoryTest {
                 .emailPro("jane.pro@pharma.com")
                 .telephone("987654321")
                 .adresse("456 Rue de la Pharmacie")
-                .dateEmbauche(java.sql.Date.valueOf("2023-02-01"))
+                .dateEmbauche(new Date())
                 .salaire(4200.0)
                 .password("password")
                 .statutContrat(StatutContrat.CDD)

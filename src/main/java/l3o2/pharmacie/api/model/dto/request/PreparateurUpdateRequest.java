@@ -4,7 +4,7 @@ import jakarta.validation.constraints.*;
 import l3o2.pharmacie.api.model.entity.PosteEmploye;
 import l3o2.pharmacie.api.model.entity.StatutContrat;
 import lombok.Data;
-import java.sql.Date;
+import java.util.Date;
 
 @Data
 public class PreparateurUpdateRequest {

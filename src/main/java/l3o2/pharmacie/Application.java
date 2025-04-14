@@ -1,7 +1,7 @@
 package l3o2.pharmacie;
 
 import java.math.BigDecimal;
-import java.sql.Date;
+import java.util.Date;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
@@ -181,7 +181,7 @@ public class Application {
                             .adresse("5 Rue de l'Apprentissage")
                             .password("apprenti123")
                             .emailPro(emailProApprenti)
-                            .dateEmbauche(Date.valueOf("2025-03-18"))
+                            .dateEmbauche(new Date())
                             .salaire(1500.0)
                             .poste(PosteEmploye.APPRENTI)
                             .statutContrat(StatutContrat.CDD)

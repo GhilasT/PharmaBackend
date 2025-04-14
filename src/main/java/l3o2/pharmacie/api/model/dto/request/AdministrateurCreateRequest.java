@@ -1,6 +1,6 @@
 package l3o2.pharmacie.api.model.dto.request;
 
-import java.sql.Date;
+import java.util.Date;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

@@ -17,7 +17,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.dao.DataIntegrityViolationException;
 
-import java.sql.Date;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -143,7 +143,7 @@ class AdministrateurServiceTest {
                 .emailPro("john.pro@pharma.com")
                 .password("password")
                 .role("SUPER_ADMIN")
-                .dateEmbauche(Date.valueOf("2023-01-01"))
+                .dateEmbauche(new Date())
                 .salaire(5000.0)
                 .adresse("123 Rue de la Pharmacie")
                 .statutContrat(StatutContrat.CDI)

@@ -60,8 +60,8 @@ public class VenteService {
 
     @Transactional
     public VenteResponse createVente(VenteCreateRequest request) {
-        System.out.println("🛒 Début de la création de la vente...");
-        System.out.println("📥 Requête reçue : " + request);
+        System.out.println("Début de la création de la vente...");
+        System.out.println("Requête reçue : " + request);
 
         StringBuilder notifications = new StringBuilder();
 
@@ -76,17 +76,17 @@ public class VenteService {
                             ))
                             : codeInitial;
 
-                    System.out.println("🔍 Code utilisé (CIP13) : " + finalCode);
+                    System.out.println("Code utilisé (CIP13) : " + finalCode);
 
                     StockMedicament stock = medicamentRepository
                             .findTopByPresentation_CodeCip13OrderByDateMiseAJourDesc(finalCode)
                             .orElseThrow(() -> {
-                                System.out.println("❌ Stock introuvable pour le code CIP13 : " + finalCode);
+                                System.out.println("Stock introuvable pour le code CIP13 : " + finalCode);
                                 return new ResponseStatusException(HttpStatus.NOT_FOUND,
                                         "Stock introuvable pour le code CIP13 : " + finalCode);
                             });
 
-                    System.out.println("📦 Stock trouvé (id: " + stock.getId() + ") | Quantité : " + stock.getQuantite());
+                    System.out.println("Stock trouvé (id: " + stock.getId() + ") | Quantité : " + stock.getQuantite());
 
                     if (stock.getQuantite() < medRequest.getQuantite()) {
                         System.out.println("quantiter insufisante");
@@ -98,10 +98,10 @@ public class VenteService {
                     medicamentRepository.save(stock);
 
                     if (stock.getQuantite() <= stock.getSeuilAlerte()) {
-                        notifications.append("⚠️ Stock faible pour ").append(finalCode).append("\n");
+                        notifications.append("Stock faible pour ").append(finalCode).append("\n");
                     }
                     if (stock.getQuantite() == 0) {
-                        notifications.append("❌ Rupture de stock : ").append(finalCode).append("\n");
+                        notifications.append("Rupture de stock : ").append(finalCode).append("\n");
                     }
 
                     System.out.println("sotck est ok !");

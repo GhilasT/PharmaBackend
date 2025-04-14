@@ -55,4 +55,18 @@ public class Vente {
     @OneToMany(mappedBy = "vente", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<MedicamentPanier> medicamentsPanier;
 
+    @Override
+    public String toString() {
+        return "Vente{" +
+                "idVente=" + idVente +
+                ", dateVente=" + dateVente +
+                ", modePaiement='" + modePaiement + '\'' +
+                ", montantTotal=" + montantTotal +
+                ", montantRembourse=" + montantRembourse +
+                ", pharmacienAdjoint=" + (pharmacienAdjoint != null ? pharmacienAdjoint.getIdPersonne() : null) +
+                ", client=" + (client != null ? client.getIdPersonne() : null) +
+                ", medicamentsPanier=" + (medicamentsPanier != null ? medicamentsPanier.size() : 0) +
+                '}';
+    }
+
 }
