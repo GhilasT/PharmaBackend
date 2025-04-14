@@ -56,7 +56,7 @@ public class PreparateurFunctionalTest {
         request.setPrenom("Paul");
         request.setEmail("paul.leroy@example.com");
         request.setEmailPro("p.leroy@pharma.com");
-        request.setTelephone("+33612345678");
+        request.setTelephone("0612345678");
         request.setAdresse("10 Rue des Préparations");
         request.setPassword("pass456");
         request.setDateEmbauche(new Date());
