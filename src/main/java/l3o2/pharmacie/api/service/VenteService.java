@@ -70,10 +70,9 @@ public class VenteService {
                     String codeInitial = medRequest.getCodeCip13();
                     String finalCode = codeInitial.length() == 8
                             ? medicamentService.getCodeCip13FromCodeCis(codeInitial)
-                            .orElseThrow(() -> new ResponseStatusException(
-                                    HttpStatus.NOT_FOUND,
-                                    "Aucune présentation trouvée pour le code CIS : " + codeInitial
-                            ))
+                                    .orElseThrow(() -> new ResponseStatusException(
+                                            HttpStatus.NOT_FOUND,
+                                            "Aucune présentation trouvée pour le code CIS : " + codeInitial))
                             : codeInitial;
 
                     System.out.println("Code utilisé (CIP13) : " + finalCode);
@@ -154,7 +153,7 @@ public class VenteService {
             System.out.println("Ordonnance requise");
 
             response.setNotification(" Ordonnance requise");
-        }else{
+        } else {
             response.setNotification("Pas d'ordonnance requise");
         }
 
@@ -194,8 +193,21 @@ public class VenteService {
                                             .emplacement(stock.getEmplacement())
                                             .build();
                                 })
-                                .collect(Collectors.toList())
-                )
+                                .collect(Collectors.toList()))
                 .build();
+    }
+
+    @Transactional(readOnly = true)
+    public List<VenteResponse> getByPharmacienId(UUID pharmacienId) {
+        return venteRepository.findByPharmacienAdjoint_IdPersonne(pharmacienId).stream()
+                .map(this::mapToResponse)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public List<VenteResponse> getByClientId(UUID clientId) {
+        return venteRepository.findByClient_IdPersonne(clientId).stream()
+                .map(this::mapToResponse)
+                .collect(Collectors.toList());
     }
 }
