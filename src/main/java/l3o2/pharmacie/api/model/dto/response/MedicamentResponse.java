@@ -17,10 +17,11 @@ public class MedicamentResponse {
 
     private Long id;
     private String codeCip13;
+    private String denomination;
     private String numeroLot;
     private Integer quantite;
     private LocalDate datePeremption;
     private LocalDate dateMiseAJour;
-    private Integer seuilAlerte = 6;
+    private Integer seuilAlerte;
     private String emplacement;
 }

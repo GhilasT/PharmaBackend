@@ -1,6 +1,7 @@
 package l3o2.pharmacie.api.controller;
 
 import l3o2.pharmacie.api.model.dto.request.MedicamentRequest;
+import l3o2.pharmacie.api.model.dto.response.MedicamentDetailsDTO;
 import l3o2.pharmacie.api.model.dto.response.MedicamentResponse;
 import l3o2.pharmacie.api.model.dto.response.StockMedicamentDTO;
 import l3o2.pharmacie.api.service.MedicamentService;
@@ -30,12 +31,11 @@ public class MedicamentController {
         return medicamentService.createMedicament(request);
     }
 
-    // recuperer un medicament  à partir de son ID
+    // recuperer un medicament à partir de son ID
     @GetMapping("/id/{id}")
     public MedicamentResponse getOne(@PathVariable Long id) {
         return medicamentService.getMedicamentById(id);
     }
-
 
     // maitre a jour
     @PutMapping("/id/{id}")
@@ -58,36 +58,33 @@ public class MedicamentController {
 
     @Autowired
     private StockMedicamentService stockMedicamentService;
-    
+
     /**
      * Récupère tous les médicaments.
      * 
      * @return Liste des médicaments formatée pour l'affichage dans le frontend
      */
     @GetMapping("/{page}")
-public ResponseEntity<Map<String, Object>> getPage(
-    @PathVariable int page,
-    @RequestParam(required = false) String search
-) {
-    Page<StockMedicamentDTO> resultPage = search != null ? 
-        stockMedicamentService.searchMedicamentsPagines(search, page) :
-        stockMedicamentService.getMedicamentsPagines(page);
+    public ResponseEntity<Map<String, Object>> getPage(
+            @PathVariable int page,
+            @RequestParam(required = false) String search) {
+        Page<StockMedicamentDTO> resultPage = search != null
+                ? stockMedicamentService.searchMedicamentsPagines(search, page)
+                : stockMedicamentService.getMedicamentsPagines(page);
 
-    return ResponseEntity.ok(Map.of(
-        "content", resultPage.getContent(),
-        "currentPage", resultPage.getNumber(),
-        "totalPages", resultPage.getTotalPages(),
-        "totalElements", resultPage.getTotalElements()
-    ));
-}
+        return ResponseEntity.ok(Map.of(
+                "content", resultPage.getContent(),
+                "currentPage", resultPage.getNumber(),
+                "totalPages", resultPage.getTotalPages(),
+                "totalElements", resultPage.getTotalElements()));
+    }
 
-@GetMapping("/search/all")
-public ResponseEntity<List<StockMedicamentDTO>> searchAllMedicaments(
-    @RequestParam(required = false) String searchTerm
-) {
-    List<StockMedicamentDTO> results = stockMedicamentService.searchAllMedicaments(searchTerm);
-    return ResponseEntity.ok(results);
-}
+    @GetMapping("/search/all")
+    public ResponseEntity<List<StockMedicamentDTO>> searchAllMedicaments(
+            @RequestParam(required = false) String searchTerm) {
+        List<StockMedicamentDTO> results = stockMedicamentService.searchAllMedicaments(searchTerm);
+        return ResponseEntity.ok(results);
+    }
 
     /**
      * Recherche des médicaments par terme de recherche.
@@ -97,17 +94,20 @@ public ResponseEntity<List<StockMedicamentDTO>> searchAllMedicaments(
      */
     @GetMapping("/search/{page}")
     public ResponseEntity<Map<String, Object>> searchByLibelleOrCodeCIS(
-        @RequestParam String searchTerm, 
-        @PathVariable int page
-    ) {
+            @RequestParam String searchTerm,
+            @PathVariable int page) {
         Page<StockMedicamentDTO> resultPage = stockMedicamentService.searchByLibelleOrCodeCIS(searchTerm, page);
 
         return ResponseEntity.ok(Map.of(
-            "content", resultPage.getContent(),
-            "currentPage", resultPage.getNumber(),
-            "totalPages", resultPage.getTotalPages(),
-            "totalElements", resultPage.getTotalElements()
-        ));
+                "content", resultPage.getContent(),
+                "currentPage", resultPage.getNumber(),
+                "totalPages", resultPage.getTotalPages(),
+                "totalElements", resultPage.getTotalElements()));
+    }
+
+    @GetMapping("/code/{cip13}")
+    public ResponseEntity<MedicamentDetailsDTO> getDetailsByCip13(@PathVariable String cip13) {
+        return ResponseEntity.ok(stockMedicamentService.getMedicamentDetailsByCip13(cip13));
     }
 
 }

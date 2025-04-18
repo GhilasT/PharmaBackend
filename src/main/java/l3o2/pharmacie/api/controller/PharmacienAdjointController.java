@@ -65,4 +65,11 @@ public class PharmacienAdjointController {
         List<PharmacienAdjointResponse> responses = pharmacienAdjointService.searchPharmaciensAdjoints(term);
         return ResponseEntity.ok(responses);
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<PharmacienAdjointResponse> getPharmacienAdjointById(@PathVariable UUID id) {
+        PharmacienAdjointResponse response = pharmacienAdjointService.getPharmacienAdjointById(id);
+        return ResponseEntity.ok(response);
+    }
+
 }

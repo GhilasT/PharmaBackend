@@ -170,4 +170,10 @@ public class PharmacienAdjointService {
                 .map(this::mapToResponse)
                 .toList();
     }
+
+    public PharmacienAdjointResponse getPharmacienAdjointById(UUID id) {
+        PharmacienAdjoint pharmacien = pharmacienAdjointRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("PharmacienAdjoint", "id", id));
+        return mapToResponse(pharmacien);
+    }
 }

@@ -191,6 +191,7 @@ public class VenteService {
                                             .dateMiseAJour(stock.getDateMiseAJour())
                                             .seuilAlerte(stock.getSeuilAlerte())
                                             .emplacement(stock.getEmplacement())
+                                            .denomination(stock.getPresentation().getCisBdpm().getDenomination())
                                             .build();
                                 })
                                 .collect(Collectors.toList()))

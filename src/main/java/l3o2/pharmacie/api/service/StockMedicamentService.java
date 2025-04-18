@@ -1,7 +1,10 @@
 package l3o2.pharmacie.api.service;
 
+import l3o2.pharmacie.api.model.dto.response.MedicamentDetailsDTO;
+import l3o2.pharmacie.api.model.dto.response.StockDetailsDTO;
 import l3o2.pharmacie.api.model.dto.response.StockMedicamentDTO;
 import l3o2.pharmacie.api.model.entity.medicament.*;
+import l3o2.pharmacie.api.repository.CisCipBdpmRepository;
 import l3o2.pharmacie.api.repository.StockMedicamentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -19,9 +22,14 @@ public class StockMedicamentService {
     private static final int PAGE_SIZE = 50;
     private final StockMedicamentRepository stockMedicamentRepository;
 
-    @Autowired
-    public StockMedicamentService(StockMedicamentRepository stockMedicamentRepository) {
+    private final CisCipBdpmRepository cisCipBdpmRepository; 
+
+    public StockMedicamentService(
+            StockMedicamentRepository stockMedicamentRepository,
+            CisCipBdpmRepository cisCipBdpmRepository
+    ) {
         this.stockMedicamentRepository = stockMedicamentRepository;
+        this.cisCipBdpmRepository = cisCipBdpmRepository;
     }
 
     // Méthode pour la pagination standard
@@ -123,4 +131,40 @@ public class StockMedicamentService {
         return stockPage.map(this::convertToStockMedicamentDTO);
     }
 
+    public MedicamentDetailsDTO getMedicamentDetailsByCip13(String cip13) {
+        // 1. Récupérer la présentation CIP13
+        CisCipBdpm presentation = cisCipBdpmRepository.findByCodeCip13(cip13)
+                .orElseThrow(() -> new RuntimeException("Code CIP13 non trouvé"));
+
+        // 2. Récupérer les stocks associés
+        List<StockMedicament> stocks = stockMedicamentRepository.findByPresentation_CodeCip13(cip13);
+
+        // 3. Construire le DTO
+        return MedicamentDetailsDTO.builder()
+                .denomination(presentation.getCisBdpm().getDenomination())
+                .formePharmaceutique(presentation.getCisBdpm().getFormePharmaceutique())
+                .voiesAdministration(presentation.getCisBdpm().getVoiesAdministration())
+                .libellePresentation(presentation.getLibellePresentation())
+                .tauxRemboursement(presentation.getTauxRemboursement())
+                .prixHT(presentation.getPrixHT())
+                .prixTTC(presentation.getPrixTTC())
+                .taxe(presentation.getTaxe())
+                .indicationsRemboursement(presentation.getIndicationsRemboursement())
+                .stocks(convertToStockDetailsDTO(stocks))
+                .build();
+    }
+
+    // Méthode de conversion existante (à ajouter)
+    private List<StockDetailsDTO> convertToStockDetailsDTO(List<StockMedicament> stocks) {
+        return stocks.stream()
+                .map(stock -> StockDetailsDTO.builder()
+                        .quantite(stock.getQuantite())
+                        .numeroLot(stock.getNumeroLot())
+                        .datePeremption(stock.getDatePeremption())
+                        .dateMiseAJour(stock.getDateMiseAJour())
+                        .seuilAlerte(stock.getSeuilAlerte())
+                        .emplacement(stock.getEmplacement())
+                        .build())
+                .collect(Collectors.toList());
+    }
 }
