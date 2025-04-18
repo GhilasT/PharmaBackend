@@ -10,10 +10,10 @@ import java.util.List;
  */
 public class Comptabilite {
 
-    public static double calculCA(List<VenteResponse> ventes){
-        double sum = 0;
+    public static Double calculCA(List<VenteResponse> ventes){
+        Double sum = 0;
         for (VenteResponse v : ventes){
-            sum += vente.getMontantTotal();
+            sum += v.getMontantTotal();
         }
         return sum;
     }

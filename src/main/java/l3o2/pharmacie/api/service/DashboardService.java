@@ -23,7 +23,7 @@ public class DashboardService {
 
     public DashboardResponse getDashboardStats() {
         return DashboardResponse.builder()
-                .CA(Double.parseDouble(Comptabilite.calculCA(venteService.getAll()))
+                .CA(Comptabilite.calculCA(venteService.getAll())
                 .benefices(0.00)
                 .nbEmployes(employeService.getAllEmployes().size())
                 .nbClients(clientService.getAllClients().size())
