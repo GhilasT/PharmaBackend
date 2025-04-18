@@ -11,7 +11,7 @@ import java.util.List;
 public class Comptabilite {
 
     public static Double calculCA(List<VenteResponse> ventes){
-        Double sum = 0;
+        Double sum = 0.00;
         for (VenteResponse v : ventes){
             sum += v.getMontantTotal();
         }
