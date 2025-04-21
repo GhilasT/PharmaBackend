@@ -9,6 +9,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,6 +27,27 @@ public interface StockMedicamentRepository extends JpaRepository<StockMedicament
      * @return Le médicament correspondant (s'il existe).
      */
     Optional<StockMedicament> findById(Long id);
+
+    /**
+     * Recherche tous les médicaments dont la quantité est non nulle.
+     * @return Liste des médicaments avec quantité non nulle.
+     */
+    Optional<List<StockMedicament>> getAllByQuantiteIsGreaterThanEqual(Integer amount);
+
+    /**
+     * Recherche tous les médicaments dont la date de péremption est comprise entre deux dates.
+     * @param from
+     * @param to
+     * @return
+     */
+    Optional<List<StockMedicament>> getAllByDatePeremptionBetween(LocalDate from, LocalDate to);
+
+    /**
+     * Recherche tous les médicaments dont la date de péremption est inférieure ou égale à la date actuelle.
+     * @param date Date actuelle.
+     * @return Liste des médicaments périmés.
+     */
+    Optional<List<StockMedicament>> getAllByDatePeremptionBefore(LocalDate date);
 
     /**
      * Recherche un médicament par son numéro de lot.
