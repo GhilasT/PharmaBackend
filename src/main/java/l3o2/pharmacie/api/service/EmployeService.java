@@ -9,6 +9,7 @@ import l3o2.pharmacie.api.model.entity.Employe;
 import l3o2.pharmacie.api.repository.EmployeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -82,6 +83,33 @@ public class EmployeService {
         updateEmployeFields(employe, request);
         Employe updatedEmploye = employeRepository.save(employe);
         return mapToResponse(updatedEmploye);
+    }
+
+    public EmployeResponse updateEmployeEmail(UUID id,String email) {
+        return updateEmploye(id, EmployeUpdateRequest.builder().email(email).build());
+    }
+
+    public EmployeResponse updateEmployeEmailPro(UUID id,String emailPro) {
+        return updateEmploye(id, EmployeUpdateRequest.builder().email(emailPro).build());
+    }
+
+    public EmployeResponse updateEmployePassword(UUID id,String oldPwd, String newPwd1, String newPwd2) {
+        Employe employe = employeRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Employé", "id", id));
+        if (passwordEncoder.matches(oldPwd, employe.getPassword())) {
+            if (newPwd1.equals(newPwd2)) {
+                employe.setPassword(passwordEncoder.encode(newPwd1));
+                Employe updatedEmploye = employeRepository.save(employe);
+                return mapToResponse(updatedEmploye);
+            }
+            else{
+                throw new ResponseStatusException(NOT_FOUND, "Problème mdp : nouveaux mdp ne matchent pas");
+            }
+
+        }
+        else{
+            throw new ResponseStatusException(NOT_FOUND, "Problème mdp : ancien mot de passe incorrect");
+        }
     }
 
     /**

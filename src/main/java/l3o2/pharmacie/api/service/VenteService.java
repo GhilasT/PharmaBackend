@@ -17,6 +17,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.web.server.ResponseStatusException;
+
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.logging.Logger;
 import java.util.logging.Level;
 
@@ -54,6 +57,15 @@ public class VenteService {
     @Transactional(readOnly = true)
     public List<VenteResponse> getAllOrderByDate() {
         return venteRepository.findAll(Sort.by(Sort.Direction.DESC, "dateVente")).stream()
+                .map(this::mapToResponse)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public List<VenteResponse> getAllOrderByDate(LocalDate date) {
+        return venteRepository.findByDateVenteBetween(Date.from(date.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()),
+                        Date.from(date.atTime(23,59).atZone(ZoneId.systemDefault()).toInstant()))
+                .stream()
                 .map(this::mapToResponse)
                 .collect(Collectors.toList());
     }

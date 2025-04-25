@@ -13,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -167,4 +168,39 @@ public class StockMedicamentService {
                         .build())
                 .collect(Collectors.toList());
     }
+
+    /**
+     * Récupère tous les médicaments périmés.
+     * @return Liste des médicaments périmés.
+     */
+    public List<StockMedicament> getMedicamentsPerimes() {
+        return stockMedicamentRepository.getAllByDatePeremptionBefore(LocalDate.now())
+                .orElseThrow(() -> new RuntimeException("Aucun médicament périmé trouvé"));
+    }
+
+    /**
+     * Récupère tous les médicaments dont la quantité est supérieure ou égale à une valeur donnée.
+     * @param amount Valeur minimale de la quantité.
+     * @return Liste des médicaments avec quantité supérieure ou égale à amount.
+     */
+    public List<StockMedicament> getMedicamentsQuantiteSuperieureOuEgale(Integer amount) {
+        return stockMedicamentRepository.getAllByQuantiteIsGreaterThanEqual(amount)
+                .orElseThrow(() -> new RuntimeException("Aucun médicament trouvé avec une quantité supérieure ou égale à " + amount));
+
+    }
+
+    /**
+     * Recupère tous les médicaments dont la date limite est entre auj et une date donnee
+     * @return liste de medicament
+     */
+    public List<StockMedicament> getMedicamentsAlerteBientotPerimee(LocalDate date_debut, LocalDate date_fin) {
+        return stockMedicamentRepository.getAllByDatePeremptionBetween(date_debut, date_fin)
+                .orElseThrow(() -> new RuntimeException("Aucun médicament trouvé avec une date de péremption entre " + LocalDate.now() + " et " + date_debut + " et " + date_fin));
+    }
+
+    public List<StockMedicament> getMedicamentsSeuilAlerte(Integer amount) {
+        return stockMedicamentRepository.findByQuantiteLessThanEqual(amount);
+    }
+
+
 }

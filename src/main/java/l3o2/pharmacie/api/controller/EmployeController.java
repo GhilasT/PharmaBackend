@@ -61,8 +61,29 @@ public class EmployeController {
         return ResponseEntity.ok(updatedEmploye);
     }
 
+    @PutMapping("/email/{id}/{email}")
+    public ResponseEntity<EmployeResponse> updateEmployeEmail(@PathVariable UUID id,
+                                                         @Valid @PathVariable String email) {
+        EmployeResponse updatedEmploye = employeService.updateEmployeEmail(id, email);
+        return ResponseEntity.ok(updatedEmploye);
+    }
 
-     //Suppression d'un employé par matricule
+    @PutMapping("/email/{id}/{emailPro}")
+    public ResponseEntity<EmployeResponse> updateEmployeEmailPro(@PathVariable UUID id,
+                                                              @Valid @PathVariable String emailPro) {
+        EmployeResponse updatedEmploye = employeService.updateEmployeEmailPro(id, emailPro);
+        return ResponseEntity.ok(updatedEmploye);
+    }
+
+    @PutMapping("/email/{id}/{oldPwd}/{newPwd1}/{newPwd2}")
+    public ResponseEntity<EmployeResponse> updateEmployePassword(@PathVariable UUID id, @Valid @PathVariable String oldPwd,
+                                                                 @Valid @PathVariable String newPwd1, @Valid @PathVariable String newPwd2) {
+        EmployeResponse updatedEmploye = employeService.updateEmployePassword(id, oldPwd, newPwd1, newPwd2);
+        return ResponseEntity.ok(updatedEmploye);
+    }
+
+
+    //Suppression d'un employé par matricule
 
     @DeleteMapping("/{matricule}")
     public ResponseEntity<Void> deleteEmploye(@PathVariable String matricule) {
