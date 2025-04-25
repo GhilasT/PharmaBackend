@@ -6,6 +6,7 @@ import l3o2.pharmacie.api.model.dto.response.DashboardResponse;
 import l3o2.pharmacie.api.model.dto.response.MedecinResponse;
 import l3o2.pharmacie.api.service.DashboardService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,7 +27,8 @@ public class DashboardController {
 
     @GetMapping
     public ResponseEntity<DashboardResponse> getDashboard() {
-        return ResponseEntity.ok(dashboardService.getDashboardStats());
+        DashboardResponse dashboardResponse = dashboardService.getDashboardStats();
+        return new ResponseEntity<>(dashboardResponse, HttpStatus.OK);
     }
 
 
