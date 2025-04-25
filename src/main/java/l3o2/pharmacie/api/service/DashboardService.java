@@ -27,17 +27,36 @@ public class DashboardService {
     ClientService clientService;
 
     public DashboardResponse getDashboardStats() {
-        return DashboardResponse.builder()
-                .CA(Comptabilite.calculCA(venteService.getAll()))
-                .benefices(0.00)
-                .nbEmployes(employeService.getAllEmployes().size())
-                .nbClients(clientService.getAllClients().size())
-                .nbMedecins(medecinService.getAllMedecins().size())
-                .nbMedicaments(stockMedicamentService.getMedicamentsQuantiteSuperieureOuEgale(1).size())
-                .nbMedicamentsRuptureStock(stockMedicamentService.getMedicamentsSeuilAlerte(0).size())
-                .nbMedicamentsPerimes(stockMedicamentService.getMedicamentsPerimes().size())
-                .nbMedicamentsAlerte(stockMedicamentService.getMedicamentsSeuilAlerte(10).size())
-                .nbMedicamentsAlerteBientotPerimee(stockMedicamentService.getMedicamentsAlerteBientotPerimee(LocalDate.now(),LocalDate.now().plusDays(30)).size())
-                .build();
+
+        DashboardResponse response = DashboardResponse.builder()
+            .CA(0.00)
+            .benefices(0.00)
+            .nbEmployes(0)
+            .nbClients(0)
+            .nbMedecins(0)
+            .nbMedicaments(0)
+            .nbMedicamentsRuptureStock(0)
+            .nbMedicamentsPerimes(0)
+            .nbMedicamentsAlerte(0)
+            .nbMedicamentsAlerteBientotPerimee(0)
+            .build();
+
+            /*
+             * DashboardResponse response = DashboardResponse.builder()
+            .CA(Comptabilite.calculCA(venteService.getAll()))
+            .benefices(0.00)
+            .nbEmployes(employeService.getAllEmployes().size())
+            .nbClients(clientService.getAllClients().size())
+            .nbMedecins(medecinService.getAllMedecins().size())
+            .nbMedicaments(stockMedicamentService.getMedicamentsQuantiteSuperieureOuEgale(1).size())
+            .nbMedicamentsRuptureStock(stockMedicamentService.getMedicamentsSeuilAlerte(0).size())
+            .nbMedicamentsPerimes(stockMedicamentService.getMedicamentsPerimes().size())
+            .nbMedicamentsAlerte(stockMedicamentService.getMedicamentsSeuilAlerte(10).size())
+            .nbMedicamentsAlerteBientotPerimee(stockMedicamentService.getMedicamentsAlerteBientotPerimee(LocalDate.now(),LocalDate.now().plusDays(30)).size())
+            .build();
+             */
+ 
+
+        return response;
     }
 }
