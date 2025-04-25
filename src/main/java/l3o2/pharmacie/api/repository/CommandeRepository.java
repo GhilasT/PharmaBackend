@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -20,5 +21,6 @@ public interface CommandeRepository extends JpaRepository<Commande, UUID> {
 
     List<Commande> findByStatut(String statut);
 
+    List<Commande> findByDateCommandeBetween(Date dateCommandeAfter, Date dateCommandeBefore);
 
 }

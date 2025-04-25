@@ -14,6 +14,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -106,6 +108,15 @@ public class CommandeService {
                 .orElseThrow(() -> new RuntimeException("Commande non trouvée"));
 
         return mapToResponse(commande);
+    }
+
+    @Transactional
+    public List<CommandeResponse> getAllOrderByDate(LocalDate date) {
+        return commandeRepository.findByDateCommandeBetween(Date.from(date.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()),
+                        Date.from(date.atTime(23,59).atZone(ZoneId.systemDefault()).toInstant()))
+                .stream()
+                .map(this::mapToResponse)
+                .collect(Collectors.toList());
     }
 
     @Transactional
