@@ -199,8 +199,7 @@ public class StockMedicamentService {
     }
 
     public List<StockMedicament> getMedicamentsSeuilAlerte(Integer amount) {
-        return stockMedicamentRepository.findByQuantiteLessThanEqual(amount)
-                .orElseThrow(() -> new RuntimeException("Aucun médicament trouvé avec une quantité inférieure ou égale à 0"));
+        return stockMedicamentRepository.findByQuantiteLessThanEqual(amount);
     }
 
 
