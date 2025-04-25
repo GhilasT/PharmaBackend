@@ -45,10 +45,13 @@ public interface VenteRepository extends JpaRepository<Vente, UUID> {
 
      // Recherche les ventes effectuées dans une période donnée.
 
-    @EntityGraph(attributePaths = {
+     @EntityGraph(attributePaths = {
         "pharmacienAdjoint",
         "client",
-        "medicamentsPanier.stockMedicament"
+        "medicamentsPanier",
+        "medicamentsPanier.stockMedicament",
+        "medicamentsPanier.stockMedicament.presentation",
+        "medicamentsPanier.stockMedicament.presentation.cisBdpm"
     })
     List<Vente> findByDateVenteBetween(Date start, Date end);
 
