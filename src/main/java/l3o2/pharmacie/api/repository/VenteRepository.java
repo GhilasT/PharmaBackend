@@ -39,7 +39,10 @@ public interface VenteRepository extends JpaRepository<Vente, UUID> {
     @EntityGraph(attributePaths = {
         "pharmacienAdjoint",
         "client",
-        "medicamentsPanier.stockMedicament"
+        "medicamentsPanier",
+        "medicamentsPanier.stockMedicament",
+        "medicamentsPanier.stockMedicament.presentation",
+        "medicamentsPanier.stockMedicament.presentation.cisBdpm"
     })
     List<Vente> findByClient_IdPersonne(UUID clientId);
 
