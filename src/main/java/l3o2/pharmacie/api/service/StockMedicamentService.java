@@ -72,10 +72,12 @@ public class StockMedicamentService {
     }
 
     // Conversion d'une entité vers DTO
-    private StockMedicamentDTO convertToStockMedicamentDTO(StockMedicament stock) {
+    public StockMedicamentDTO convertToStockMedicamentDTO(StockMedicament stock) {
         CisBdpm cisBdpm = stock.getPresentation().getCisBdpm();
         CisCipBdpm cisCipBdpm = stock.getPresentation();
-
+        
+        long id = stock.getId();//modifier
+        
         String codeCIS = cisBdpm.getCodeCis();
         String libelle = cisCipBdpm.getLibellePresentation();
         String denomination = cisBdpm.getDenomination();
@@ -109,7 +111,8 @@ public class StockMedicamentService {
         String tauxRemboursement = cisCipBdpm.getTauxRemboursement();
 
         return StockMedicamentDTO.builder()
-                .codeCIS(codeCIS)
+             .id(id)    // modifier  pour test 
+			.codeCIS(codeCIS)
                 .libelle(libelle)
                 .denomination(denomination)
                 .dosage(dosage)
@@ -124,7 +127,6 @@ public class StockMedicamentService {
                 .codeCip13(codeCip13)
                 .build();
     }
-
     public Page<StockMedicamentDTO> searchByLibelleOrCodeCIS(String searchTerm, int page) {
         Pageable pageable = PageRequest.of(page, PAGE_SIZE);
         Page<StockMedicament> stockPage = stockMedicamentRepository.searchByLibelleOrCodeCIS(searchTerm, pageable);
