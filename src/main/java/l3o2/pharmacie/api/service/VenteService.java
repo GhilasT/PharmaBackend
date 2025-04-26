@@ -1,12 +1,11 @@
 package l3o2.pharmacie.api.service;
 
+import l3o2.pharmacie.api.model.dto.request.OrdonnanceCreateRequest;
 import l3o2.pharmacie.api.model.dto.request.VenteCreateRequest;
 import l3o2.pharmacie.api.model.dto.request.MedicamentPanierRequest;
 import l3o2.pharmacie.api.model.dto.response.MedicamentResponse;
 import l3o2.pharmacie.api.model.dto.response.VenteResponse;
-import l3o2.pharmacie.api.model.entity.Client;
-import l3o2.pharmacie.api.model.entity.PharmacienAdjoint;
-import l3o2.pharmacie.api.model.entity.Vente;
+import l3o2.pharmacie.api.model.entity.*;
 import l3o2.pharmacie.api.model.entity.medicament.MedicamentPanier;
 import l3o2.pharmacie.api.model.entity.medicament.StockMedicament;
 import l3o2.pharmacie.api.repository.*;
@@ -70,9 +69,10 @@ public class VenteService {
                     String codeInitial = medRequest.getCodeCip13();
                     String finalCode = codeInitial.length() == 8
                             ? medicamentService.getCodeCip13FromCodeCis(codeInitial)
-                                    .orElseThrow(() -> new ResponseStatusException(
-                                            HttpStatus.NOT_FOUND,
-                                            "Aucune présentation trouvée pour le code CIS : " + codeInitial))
+                            .orElseThrow(() -> new ResponseStatusException(
+                                    HttpStatus.NOT_FOUND,
+                                    "Aucune présentation trouvée pour le code CIS : " + codeInitial
+                            ))
                             : codeInitial;
 
                     System.out.println("Code utilisé (CIP13) : " + finalCode);
@@ -150,12 +150,13 @@ public class VenteService {
                 .collect(Collectors.toList());
 
         if (!request.isOrdonnanceAjoutee() && !sousOrdonnance.isEmpty()) {
-            System.out.println("Ordonnance requise");
-
-            response.setNotification(" Ordonnance requise");
-        } else {
-            response.setNotification("Pas d'ordonnance requise");
+            LOGGER.warning("Ordonnance requise avant paiement");
+            throw new ResponseStatusException(
+                    HttpStatus.PRECONDITION_REQUIRED,
+                    "Impossible de finaliser la vente : ordonnance requise."
+            );
         }
+        response.setNotification("Pas d'ordonnance requise");
 
         System.out.println(" Vente enregistrée avec succès !");
         return response;
@@ -191,24 +192,13 @@ public class VenteService {
                                             .dateMiseAJour(stock.getDateMiseAJour())
                                             .seuilAlerte(stock.getSeuilAlerte())
                                             .emplacement(stock.getEmplacement())
-                                            .denomination(stock.getPresentation().getCisBdpm().getDenomination())
                                             .build();
                                 })
-                                .collect(Collectors.toList()))
+                                .collect(Collectors.toList())
+                )
                 .build();
     }
 
-    @Transactional(readOnly = true)
-    public List<VenteResponse> getByPharmacienId(UUID pharmacienId) {
-        return venteRepository.findByPharmacienAdjoint_IdPersonne(pharmacienId).stream()
-                .map(this::mapToResponse)
-                .collect(Collectors.toList());
-    }
 
-    @Transactional(readOnly = true)
-    public List<VenteResponse> getByClientId(UUID clientId) {
-        return venteRepository.findByClient_IdPersonne(clientId).stream()
-                .map(this::mapToResponse)
-                .collect(Collectors.toList());
-    }
+
 }
