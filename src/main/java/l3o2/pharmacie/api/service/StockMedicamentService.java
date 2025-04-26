@@ -6,6 +6,9 @@ import l3o2.pharmacie.api.model.dto.response.StockMedicamentDTO;
 import l3o2.pharmacie.api.model.entity.medicament.*;
 import l3o2.pharmacie.api.repository.CisCipBdpmRepository;
 import l3o2.pharmacie.api.repository.StockMedicamentRepository;
+import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
