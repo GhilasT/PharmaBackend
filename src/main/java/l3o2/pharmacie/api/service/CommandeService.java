@@ -27,9 +27,8 @@ import java.util.stream.Collectors;
 public class CommandeService {
 
     private final CommandeRepository commandeRepository;
-    private  final MedicamentRepository medicamentRepository;
+    private final MedicamentRepository medicamentRepository;
     private final StockMedicamentService stockMedicamentService;
-
 
     public CommandeResponse createCommande(CommandeCreateRequest request) {
         Commande commande = Commande.builder()
@@ -45,14 +44,12 @@ public class CommandeService {
         // Affecter la commande à chaque ligne
         commande.getLigneCommandes().forEach(ligne -> ligne.setCommande(commande));
 
-
         BigDecimal total;
-        for(LigneCommande f : commande.getLigneCommandes()) {
-            System.out.println( "le totale !! : "+ f.getMontantLigne());
+        for (LigneCommande f : commande.getLigneCommandes()) {
+            System.out.println("le totale !! : " + f.getMontantLigne());
             System.out.println("et  le prix unitaire : " + f.getPrixUnitaire());
-            System.out.println("le medoc : "+f.getStockMedicament());
+            System.out.println("le medoc : " + f.getStockMedicament());
         }
-
 
         BigDecimal montantTotal = commande.getLigneCommandes().stream()
                 .map(LigneCommande::getMontantLigne)
@@ -82,10 +79,11 @@ public class CommandeService {
 
     // Mapper une ligne de commande pour la réponse
     private LigneCommandeResponse mapLigneToResponse(LigneCommande ligneCommande) {
-        StockMedicamentDTO stockMedicamentDTO = stockMedicamentService.convertToStockMedicamentDTO(ligneCommande.getStockMedicament()); 
+        StockMedicamentDTO stockMedicamentDTO = stockMedicamentService
+                .convertToStockMedicamentDTO(ligneCommande.getStockMedicament());
         return LigneCommandeResponse.builder()
                 .stockMedicamentDTO(stockMedicamentDTO)
-                .stockMedicamentId(ligneCommande.getStockMedicament().getId())//A modifier
+                .stockMedicamentId(ligneCommande.getStockMedicament().getId())// A modifier
                 .quantite(ligneCommande.getQuantite())
                 .prixUnitaire(ligneCommande.getPrixUnitaire())
                 .montantLigne(ligneCommande.getMontantLigne())
@@ -94,7 +92,8 @@ public class CommandeService {
 
     private LigneCommande mapLigneCommandeToEntity(LigneCommandeCreateRequest req) {
         StockMedicament stockMedicament = medicamentRepository.findById(req.getStockMedicamentId())
-                .orElseThrow(() -> new RuntimeException("StockMedicament non trouvé pour l'ID : " + req.getStockMedicamentId()));
+                .orElseThrow(() -> new RuntimeException(
+                        "StockMedicament non trouvé pour l'ID : " + req.getStockMedicamentId()));
 
         BigDecimal prixUnitaire = stockMedicament.getPresentation().getPrixUnitaireAvecReduction();
         BigDecimal montantLigne = prixUnitaire.multiply(BigDecimal.valueOf(req.getQuantite()));
@@ -106,6 +105,7 @@ public class CommandeService {
                 .montantLigne(montantLigne)
                 .build();
     }
+
     // Récupérer une commande par son identifiant
     @Transactional
     public CommandeResponse getCommande(UUID reference) {
@@ -114,20 +114,18 @@ public class CommandeService {
 
         return mapToResponse(commande);
     }
-    
-    public List<CommandeResponse> getAll(){
-        System.out.println("Get all commandes Service ");
-        List<CommandeResponse> listRes = commandeRepository.findAll().stream().map(this::mapToResponse).collect(Collectors.toList());
-        System.out.println("la liste de commande : "+listRes);
-        return listRes;
+
+    public List<CommandeResponse> getAll() {
+        List<Commande> commandes = commandeRepository.findAllWithLigneCommandesAndStockMedicament();
+        return commandes.stream().map(this::mapToResponse).collect(Collectors.toList());
     }
 
-
     @Transactional
-    public CommandeResponse  validerReceptionCommande(UUID referenceCommande) {
+    public CommandeResponse validerReceptionCommande(UUID referenceCommande) {
         // Récupérer la commande
         Commande commande = commandeRepository.findById(referenceCommande)
-                .orElseThrow(() -> new RuntimeException("Commande non trouvée pour la référence : " + referenceCommande));
+                .orElseThrow(
+                        () -> new RuntimeException("Commande non trouvée pour la référence : " + referenceCommande));
 
         // Pour chaque ligne de commande, incrémenter le stock correspondant
         commande.getLigneCommandes().forEach(ligne -> {
@@ -138,7 +136,6 @@ public class CommandeService {
             medicamentRepository.save(stock);
         });
 
-
         commande.setStatut("Reçu");
 
         // Sauvegarder la commande mise à jour
@@ -146,57 +143,56 @@ public class CommandeService {
         return mapToResponse(commande);
     }
 
-
     @Transactional
     public CommandeResponse updateCommandeIncomplete(UUID reference, List<Integer> nouvellesQuantites) {
         Commande commande = commandeRepository.findById(reference)
                 .orElseThrow(() -> new RuntimeException("Commande non trouvée pour la référence : " + reference));
-    
+
         List<LigneCommande> ligneCommandes = commande.getLigneCommandes();
-    
+
         if (ligneCommandes.size() != nouvellesQuantites.size()) {
             throw new RuntimeException("Le nombre de quantités ne correspond pas au nombre de lignes de commande.");
         }
-    
+
         for (int i = 0; i < ligneCommandes.size(); i++) {
             LigneCommande ligneCommande = ligneCommandes.get(i);
             int nouvelleQuantite = nouvellesQuantites.get(i);
-    
+
             if (nouvelleQuantite < 0) {
                 throw new IllegalArgumentException("La quantité ne peut pas être négative.");
             }
-    
+
             // Mettre à jour la quantité
             ligneCommande.setQuantite(nouvelleQuantite);
             // Recalculer le montant de la ligne
-            ligneCommande.setMontantLigne(ligneCommande.getPrixUnitaire().multiply(BigDecimal.valueOf(nouvelleQuantite)));
-    
+            ligneCommande
+                    .setMontantLigne(ligneCommande.getPrixUnitaire().multiply(BigDecimal.valueOf(nouvelleQuantite)));
+
             StockMedicament stock = ligneCommande.getStockMedicament();
             int nouvelleQuantiteStock = stock.getQuantite() + nouvelleQuantite;
-            
+
             if (nouvelleQuantiteStock < 0) {
                 throw new RuntimeException("Stock insuffisant pour l'article : " + ligneCommande.getId());
             }
-    
+
             stock.setQuantite(nouvelleQuantiteStock);
             // Sauvegarder le stock mis à jour
             medicamentRepository.save(stock);
         }
-    
+
         // Recalculer le montant total de la commande
         BigDecimal montantTotal = ligneCommandes.stream()
                 .map(LigneCommande::getMontantLigne)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
         commande.setMontantTotal(montantTotal);
-    
+
         // Changer le statut
         commande.setStatut("Incomplète");
-    
+
         // Sauvegarder la commande mise à jour
         commandeRepository.save(commande);
-    
+
         return mapToResponse(commande);
     }
-    
-    
+
 }

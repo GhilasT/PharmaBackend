@@ -40,7 +40,6 @@ public class CommandeController {
     public ResponseEntity<List<CommandeResponse>> getAllCommandes() {
         System.out.println("Get all commandes controller");
         List<CommandeResponse> commandes = commandeService.getAll();
-        System.out.println(commandes);
         return ResponseEntity.ok(commandes);
     }
 

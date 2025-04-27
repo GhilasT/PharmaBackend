@@ -23,4 +23,10 @@ public interface CommandeRepository extends JpaRepository<Commande, UUID> {
 
     List<Commande> findByDateCommandeBetween(Date dateCommandeAfter, Date dateCommandeBefore);
 
+    @Query("SELECT DISTINCT c FROM Commande c " +
+       "LEFT JOIN FETCH c.ligneCommandes l " +
+       "LEFT JOIN FETCH l.stockMedicament sm " +
+       "LEFT JOIN FETCH sm.presentation")
+List<Commande> findAllWithLigneCommandesAndStockMedicament();
+
 }
