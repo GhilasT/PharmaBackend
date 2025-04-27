@@ -1,135 +1,137 @@
-C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\config\SecurityConfig.java
-C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\controller\AdministrateurController.java
-C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\controller\ApprentiController.java
-C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\controller\AuthController.java
-C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\controller\ClientController.java
-C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\controller\CommandeController.java
-C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\controller\EmployeController.java
-C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\controller\FournisseurController.java
-C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\controller\ImportController.java
-C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\controller\MedecinController.java
-C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\controller\MedicamentController.java
-C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\controller\OrdonnanceController.java
-C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\controller\PharmacienAdjointController.java
-C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\controller\PreparateurController.java
-C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\controller\TitulaireController.java
-C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\controller\VenteController.java
-C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\exceptions\DuplicateEmailException.java
-C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\exceptions\DuplicateEmailProException.java
-C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\exceptions\DuplicateRPPSException.java
-C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\exceptions\DuplicateSocieteException.java
-C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\exceptions\DuplicateTelephoneException.java
-C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\exceptions\InvalidDataException.java
-C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\exceptions\InvalidOperationException.java
-C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\exceptions\InvalidParameterException.java
-C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\exceptions\ResourceNotFoundException.java
-C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\handler\GlobalExceptionHandler.java
-C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\model\dto\request\AdministrateurCreateRequest.java
-C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\model\dto\request\AdministrateurUpdateRequest.java
-C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\model\dto\request\ApprentiCreateRequest.java
-C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\model\dto\request\ApprentiUpdateRequest.java
-C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\model\dto\request\ClientCreateRequest.java
-C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\model\dto\request\CommandeCreateRequest.java
-C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\model\dto\request\EmployeCreateRequest.java
-C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\model\dto\request\EmployeUpdateRequest.java
-C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\model\dto\request\FournisseurCreateRequest.java
-C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\model\dto\request\FournisseurUpdateRequest.java
-C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\model\dto\request\LigneCommandeCreateRequest.java
-C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\model\dto\request\MedecinCreateRequest.java
-C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\model\dto\request\MedecinUpdateRequest.java
-C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\model\dto\request\MedicamentPanierRequest.java
-C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\model\dto\request\MedicamentRequest.java
-C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\model\dto\request\OrdonnanceCreateRequest.java
-C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\model\dto\request\PharmacienAdjointCreateRequest.java
-C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\model\dto\request\PharmacienAdjointUpdateRequest.java
-C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\model\dto\request\PreparateurCreateRequest.java
-C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\model\dto\request\PreparateurUpdateRequest.java
-C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\model\dto\request\TitulaireCreateRequest.java
-C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\model\dto\request\VenteCreateRequest.java
-C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\model\dto\response\AdministrateurResponse.java
-C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\model\dto\response\ApprentiResponse.java
-C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\model\dto\response\ClientResponse.java
-C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\model\dto\response\CommandeResponse.java
-C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\model\dto\response\EmployeResponse.java
-C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\model\dto\response\FournisseurResponse.java
-C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\model\dto\response\LigneCommandeResponse.java
-C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\model\dto\response\LoginResponse.java
-C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\model\dto\response\MedecinResponse.java
-C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\model\dto\response\MedicamentResponse.java
-C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\model\dto\response\OrdonnanceResponse.java
-C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\model\dto\response\PharmacienAdjointResponse.java
-C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\model\dto\response\PreparateurResponse.java
-C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\model\dto\response\StockMedicamentDTO.java
-C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\model\dto\response\TitulaireResponse.java
-C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\model\dto\response\VenteResponse.java
-C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\model\entity\Administrateur.java
-C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\model\entity\Apprenti.java
-C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\model\entity\Client.java
-C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\model\entity\Commande.java
-C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\model\entity\Employe.java
-C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\model\entity\Fournisseur.java
-C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\model\entity\LigneCommande.java
-C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\model\entity\Medecin.java
-C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\model\entity\medicament\CisBdpm.java
-C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\model\entity\medicament\CisCipBdpm.java
-C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\model\entity\medicament\CisCipDispoSpec.java
-C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\model\entity\medicament\CisCompoBdpm.java
-C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\model\entity\medicament\CisCpdBdpm.java
-C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\model\entity\medicament\CisGenerBdpm.java
-C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\model\entity\medicament\CisHasAsmr.java
-C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\model\entity\medicament\CisHasSmr.java
-C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\model\entity\medicament\CisInfoImportantes.java
-C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\model\entity\medicament\CisMitm.java
-C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\model\entity\medicament\HasLiensPageCT.java
-C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\model\entity\medicament\Medicament.java
-C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\model\entity\medicament\MedicamentPanier.java
-C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\model\entity\medicament\StockMedicament.java
-C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\model\entity\medicament\TypeGenerique.java
-C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\model\entity\Ordonnance.java
-C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\model\entity\Personne.java
-C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\model\entity\PharmacienAdjoint.java
-C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\model\entity\PosteEmploye.java
-C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\model\entity\Preparateur.java
-C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\model\entity\Prescription.java
-C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\model\entity\StatutContrat.java
-C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\model\entity\Titulaire.java
-C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\model\entity\Vente.java
-C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\repository\AdministrateurRepository.java
-C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\repository\ApprentiRepository.java
-C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\repository\CisBdpmRepository.java
-C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\repository\CisCipBdpmRepository.java
-C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\repository\CisCpdBdpmRepository.java
-C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\repository\ClientRepository.java
-C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\repository\CommandeRepository.java
-C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\repository\EmployeRepository.java
-C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\repository\FournisseurRepository.java
-C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\repository\MedecinRepository.java
-C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\repository\MedicamentRepository.java
-C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\repository\OrdonnanceRepository.java
-C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\repository\PersonneRepository.java
-C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\repository\PharmacienAdjointRepository.java
-C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\repository\PreparateurRepository.java
-C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\repository\StockMedicamentRepository.java
-C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\repository\TitulaireRepository.java
-C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\repository\VenteRepository.java
-C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\service\AdministrateurService.java
-C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\service\ApprentiService.java
-C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\service\AuthService.java
-C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\service\CisBdpmService.java
-C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\service\CisCipBdpmService.java
-C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\service\CisCpdBdpmService.java
-C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\service\ClientService.java
-C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\service\CommandeService.java
-C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\service\CsvImportService.java
-C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\service\EmployeService.java
-C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\service\FournisseurService.java
-C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\service\MedecinService.java
-C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\service\MedicamentService.java
-C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\service\OrdonnanceService.java
-C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\service\PharmacienAdjointService.java
-C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\service\PreparateurService.java
-C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\service\StockMedicamentService.java
-C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\service\TitulaireService.java
-C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\service\VenteService.java
-C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\api\util\HibernateSessionUtil.java
-C:\Users\Dell\Desktop\merged\src\main\java\l3o2\pharmacie\Application.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\main\java\l3o2\pharmacie\api\config\SecurityConfig.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\main\java\l3o2\pharmacie\api\controller\AdministrateurController.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\main\java\l3o2\pharmacie\api\controller\ApprentiController.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\main\java\l3o2\pharmacie\api\controller\AuthController.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\main\java\l3o2\pharmacie\api\controller\ClientController.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\main\java\l3o2\pharmacie\api\controller\CommandeController.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\main\java\l3o2\pharmacie\api\controller\EmployeController.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\main\java\l3o2\pharmacie\api\controller\FournisseurController.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\main\java\l3o2\pharmacie\api\controller\ImportController.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\main\java\l3o2\pharmacie\api\controller\MedecinController.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\main\java\l3o2\pharmacie\api\controller\MedicamentController.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\main\java\l3o2\pharmacie\api\controller\OrdonnanceController.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\main\java\l3o2\pharmacie\api\controller\PharmacienAdjointController.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\main\java\l3o2\pharmacie\api\controller\PreparateurController.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\main\java\l3o2\pharmacie\api\controller\TitulaireController.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\main\java\l3o2\pharmacie\api\controller\VenteController.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\main\java\l3o2\pharmacie\api\exceptions\DuplicateEmailException.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\main\java\l3o2\pharmacie\api\exceptions\DuplicateEmailProException.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\main\java\l3o2\pharmacie\api\exceptions\DuplicateRPPSException.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\main\java\l3o2\pharmacie\api\exceptions\DuplicateSocieteException.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\main\java\l3o2\pharmacie\api\exceptions\DuplicateTelephoneException.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\main\java\l3o2\pharmacie\api\exceptions\InvalidDataException.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\main\java\l3o2\pharmacie\api\exceptions\InvalidOperationException.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\main\java\l3o2\pharmacie\api\exceptions\InvalidParameterException.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\main\java\l3o2\pharmacie\api\exceptions\ResourceNotFoundException.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\main\java\l3o2\pharmacie\api\handler\GlobalExceptionHandler.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\main\java\l3o2\pharmacie\api\model\dto\request\AdministrateurCreateRequest.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\main\java\l3o2\pharmacie\api\model\dto\request\AdministrateurUpdateRequest.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\main\java\l3o2\pharmacie\api\model\dto\request\ApprentiCreateRequest.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\main\java\l3o2\pharmacie\api\model\dto\request\ApprentiUpdateRequest.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\main\java\l3o2\pharmacie\api\model\dto\request\ClientCreateRequest.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\main\java\l3o2\pharmacie\api\model\dto\request\CommandeCreateRequest.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\main\java\l3o2\pharmacie\api\model\dto\request\EmployeCreateRequest.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\main\java\l3o2\pharmacie\api\model\dto\request\EmployeUpdateRequest.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\main\java\l3o2\pharmacie\api\model\dto\request\FournisseurCreateRequest.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\main\java\l3o2\pharmacie\api\model\dto\request\FournisseurUpdateRequest.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\main\java\l3o2\pharmacie\api\model\dto\request\LigneCommandeCreateRequest.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\main\java\l3o2\pharmacie\api\model\dto\request\MedecinCreateRequest.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\main\java\l3o2\pharmacie\api\model\dto\request\MedecinUpdateRequest.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\main\java\l3o2\pharmacie\api\model\dto\request\MedicamentPanierRequest.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\main\java\l3o2\pharmacie\api\model\dto\request\MedicamentRequest.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\main\java\l3o2\pharmacie\api\model\dto\request\OrdonnanceCreateRequest.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\main\java\l3o2\pharmacie\api\model\dto\request\PharmacienAdjointCreateRequest.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\main\java\l3o2\pharmacie\api\model\dto\request\PharmacienAdjointUpdateRequest.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\main\java\l3o2\pharmacie\api\model\dto\request\PreparateurCreateRequest.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\main\java\l3o2\pharmacie\api\model\dto\request\PreparateurUpdateRequest.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\main\java\l3o2\pharmacie\api\model\dto\request\TitulaireCreateRequest.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\main\java\l3o2\pharmacie\api\model\dto\request\VenteCreateRequest.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\main\java\l3o2\pharmacie\api\model\dto\response\AdministrateurResponse.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\main\java\l3o2\pharmacie\api\model\dto\response\ApprentiResponse.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\main\java\l3o2\pharmacie\api\model\dto\response\ClientResponse.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\main\java\l3o2\pharmacie\api\model\dto\response\CommandeResponse.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\main\java\l3o2\pharmacie\api\model\dto\response\EmployeResponse.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\main\java\l3o2\pharmacie\api\model\dto\response\FournisseurResponse.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\main\java\l3o2\pharmacie\api\model\dto\response\LigneCommandeResponse.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\main\java\l3o2\pharmacie\api\model\dto\response\LoginResponse.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\main\java\l3o2\pharmacie\api\model\dto\response\MedecinResponse.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\main\java\l3o2\pharmacie\api\model\dto\response\MedicamentDetailsDTO.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\main\java\l3o2\pharmacie\api\model\dto\response\MedicamentResponse.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\main\java\l3o2\pharmacie\api\model\dto\response\OrdonnanceResponse.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\main\java\l3o2\pharmacie\api\model\dto\response\PharmacienAdjointResponse.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\main\java\l3o2\pharmacie\api\model\dto\response\PreparateurResponse.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\main\java\l3o2\pharmacie\api\model\dto\response\StockDetailsDTO.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\main\java\l3o2\pharmacie\api\model\dto\response\StockMedicamentDTO.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\main\java\l3o2\pharmacie\api\model\dto\response\TitulaireResponse.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\main\java\l3o2\pharmacie\api\model\dto\response\VenteResponse.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\main\java\l3o2\pharmacie\api\model\entity\Administrateur.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\main\java\l3o2\pharmacie\api\model\entity\Apprenti.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\main\java\l3o2\pharmacie\api\model\entity\Client.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\main\java\l3o2\pharmacie\api\model\entity\Commande.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\main\java\l3o2\pharmacie\api\model\entity\Employe.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\main\java\l3o2\pharmacie\api\model\entity\Fournisseur.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\main\java\l3o2\pharmacie\api\model\entity\LigneCommande.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\main\java\l3o2\pharmacie\api\model\entity\Medecin.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\main\java\l3o2\pharmacie\api\model\entity\medicament\CisBdpm.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\main\java\l3o2\pharmacie\api\model\entity\medicament\CisCipBdpm.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\main\java\l3o2\pharmacie\api\model\entity\medicament\CisCipDispoSpec.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\main\java\l3o2\pharmacie\api\model\entity\medicament\CisCompoBdpm.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\main\java\l3o2\pharmacie\api\model\entity\medicament\CisCpdBdpm.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\main\java\l3o2\pharmacie\api\model\entity\medicament\CisGenerBdpm.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\main\java\l3o2\pharmacie\api\model\entity\medicament\CisHasAsmr.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\main\java\l3o2\pharmacie\api\model\entity\medicament\CisHasSmr.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\main\java\l3o2\pharmacie\api\model\entity\medicament\CisInfoImportantes.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\main\java\l3o2\pharmacie\api\model\entity\medicament\CisMitm.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\main\java\l3o2\pharmacie\api\model\entity\medicament\HasLiensPageCT.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\main\java\l3o2\pharmacie\api\model\entity\medicament\Medicament.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\main\java\l3o2\pharmacie\api\model\entity\medicament\MedicamentPanier.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\main\java\l3o2\pharmacie\api\model\entity\medicament\StockMedicament.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\main\java\l3o2\pharmacie\api\model\entity\medicament\TypeGenerique.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\main\java\l3o2\pharmacie\api\model\entity\Ordonnance.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\main\java\l3o2\pharmacie\api\model\entity\Personne.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\main\java\l3o2\pharmacie\api\model\entity\PharmacienAdjoint.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\main\java\l3o2\pharmacie\api\model\entity\PosteEmploye.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\main\java\l3o2\pharmacie\api\model\entity\Preparateur.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\main\java\l3o2\pharmacie\api\model\entity\Prescription.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\main\java\l3o2\pharmacie\api\model\entity\StatutContrat.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\main\java\l3o2\pharmacie\api\model\entity\Titulaire.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\main\java\l3o2\pharmacie\api\model\entity\Vente.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\main\java\l3o2\pharmacie\api\repository\AdministrateurRepository.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\main\java\l3o2\pharmacie\api\repository\ApprentiRepository.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\main\java\l3o2\pharmacie\api\repository\CisBdpmRepository.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\main\java\l3o2\pharmacie\api\repository\CisCipBdpmRepository.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\main\java\l3o2\pharmacie\api\repository\CisCpdBdpmRepository.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\main\java\l3o2\pharmacie\api\repository\ClientRepository.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\main\java\l3o2\pharmacie\api\repository\CommandeRepository.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\main\java\l3o2\pharmacie\api\repository\EmployeRepository.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\main\java\l3o2\pharmacie\api\repository\FournisseurRepository.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\main\java\l3o2\pharmacie\api\repository\MedecinRepository.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\main\java\l3o2\pharmacie\api\repository\MedicamentRepository.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\main\java\l3o2\pharmacie\api\repository\OrdonnanceRepository.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\main\java\l3o2\pharmacie\api\repository\PersonneRepository.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\main\java\l3o2\pharmacie\api\repository\PharmacienAdjointRepository.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\main\java\l3o2\pharmacie\api\repository\PreparateurRepository.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\main\java\l3o2\pharmacie\api\repository\StockMedicamentRepository.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\main\java\l3o2\pharmacie\api\repository\TitulaireRepository.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\main\java\l3o2\pharmacie\api\repository\VenteRepository.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\main\java\l3o2\pharmacie\api\service\AdministrateurService.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\main\java\l3o2\pharmacie\api\service\ApprentiService.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\main\java\l3o2\pharmacie\api\service\AuthService.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\main\java\l3o2\pharmacie\api\service\CisBdpmService.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\main\java\l3o2\pharmacie\api\service\CisCipBdpmService.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\main\java\l3o2\pharmacie\api\service\CisCpdBdpmService.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\main\java\l3o2\pharmacie\api\service\ClientService.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\main\java\l3o2\pharmacie\api\service\CommandeService.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\main\java\l3o2\pharmacie\api\service\CsvImportService.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\main\java\l3o2\pharmacie\api\service\EmployeService.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\main\java\l3o2\pharmacie\api\service\FournisseurService.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\main\java\l3o2\pharmacie\api\service\MedecinService.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\main\java\l3o2\pharmacie\api\service\MedicamentService.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\main\java\l3o2\pharmacie\api\service\OrdonnanceService.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\main\java\l3o2\pharmacie\api\service\PharmacienAdjointService.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\main\java\l3o2\pharmacie\api\service\PreparateurService.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\main\java\l3o2\pharmacie\api\service\StockMedicamentService.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\main\java\l3o2\pharmacie\api\service\TitulaireService.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\main\java\l3o2\pharmacie\api\service\VenteService.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\main\java\l3o2\pharmacie\api\util\HibernateSessionUtil.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\main\java\l3o2\pharmacie\Application.java

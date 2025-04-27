@@ -17,6 +17,10 @@ public class StockMedicamentDTO {
     // Code CIS du médicament
     private String codeCIS;
 
+    
+    private long id;//modifier pour test 
+
+
     // Code CIP13 du médicament
     private String codeCip13;
 

@@ -8,13 +8,19 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 
+/**
+  * Format de réponse pour une ligne de commande 
+ */
+
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class LigneCommandeResponse {
 
-    private StockMedicament stockMedicament;
+    //private StockMedicament stockMedicament;
+    private Long stockMedicamentId;
+    private StockMedicamentDTO stockMedicamentDTO;
     private int quantite;
     private BigDecimal prixUnitaire;
     private BigDecimal montantLigne;

@@ -175,4 +175,7 @@ public class EmployeService {
                 .diplome(employe.getDiplome())
                 .build();
     }
+    public long countAllEmployes() {
+        return employeRepository.count();
+    }
 }

@@ -146,4 +146,7 @@ public class ClientService {
                 .orElseThrow(() -> new ResourceNotFoundException("Client", "telephone", telephone));
         return mapToResponse(client);
     }
+    public long countAllClients() {
+        return clientRepository.count();
+    }
 }

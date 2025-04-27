@@ -171,7 +171,7 @@ public class Application {
                 }
 
                 // Ajouter un apprenti
-                */String emailProApprenti = "apprenti.pro@example.com";
+                String emailProApprenti = "apprenti.pro@example.com";
                 if (!employeService.existsByEmailPro(emailProApprenti)) {
                     ApprentiCreateRequest requestApprenti = ApprentiCreateRequest.builder()
                             .nom("Apprenti")
