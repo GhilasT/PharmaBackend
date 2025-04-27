@@ -1,5 +1,7 @@
 package l3o2.pharmacie.api.model.dto.request;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import l3o2.pharmacie.api.model.entity.Client;
 import l3o2.pharmacie.api.model.entity.Medecin;
 import l3o2.pharmacie.api.model.entity.Prescription;
@@ -14,12 +16,15 @@ import java.util.UUID;
 @Builder
 public class OrdonnanceCreateRequest {
 
-    private UUID idOrdonnance;
+    @JsonFormat(
+            shape   = JsonFormat.Shape.STRING,
+            pattern = "yyyy-MM-dd'T'HH",
+            timezone = "UTC"
+    )
     private Date dateEmission;
-    private Date dateExpiration;
     private String rppsMedecin;
-    private Client client;
-    private Medecin medecin;
-    private List<Prescription> prescriptions;
-    private UUID venteId;
+    @JsonProperty("clientId")
+    private UUID clientId;
+    private List<PrescriptionCreateRequest> prescriptions;
+
 }

@@ -1,109 +1,79 @@
 package l3o2.pharmacie.api.service;
 
+import jakarta.persistence.EntityNotFoundException;
 import l3o2.pharmacie.api.model.dto.request.OrdonnanceCreateRequest;
-import l3o2.pharmacie.api.model.dto.response.OrdonnanceResponse;
+import l3o2.pharmacie.api.model.dto.request.PrescriptionCreateRequest;
+import l3o2.pharmacie.api.model.entity.Client;
 import l3o2.pharmacie.api.model.entity.Ordonnance;
-import l3o2.pharmacie.api.model.entity.Vente;
+import l3o2.pharmacie.api.model.entity.Prescription;
+import l3o2.pharmacie.api.repository.ClientRepository;
 import l3o2.pharmacie.api.repository.OrdonnanceRepository;
-import l3o2.pharmacie.api.repository.VenteRepository; // Ajout de VenteRepository
-import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.UUID;
 
 @Service
-@RequiredArgsConstructor
 public class OrdonnanceService {
-/*
-    private final OrdonnanceRepository ordonnanceRepository;
-    private final VenteRepository venteRepository;
+    private final ClientRepository clientRepo;
+    private final OrdonnanceRepository ordRepo;
+
+    public OrdonnanceService(ClientRepository clientRepo,
+                             OrdonnanceRepository ordRepo) {
+        this.clientRepo = clientRepo;
+        this.ordRepo = ordRepo;
+    }
 
     @Transactional
-    public OrdonnanceResponse createOrdonnance(OrdonnanceCreateRequest request) {
-        // Vérification si l'ordonnance existe déjà
-        if (ordonnanceRepository.existsById(request.getIdOrdonnance())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Une ordonnance avec cet id existe déjà.");
+    public UUID createOrdonnance(OrdonnanceCreateRequest dto) {
+        Client client = clientRepo.findById(dto.getClientId())
+                .orElseThrow(() -> new EntityNotFoundException("Client introuvable"));
+
+        // Construction de l'entité Ordonnance
+        Ordonnance ord = Ordonnance.builder()
+                .dateEmission(dto.getDateEmission())
+                .rppsMedecin(dto.getRppsMedecin())
+                .client(client)
+                .build();
+
+        // Début du traitement des prescriptions
+        List<PrescriptionCreateRequest> prescList = dto.getPrescriptions();
+        if (prescList != null && !prescList.isEmpty()) {
+            int idx = 0;
+            for (PrescriptionCreateRequest p : prescList) {
+                if (p == null) {
+                    System.err.println("Prescription nulle détectée, on passe");
+                    idx++;
+                    continue;
+                }
+
+                System.out.println("→ Ajout prescription #" + idx + ":");
+                System.out.println("    medicament        = " + p.getMedicament());
+                System.out.println("    quantitePrescrite = " + p.getQuantitePrescrite());
+                System.out.println("    duree             = " + p.getDuree());
+                System.out.println("    posologie         = " + p.getPosologie());
+                System.out.println("probeleme !!");
+
+                // Construction de l'entité Prescription
+                Prescription ent = Prescription.builder()
+                        .medicament(p.getMedicament())
+                        .posologie(p.getPosologie())
+                        .quantitePrescrite(p.getQuantitePrescrite())
+                        .duree(p.getDuree())
+                        .build();
+                System.out.println("le test !");
+
+                // Ajout à la collection gérée par JPA
+                ord.getPrescriptions().add(ent);
+                System.out.println("le test finale ");
+                idx++;
+            }
         }
 
-        // Recherche de la vente par l'ID
-        Vente vente = venteRepository.findById(request.getVenteId())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Vente non trouvée"));
-
-        // Création de l'ordonnance
-        Ordonnance ordonnance = Ordonnance.builder()
-                .idOrdonnance(request.getIdOrdonnance())
-                .dateEmission(request.getDateEmission())
-                .dateExpiration(request.getDateExpiration())
-                .rppsMedecin(request.getRppsMedecin())
-                .client(request.getClient())
-                .medecin(request.getMedecin())
-                .prescriptions(request.getPrescriptions())
-                .vente(vente)
-                .build();
-
-
-        return mapToResponse(ordonnanceRepository.save(ordonnance));
+        // Persist de l'ordonnance et de ses prescriptions grâce au cascade
+        ordRepo.save(ord);
+        System.out.println("L'ID de l'ordonnance créée: " + ord.getIdOrdonnance());
+        return ord.getIdOrdonnance();
     }
-
-    public List<OrdonnanceResponse> getAllOrdonnances() {
-        // Récupérer toutes les ordonnances et les transformer en réponses
-        return ordonnanceRepository.findAll()
-                .stream()
-                .map(this::mapToResponse)
-                .toList();
-    }
-
-    public OrdonnanceResponse getOrdonnanceById(UUID idOrdonnance) {
-        // Récupérer une ordonnance par son ID et retourner la réponse
-        Ordonnance ordonnance = ordonnanceRepository.findById(idOrdonnance)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Ordonnance non trouvée"));
-        return mapToResponse(ordonnance);
-    }
-    /*
-    public OrdonnanceResponse getOrdonnanceByVente(UUID venteId) {
-        // Récupérer une ordonnance par la vente associée
-        return ordonnanceRepository.findByVente(venteId)
-                .map(this::mapToResponse)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Ordonnance non trouvée pour cette vente"));
-    }
-
-
-
-    // Convertir Ordonnance en OrdonnanceResponse
-    public OrdonnanceResponse mapToResponse(Ordonnance ordonnance) {
-        return OrdonnanceResponse.builder()
-                .idOrdonnance(ordonnance.getIdOrdonnance())
-                .numeroOrd(ordonnance.getNumeroOrd())
-                .dateEmission(ordonnance.getDateEmission())
-                .dateExpiration(ordonnance.getDateExpiration())
-                .rppsMedecin(ordonnance.getRppsMedecin())
-                .client(ordonnance.getClient())
-                .medecin(ordonnance.getMedecin())
-                .prescriptions(ordonnance.getPrescriptions())
-                .build();
-    }
-
-    // Convertir OrdonnanceCreateRequest en Ordonnance
-    public Ordonnance mapToEntity(OrdonnanceCreateRequest request) {
-        Vente vente = venteRepository.findById(request.getVenteId())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Vente non trouvée"));
-
-        return Ordonnance.builder()
-
-                .idOrdonnance(request.getIdOrdonnance())
-                .dateEmission(request.getDateEmission())
-                .dateExpiration(request.getDateExpiration())
-                .rppsMedecin(request.getRppsMedecin())
-                .client(request.getClient())
-                .medecin(request.getMedecin())
-                .prescriptions(request.getPrescriptions())
-                .vente(vente)
-                .build();
-    }
-
- */
 }

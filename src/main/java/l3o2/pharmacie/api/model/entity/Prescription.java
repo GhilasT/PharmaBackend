@@ -1,16 +1,9 @@
 package l3o2.pharmacie.api.model.entity;
 
+import jakarta.persistence.*;
 import l3o2.pharmacie.api.model.entity.medicament.StockMedicament;
 import java.util.UUID;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -40,23 +33,22 @@ public class Prescription {
     private UUID idPrescription;
 
     @Column(nullable = false)
-    // Posologie indiquée pour le médicament prescrit.
+    // Posologie indiquée pour le médicament prescrit.(ou commentaie)n
     private String posologie;
 
     @Column(nullable = false)
     // Quantité prescrite du médicament.
     private int quantitePrescrite;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     // Durée du traitement en jours.
     private int duree;
 
-    @OneToOne
-    // Médicament associé à la prescription.
-    private StockMedicament medicament;
-    @ManyToOne
-    @JoinColumn(name = "id_ordonnance")
-    private Ordonnance ordonnance;
+    @Column(nullable = false, name = "medicament")
+    private String medicament;
+
+
+
 
 
 }
