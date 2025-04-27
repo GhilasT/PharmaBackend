@@ -30,6 +30,9 @@ public class Ordonnance {
 
     @Column(nullable = false)
     private String rppsMedecin;
+    
+     @Column(name="numeroord", nullable=true)
+    private String numeroOrd;
 
     /** Relation vers le client */
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
