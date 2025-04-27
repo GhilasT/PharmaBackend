@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.ThreadLocalRandom;
 
 @Service
 public class OrdonnanceService {
@@ -29,11 +30,19 @@ public class OrdonnanceService {
     public UUID createOrdonnance(OrdonnanceCreateRequest dto) {
         Client client = clientRepo.findById(dto.getClientId())
                 .orElseThrow(() -> new EntityNotFoundException("Client introuvable"));
+        // 2) Génère un numéro aléatoire unique entre 100000 et 999999
+        String numero;
+        do {
+            numero = String.format("%06d",
+                    ThreadLocalRandom.current().nextInt(0, 1_000_000)
+            );
+        } while (ordRepo.existsByNumeroOrd(numero));
 
         // Construction de l'entité Ordonnance
         Ordonnance ord = Ordonnance.builder()
                 .dateEmission(dto.getDateEmission())
                 .rppsMedecin(dto.getRppsMedecin())
+                .numeroOrd(numero)
                 .client(client)
                 .build();
 
