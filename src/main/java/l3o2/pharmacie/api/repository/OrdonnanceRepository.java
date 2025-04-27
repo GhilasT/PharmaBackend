@@ -10,5 +10,5 @@ import java.util.UUID;
 
 @Repository
 public interface OrdonnanceRepository extends JpaRepository<Ordonnance, UUID> {
-
+    boolean existsByNumeroOrd(String numeroOrd);
 }
