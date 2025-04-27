@@ -1,5 +1,46 @@
-C:\Users\Dell\Desktop\merged\src\test\java\l3o2\pharmacie\api\controller\AdministrateurServiceController.java
-C:\Users\Dell\Desktop\merged\src\test\java\l3o2\pharmacie\api\repository\AdministrateurRepositoryTest.java
-C:\Users\Dell\Desktop\merged\src\test\java\l3o2\pharmacie\api\service\AdministrateurServiceTest.java
-C:\Users\Dell\Desktop\merged\src\test\java\l3o2\pharmacie\ApplicationTests.java
-C:\Users\Dell\Desktop\merged\src\test\java\pharmacie\ApplicationTests.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\test\java\l3o2\pharmacie\api\controller\AdministrateurControllerTest.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\test\java\l3o2\pharmacie\api\controller\ApprentiControllerTest.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\test\java\l3o2\pharmacie\api\controller\FournisseurControllerTest.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\test\java\l3o2\pharmacie\api\controller\MedecinControllerTest.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\test\java\l3o2\pharmacie\api\controller\PharmacienAdjointControllerTest.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\test\java\l3o2\pharmacie\api\controller\PreparateurControllerTest.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\test\java\l3o2\pharmacie\api\controller\TitulaireControllerTest.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\test\java\l3o2\pharmacie\api\controller\VenteControllerTest.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\test\java\l3o2\pharmacie\api\functional\AdministrateurFunctionalTest.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\test\java\l3o2\pharmacie\api\functional\ApprentiFunctionalTest.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\test\java\l3o2\pharmacie\api\functional\AuthFunctionalTest.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\test\java\l3o2\pharmacie\api\functional\ClientFunctionalTest.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\test\java\l3o2\pharmacie\api\functional\FournisseurFunctionalTest.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\test\java\l3o2\pharmacie\api\functional\MedecinFunctionalTest.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\test\java\l3o2\pharmacie\api\functional\PharmacienAdjointFunctionalTest.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\test\java\l3o2\pharmacie\api\functional\PreparateurFunctionalTest.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\test\java\l3o2\pharmacie\api\functional\TitulaireFunctionalTest.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\test\java\l3o2\pharmacie\api\integration\AdministrateurFullIntegrationTest.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\test\java\l3o2\pharmacie\api\integration\ApprentiIntegrationTest.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\test\java\l3o2\pharmacie\api\integration\FournisseurIntegrationTest.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\test\java\l3o2\pharmacie\api\integration\MedecinIntegrationTest.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\test\java\l3o2\pharmacie\api\integration\PharmacienAdjointIntegrationTest.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\test\java\l3o2\pharmacie\api\integration\PreparateurIntegrationTest.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\test\java\l3o2\pharmacie\api\integration\TitulaireIntegrationTest.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\test\java\l3o2\pharmacie\api\repository\AdministrateurRepositoryTest.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\test\java\l3o2\pharmacie\api\repository\ApprentiRepositoryTest.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\test\java\l3o2\pharmacie\api\repository\CisBdpmRepositoryTest.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\test\java\l3o2\pharmacie\api\repository\CisCipBdpmRepositoryTest.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\test\java\l3o2\pharmacie\api\repository\FournisseurRepositoryTest.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\test\java\l3o2\pharmacie\api\repository\MedecinRepositoryTest.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\test\java\l3o2\pharmacie\api\repository\PharmacienAdjointRepositoryTest.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\test\java\l3o2\pharmacie\api\repository\PreparateurRepositoryTest.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\test\java\l3o2\pharmacie\api\repository\TitulaireRepositoryTest.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\test\java\l3o2\pharmacie\api\repository\VenteRepositoryTest.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\test\java\l3o2\pharmacie\api\service\AdministrateurServiceTest.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\test\java\l3o2\pharmacie\api\service\ApprentiServiceTest.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\test\java\l3o2\pharmacie\api\service\CisBdpmServiceTest.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\test\java\l3o2\pharmacie\api\service\CisCipBdpmServiceTest.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\test\java\l3o2\pharmacie\api\service\CisCpdBdpmServiceTest.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\test\java\l3o2\pharmacie\api\service\FournisseurServiceTest.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\test\java\l3o2\pharmacie\api\service\MedecinServiceTest.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\test\java\l3o2\pharmacie\api\service\PharmacienAdjointServiceTest.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\test\java\l3o2\pharmacie\api\service\PreparateurServiceTest.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\test\java\l3o2\pharmacie\api\service\TitulaireServiceTest.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\test\java\l3o2\pharmacie\api\service\VenteServiceTest.java
+C:\Users\93abd\OneDrive\Bureau\2024-L3O2\branches\ElMassaoudi Abdelkarim\PharmaFinal\PharmaBackend\src\test\java\l3o2\pharmacie\ApplicationTests.java

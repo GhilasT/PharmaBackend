@@ -5,6 +5,7 @@ import l3o2.pharmacie.api.model.dto.request.CommandeCreateRequest;
 import l3o2.pharmacie.api.model.dto.request.LigneCommandeCreateRequest;
 import l3o2.pharmacie.api.model.dto.response.CommandeResponse;
 import l3o2.pharmacie.api.model.dto.response.LigneCommandeResponse;
+import l3o2.pharmacie.api.model.dto.response.StockMedicamentDTO;
 import l3o2.pharmacie.api.model.entity.Commande;
 import l3o2.pharmacie.api.model.entity.LigneCommande;
 import l3o2.pharmacie.api.model.entity.medicament.StockMedicament;
@@ -27,6 +28,8 @@ public class CommandeService {
 
     private final CommandeRepository commandeRepository;
     private  final MedicamentRepository medicamentRepository;
+    private final StockMedicamentService stockMedicamentService;
+
 
     public CommandeResponse createCommande(CommandeCreateRequest request) {
         Commande commande = Commande.builder()
@@ -79,8 +82,10 @@ public class CommandeService {
 
     // Mapper une ligne de commande pour la réponse
     private LigneCommandeResponse mapLigneToResponse(LigneCommande ligneCommande) {
+        StockMedicamentDTO stockMedicamentDTO = stockMedicamentService.convertToStockMedicamentDTO(ligneCommande.getStockMedicament()); 
         return LigneCommandeResponse.builder()
-                .stockMedicament(ligneCommande.getStockMedicament())
+                .stockMedicamentDTO(stockMedicamentDTO)
+                .stockMedicamentId(ligneCommande.getStockMedicament().getId())//A modifier
                 .quantite(ligneCommande.getQuantite())
                 .prixUnitaire(ligneCommande.getPrixUnitaire())
                 .montantLigne(ligneCommande.getMontantLigne())
@@ -109,18 +114,17 @@ public class CommandeService {
 
         return mapToResponse(commande);
     }
-
-    @Transactional
-    public List<CommandeResponse> getAllOrderByDate(LocalDate date) {
-        return commandeRepository.findByDateCommandeBetween(Date.from(date.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()),
-                        Date.from(date.atTime(23,59).atZone(ZoneId.systemDefault()).toInstant()))
-                .stream()
-                .map(this::mapToResponse)
-                .collect(Collectors.toList());
+    
+    public List<CommandeResponse> getAll(){
+        System.out.println("Get all commandes Service ");
+        List<CommandeResponse> listRes = commandeRepository.findAll().stream().map(this::mapToResponse).collect(Collectors.toList());
+        System.out.println("la liste de commande : "+listRes);
+        return listRes;
     }
 
+
     @Transactional
-    public void validerReceptionCommande(UUID referenceCommande) {
+    public CommandeResponse  validerReceptionCommande(UUID referenceCommande) {
         // Récupérer la commande
         Commande commande = commandeRepository.findById(referenceCommande)
                 .orElseThrow(() -> new RuntimeException("Commande non trouvée pour la référence : " + referenceCommande));
@@ -139,5 +143,60 @@ public class CommandeService {
 
         // Sauvegarder la commande mise à jour
         commandeRepository.save(commande);
+        return mapToResponse(commande);
     }
+
+
+    @Transactional
+    public CommandeResponse updateCommandeIncomplete(UUID reference, List<Integer> nouvellesQuantites) {
+        Commande commande = commandeRepository.findById(reference)
+                .orElseThrow(() -> new RuntimeException("Commande non trouvée pour la référence : " + reference));
+    
+        List<LigneCommande> ligneCommandes = commande.getLigneCommandes();
+    
+        if (ligneCommandes.size() != nouvellesQuantites.size()) {
+            throw new RuntimeException("Le nombre de quantités ne correspond pas au nombre de lignes de commande.");
+        }
+    
+        for (int i = 0; i < ligneCommandes.size(); i++) {
+            LigneCommande ligneCommande = ligneCommandes.get(i);
+            int nouvelleQuantite = nouvellesQuantites.get(i);
+    
+            if (nouvelleQuantite < 0) {
+                throw new IllegalArgumentException("La quantité ne peut pas être négative.");
+            }
+    
+            // Mettre à jour la quantité
+            ligneCommande.setQuantite(nouvelleQuantite);
+            // Recalculer le montant de la ligne
+            ligneCommande.setMontantLigne(ligneCommande.getPrixUnitaire().multiply(BigDecimal.valueOf(nouvelleQuantite)));
+    
+            StockMedicament stock = ligneCommande.getStockMedicament();
+            int nouvelleQuantiteStock = stock.getQuantite() + nouvelleQuantite;
+            
+            if (nouvelleQuantiteStock < 0) {
+                throw new RuntimeException("Stock insuffisant pour l'article : " + ligneCommande.getId());
+            }
+    
+            stock.setQuantite(nouvelleQuantiteStock);
+            // Sauvegarder le stock mis à jour
+            medicamentRepository.save(stock);
+        }
+    
+        // Recalculer le montant total de la commande
+        BigDecimal montantTotal = ligneCommandes.stream()
+                .map(LigneCommande::getMontantLigne)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        commande.setMontantTotal(montantTotal);
+    
+        // Changer le statut
+        commande.setStatut("Incomplète");
+    
+        // Sauvegarder la commande mise à jour
+        commandeRepository.save(commande);
+    
+        return mapToResponse(commande);
+    }
+    
+    
 }
