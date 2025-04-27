@@ -20,12 +20,12 @@ public class DashboardResponse {
 
     private double CA;
     private double benefices;
-    private int nbEmployes;
-    private int nbClients;
-    private int nbMedecins;
-    private int nbMedicaments;
-    private int nbMedicamentsRuptureStock;
-    private int nbMedicamentsPerimes;
-    private int nbMedicamentsAlerte;
-    private int nbMedicamentsAlerteBientotPerimee;
+    private long nbEmployes;
+    private long nbClients;
+    private long nbMedecins;
+    private long nbMedicaments;
+    private long nbMedicamentsRuptureStock;
+    private long nbMedicamentsPerimes;
+    private long nbMedicamentsAlerte;
+    private long nbMedicamentsAlerteBientotPerimee;
 }

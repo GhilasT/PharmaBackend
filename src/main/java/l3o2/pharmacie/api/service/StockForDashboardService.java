@@ -50,7 +50,21 @@ public class StockForDashboardService{
         return stockMedicamentRepository.findByQuantiteLessThanEqual(amount);
     }
 
-
+    public long countMedicamentsQuantiteSuperieureOuEgale(int amount) {
+        return stockMedicamentRepository.countByQuantiteGreaterThanEqual(amount);
+    }
+    
+    public long countMedicamentsSeuilAlerte(int seuil) {
+        return stockMedicamentRepository.countByQuantiteLessThanEqual(seuil);
+    }
+    
+    public long countMedicamentsPerimes() {
+        return stockMedicamentRepository.countByDatePeremptionBefore(LocalDate.now());
+    }
+    
+    public long countMedicamentsAlerteBientotPerimee(LocalDate start, LocalDate end) {
+        return stockMedicamentRepository.countByDatePeremptionBetween(start, end);
+    }
 
 
 }

@@ -4,6 +4,7 @@ import l3o2.pharmacie.api.model.entity.Vente;
 
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
@@ -19,69 +20,75 @@ public interface VenteRepository extends JpaRepository<Vente, UUID> {
 
     /**
      * Recherche les ventes effectuées par un pharmacien adjoint spécifique.
+     * 
      * @param pharmacienAdjointId Identifiant du pharmacien adjoint.
      * @return Liste des ventes effectuées par ce pharmacien adjoint.
      */
     @EntityGraph(attributePaths = {
-        "pharmacienAdjoint", 
-        "client",
-        "medicamentsPanier",
-        "medicamentsPanier.stockMedicament",
-        "medicamentsPanier.stockMedicament.presentation",
-        "medicamentsPanier.stockMedicament.presentation.cisBdpm"
+            "pharmacienAdjoint",
+            "client",
+            "medicamentsPanier",
+            "medicamentsPanier.stockMedicament",
+            "medicamentsPanier.stockMedicament.presentation",
+            "medicamentsPanier.stockMedicament.presentation.cisBdpm"
     })
     List<Vente> findByPharmacienAdjoint_IdPersonne(UUID pharmacienAdjointId);
+
     /**
      * Recherche les ventes effectuées par un client spécifique.
+     * 
      * @param clientId Identifiant du client.
      * @return Liste des ventes associées à ce client.
      */
     @EntityGraph(attributePaths = {
-        "pharmacienAdjoint",
-        "client",
-        "medicamentsPanier",
-        "medicamentsPanier.stockMedicament",
-        "medicamentsPanier.stockMedicament.presentation",
-        "medicamentsPanier.stockMedicament.presentation.cisBdpm"
+            "pharmacienAdjoint",
+            "client",
+            "medicamentsPanier",
+            "medicamentsPanier.stockMedicament",
+            "medicamentsPanier.stockMedicament.presentation",
+            "medicamentsPanier.stockMedicament.presentation.cisBdpm"
     })
     List<Vente> findByClient_IdPersonne(UUID clientId);
 
-     // Recherche les ventes effectuées dans une période donnée.
+    // Recherche les ventes effectuées dans une période donnée.
 
-     @EntityGraph(attributePaths = {
-        "pharmacienAdjoint",
-        "client",
-        "medicamentsPanier",
-        "medicamentsPanier.stockMedicament",
-        "medicamentsPanier.stockMedicament.presentation",
-        "medicamentsPanier.stockMedicament.presentation.cisBdpm"
+    @EntityGraph(attributePaths = {
+            "pharmacienAdjoint",
+            "client",
+            "medicamentsPanier",
+            "medicamentsPanier.stockMedicament",
+            "medicamentsPanier.stockMedicament.presentation",
+            "medicamentsPanier.stockMedicament.presentation.cisBdpm"
     })
     List<Vente> findByDateVenteBetween(Date start, Date end);
 
     /**
      * Recherche les ventes par mode de paiement (ex: Espèces, Carte bancaire).
+     * 
      * @param modePaiement Mode de paiement utilisé.
      * @return Liste des ventes correspondant au mode de paiement.
      */
     List<Vente> findByModePaiement(String modePaiement);
+
     @Override
     @EntityGraph(attributePaths = {
-        "pharmacienAdjoint",
-        "client",
-        "medicamentsPanier",
-        "medicamentsPanier.stockMedicament",
-        "medicamentsPanier.stockMedicament.presentation",
-        "medicamentsPanier.stockMedicament.presentation.cisBdpm"
+            "pharmacienAdjoint",
+            "client",
+            "medicamentsPanier",
+            "medicamentsPanier.stockMedicament",
+            "medicamentsPanier.stockMedicament.presentation",
+            "medicamentsPanier.stockMedicament.presentation.cisBdpm"
     })
     List<Vente> findAll();
+
     @EntityGraph(attributePaths = {
-        "pharmacienAdjoint",
-        "client",
-        "medicamentsPanier",
-        "medicamentsPanier.stockMedicament.presentation.cisBdpm"
+            "pharmacienAdjoint",
+            "client",
+            "medicamentsPanier",
+            "medicamentsPanier.stockMedicament.presentation.cisBdpm"
     })
     Optional<Vente> findById(UUID idVente);
 
-    
-
+    @Query("SELECT COALESCE(SUM(v.montantTotal), 0) FROM Vente v")
+    double sumTotalCA();
 }

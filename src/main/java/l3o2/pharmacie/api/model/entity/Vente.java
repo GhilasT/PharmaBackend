@@ -15,6 +15,7 @@ import lombok.*;
  * Contient les informations relatives aux transactions effectuées en pharmacie.
  */
 @Entity
+
 @Table(name = "ventes")
 @Data
 @NoArgsConstructor

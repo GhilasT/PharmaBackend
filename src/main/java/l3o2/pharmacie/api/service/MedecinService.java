@@ -177,4 +177,8 @@ public class MedecinService {
                 .siret(entity.getSiret())
                 .build();
     }
+    public long countAllMedecins() {
+        return medecinRepository.count();
+    }
+    
 }
