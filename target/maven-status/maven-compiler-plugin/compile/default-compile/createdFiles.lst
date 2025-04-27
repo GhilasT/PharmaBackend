@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 l3o2/pharmacie/api/model/dto/request/EmployeCreateRequest$EmployeCreateRequestBuilder.class
 l3o2/pharmacie/api/model/dto/response/OrdonnanceResponse$OrdonnanceResponseBuilder.class
 l3o2/pharmacie/api/exceptions/DuplicateEmailException.class
@@ -213,3 +214,5 @@ l3o2/pharmacie/api/model/dto/request/ApprentiUpdateRequest$ApprentiUpdateRequest
 l3o2/pharmacie/api/model/dto/request/ClientCreateRequest.class
 l3o2/pharmacie/api/model/entity/medicament/CisCipDispoSpec.class
 l3o2/pharmacie/api/model/entity/Administrateur$AdministrateurBuilder.class
+=======
+>>>>>>> f745622b2a21a7dcee4646feb5a3e337ad961779

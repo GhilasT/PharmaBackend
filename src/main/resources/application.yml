@@ -1,4 +1,7 @@
 spring:
+  datasource:
+    hikari:
+      maximum-pool-size: 20
   application:
     name: pharmacie
   profiles:
@@ -9,6 +12,7 @@ spring:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
     properties:
       hibernate:
+        default_batch_fetch_size: 30
         format_sql: true
         jdbc:
           lob:

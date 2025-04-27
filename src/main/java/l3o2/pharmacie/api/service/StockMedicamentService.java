@@ -6,6 +6,9 @@ import l3o2.pharmacie.api.model.dto.response.StockMedicamentDTO;
 import l3o2.pharmacie.api.model.entity.medicament.*;
 import l3o2.pharmacie.api.repository.CisCipBdpmRepository;
 import l3o2.pharmacie.api.repository.StockMedicamentRepository;
+import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -73,10 +76,12 @@ public class StockMedicamentService {
     }
 
     // Conversion d'une entité vers DTO
-    private StockMedicamentDTO convertToStockMedicamentDTO(StockMedicament stock) {
+    public StockMedicamentDTO convertToStockMedicamentDTO(StockMedicament stock) {
         CisBdpm cisBdpm = stock.getPresentation().getCisBdpm();
         CisCipBdpm cisCipBdpm = stock.getPresentation();
-
+        
+        long id = stock.getId();//modifier
+        
         String codeCIS = cisBdpm.getCodeCis();
         String libelle = cisCipBdpm.getLibellePresentation();
         String denomination = cisBdpm.getDenomination();
@@ -110,7 +115,8 @@ public class StockMedicamentService {
         String tauxRemboursement = cisCipBdpm.getTauxRemboursement();
 
         return StockMedicamentDTO.builder()
-                .codeCIS(codeCIS)
+             .id(id)    // modifier  pour test 
+			.codeCIS(codeCIS)
                 .libelle(libelle)
                 .denomination(denomination)
                 .dosage(dosage)
@@ -125,7 +131,6 @@ public class StockMedicamentService {
                 .codeCip13(codeCip13)
                 .build();
     }
-
     public Page<StockMedicamentDTO> searchByLibelleOrCodeCIS(String searchTerm, int page) {
         Pageable pageable = PageRequest.of(page, PAGE_SIZE);
         Page<StockMedicament> stockPage = stockMedicamentRepository.searchByLibelleOrCodeCIS(searchTerm, pageable);
@@ -169,38 +174,5 @@ public class StockMedicamentService {
                 .collect(Collectors.toList());
     }
 
-    /**
-     * Récupère tous les médicaments périmés.
-     * @return Liste des médicaments périmés.
-     */
-    public List<StockMedicament> getMedicamentsPerimes() {
-        return stockMedicamentRepository.getAllByDatePeremptionBefore(LocalDate.now())
-                .orElseThrow(() -> new RuntimeException("Aucun médicament périmé trouvé"));
-    }
-
-    /**
-     * Récupère tous les médicaments dont la quantité est supérieure ou égale à une valeur donnée.
-     * @param amount Valeur minimale de la quantité.
-     * @return Liste des médicaments avec quantité supérieure ou égale à amount.
-     */
-    public List<StockMedicament> getMedicamentsQuantiteSuperieureOuEgale(Integer amount) {
-        return stockMedicamentRepository.getAllByQuantiteIsGreaterThanEqual(amount)
-                .orElseThrow(() -> new RuntimeException("Aucun médicament trouvé avec une quantité supérieure ou égale à " + amount));
-
-    }
-
-    /**
-     * Recupère tous les médicaments dont la date limite est entre auj et une date donnee
-     * @return liste de medicament
-     */
-    public List<StockMedicament> getMedicamentsAlerteBientotPerimee(LocalDate date_debut, LocalDate date_fin) {
-        return stockMedicamentRepository.getAllByDatePeremptionBetween(date_debut, date_fin)
-                .orElseThrow(() -> new RuntimeException("Aucun médicament trouvé avec une date de péremption entre " + LocalDate.now() + " et " + date_debut + " et " + date_fin));
-    }
-
-    public List<StockMedicament> getMedicamentsSeuilAlerte(Integer amount) {
-        return stockMedicamentRepository.findByQuantiteLessThanEqual(amount);
-    }
-
-
+    
 }

@@ -1,5 +1,6 @@
 package l3o2.pharmacie.api.repository;
 
+import l3o2.pharmacie.api.model.dto.response.StockDetailsDTO;
 import l3o2.pharmacie.api.model.entity.medicament.StockMedicament;
 
 import org.springframework.data.domain.Page;
@@ -23,6 +24,7 @@ public interface StockMedicamentRepository extends JpaRepository<StockMedicament
 
     /**
      * Recherche un médicament par son identifiant unique.
+     * 
      * @param id Identifiant du médicament.
      * @return Le médicament correspondant (s'il existe).
      */
@@ -30,27 +32,33 @@ public interface StockMedicamentRepository extends JpaRepository<StockMedicament
 
     /**
      * Recherche tous les médicaments dont la quantité est non nulle.
+     * 
      * @return Liste des médicaments avec quantité non nulle.
      */
-    Optional<List<StockMedicament>> getAllByQuantiteIsGreaterThanEqual(Integer amount);
+    Optional<List<StockDetailsDTO>> getAllByQuantiteIsGreaterThanEqual(Integer amount);
 
     /**
-     * Recherche tous les médicaments dont la date de péremption est comprise entre deux dates.
+     * Recherche tous les médicaments dont la date de péremption est comprise entre
+     * deux dates.
+     * 
      * @param from
      * @param to
      * @return
      */
-    Optional<List<StockMedicament>> getAllByDatePeremptionBetween(LocalDate from, LocalDate to);
+    Optional<List<StockDetailsDTO>> getAllByDatePeremptionBetween(LocalDate from, LocalDate to);
 
     /**
-     * Recherche tous les médicaments dont la date de péremption est inférieure ou égale à la date actuelle.
+     * Recherche tous les médicaments dont la date de péremption est inférieure ou
+     * égale à la date actuelle.
+     * 
      * @param date Date actuelle.
      * @return Liste des médicaments périmés.
      */
-    Optional<List<StockMedicament>> getAllByDatePeremptionBefore(LocalDate date);
+    Optional<List<StockDetailsDTO>> getAllByDatePeremptionBefore(LocalDate date);
 
     /**
      * Recherche un médicament par son numéro de lot.
+     * 
      * @param numeroLot Numéro de lot du médicament.
      * @return Le médicament correspondant (s'il existe).
      */
@@ -58,27 +66,32 @@ public interface StockMedicamentRepository extends JpaRepository<StockMedicament
 
     /**
      * Recherche tous les médicaments d'une présentation spécifique.
+     * 
      * @param codeCip13 Code CIP13 de la présentation du médicament.
      * @return Liste des médicaments correspondants.
      */
     List<StockMedicament> findByPresentation_CodeCip13(String codeCip13);
 
     /**
-     * Recherche tous les médicaments dont la quantité en stock est inférieure au seuil d'alerte.
+     * Recherche tous les médicaments dont la quantité en stock est inférieure au
+     * seuil d'alerte.
+     * 
      * @return Liste des médicaments nécessitant un réapprovisionnement.
      */
-    List<StockMedicament> findByQuantiteLessThanEqual(Integer seuilAlerte);
-    
+    List<StockDetailsDTO> findByQuantiteLessThanEqual(Integer seuilAlerte);
+
     /**
-     * Recherche tous les médicaments dont la présentation est liée à un code CIS spécifique.
+     * Recherche tous les médicaments dont la présentation est liée à un code CIS
+     * spécifique.
      * 
      * @param codeCis Code CIS du médicament
      * @return Liste des médicaments correspondants
      */
     List<StockMedicament> findByPresentation_CisBdpm_CodeCisContainingIgnoreCase(String codeCis);
-    
+
     /**
-     * Recherche tous les médicaments dont la présentation a un libellé contenant le terme spécifié.
+     * Recherche tous les médicaments dont la présentation a un libellé contenant le
+     * terme spécifié.
      * 
      * @param libelle Terme de recherche pour le libellé de la présentation
      * @return Liste des médicaments correspondants
@@ -86,9 +99,18 @@ public interface StockMedicamentRepository extends JpaRepository<StockMedicament
     List<StockMedicament> findByPresentation_LibellePresentationContainingIgnoreCase(String libelle);
 
     @Query("SELECT s FROM StockMedicament s WHERE " +
-       "LOWER(s.presentation.libellePresentation) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR " +
-       "LOWER(s.presentation.cisBdpm.codeCis) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR " +
-       "LOWER(s.presentation.cisBdpm.denomination) LIKE LOWER(CONCAT('%', :searchTerm, '%'))")
-Page<StockMedicament> searchByLibelleOrCodeCIS(@Param("searchTerm") String searchTerm, Pageable pageable);
+            "LOWER(s.presentation.libellePresentation) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR " +
+            "LOWER(s.presentation.cisBdpm.codeCis) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR " +
+            "LOWER(s.presentation.cisBdpm.denomination) LIKE LOWER(CONCAT('%', :searchTerm, '%'))")
+    Page<StockMedicament> searchByLibelleOrCodeCIS(@Param("searchTerm") String searchTerm, Pageable pageable);
 
+    @Query("SELECT COUNT(s) FROM StockMedicament s WHERE s.quantite >= :amount")
+    long countByQuantiteGreaterThanEqual(@Param("amount") int amount);
+    
+    @Query("SELECT COUNT(s) FROM StockMedicament s WHERE s.quantite <= :seuil")
+    long countByQuantiteLessThanEqual(@Param("seuil") int seuil);
+
+    long countByDatePeremptionBefore(LocalDate date);
+
+    long countByDatePeremptionBetween(LocalDate start, LocalDate end);
 }

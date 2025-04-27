@@ -154,4 +154,8 @@ public class MedecinService {
                 .map(this::mapToResponse)
                 .collect(Collectors.toList());
     }
+    public long countAllMedecins() {
+        return medecinRepository.count();
+    }
+    
 }
