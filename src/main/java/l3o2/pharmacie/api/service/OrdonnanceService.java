@@ -85,4 +85,8 @@ public class OrdonnanceService {
         System.out.println("L'ID de l'ordonnance créée: " + ord.getIdOrdonnance());
         return ord.getIdOrdonnance();
     }
+
+    public List<Ordonnance> getAllOrdonnances() {
+        return ordRepo.findAll();
+    }
 }
