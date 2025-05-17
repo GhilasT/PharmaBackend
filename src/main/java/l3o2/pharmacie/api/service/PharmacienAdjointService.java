@@ -106,6 +106,21 @@ public class PharmacienAdjointService {
     }
 
     /**
+     * Récupère un pharmacien adjoint par son ID.
+     * @param id Identifiant du pharmacien adjoint.
+     * @return Pharmacien adjoint trouvé sous forme de DTO.
+     * @author raphaelcharoze
+     */
+    public PharmacienAdjointResponse findById(UUID id){
+        PharmacienAdjoint pharmacien = pharmacienAdjointRepository
+                .findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                        "Aucun pharmacien adjoint trouvé avec l'ID: " + id));
+        return mapToResponse(pharmacien);
+    }
+
+
+    /**
      * Récupère la liste de tous les pharmaciens adjoints.
      * 
      * @return Liste de DTOs représentant les pharmaciens adjoints.

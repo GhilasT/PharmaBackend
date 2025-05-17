@@ -39,7 +39,7 @@ public class EmailUtil {
     public String ligneCommandeToPartHtmlEmail(LigneCommandeResponse ligne) {
 
         return "<tr>" +
-                "<td>" + ligne.getStockMedicament().getPresentation().getLibellePresentation() + "</td>" +
+                "<td>" + ligne.getStockMedicamentDTO().getLibelle() + "</td>" +
                 "<td>" + ligne.getQuantite() + "</td>" +
                 "<td>" + ligne.getPrixUnitaire() + "</td>" +
                 "<td>" + (ligne.getPrixUnitaire()).doubleValue() * ligne.getQuantite() + "</td>" +
