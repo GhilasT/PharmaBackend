@@ -1,26 +1,20 @@
 package l3o2.pharmacie.api.model.dto.response;
 
-import java.util.UUID;
-
-import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import lombok.Data;
 
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
+/**
+ * Login response
+ * @author raphaelcharoze
+ */
+
+@Data
 @Builder
 public class LoginResponse {
     private boolean success;
     private String nom;
     private String prenom;
     private String role;
-    private UUID id;
-
-    
-
+    private String id;
+    private String token;
 }
