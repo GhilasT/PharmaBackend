@@ -17,6 +17,7 @@ import org.springframework.web.server.ResponseStatusException;
 import l3o2.pharmacie.api.model.entity.PosteEmploye;
 import l3o2.pharmacie.api.model.entity.Preparateur;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -54,6 +55,7 @@ public class TitulaireService {
                 .role(request.getRole().trim())
                 .numeroRPPS(request.getNumeroRPPS().trim())
                 .poste(request.getPoste()) // Assure-toi que tu passes le poste ici
+                .permissions(List.of("ADMINISTRER","COMMANDER","VENDRE","GERER_ADMIN")) //liste permissions backend
                 .build();
 
         // Génération du matricule

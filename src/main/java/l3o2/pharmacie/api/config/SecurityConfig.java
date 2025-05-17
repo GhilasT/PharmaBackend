@@ -40,22 +40,22 @@ public class SecurityConfig {
 
         http.authorizeHttpRequests(auth ->
                         auth
-                                .requestMatchers("/api/auth/login").permitAll()  // Public routes
-                                .requestMatchers("/api/auth/register/**").hasAnyRole("ADMINISTRER")
-                                .requestMatchers("/api/administrateurs/**").hasAnyRole("GERER_ADMIN") //seulement les titulaires peuvent accéder aux administrateurs
-                                .requestMatchers("/api/apprentis/**").hasAnyRole("ADMINISTRER")
-                                .requestMatchers("/api/client/**").hasAnyRole("VENDRE") //seulement les vendeurs peuvent accéder aux clients
-                                .requestMatchers("/api/employes/**").hasAnyRole("ADMINISTRER")
-                                .requestMatchers("/api/fournisseurs/**").hasAnyRole("COMMANDER") //seulement les commandeurs peuvent accéder aux fournisseurs
-                                .requestMatchers("/api/medecins/**").hasAnyRole("VENDRE") //seulement les vendeurs peuvent accéder aux médecins
-                                .requestMatchers("/api/medicaments/**").hasAnyRole("VENDRE", "COMMANDER") //seulement les vendeurs et les commandeurs peuvent accéder aux médicaments
-                                .requestMatchers("/api/ordonnances/**").hasAnyRole("VENDRE") //seulement les vendeurs peuvent accéder aux ordonnances
-                                .requestMatchers("/api/pharmaciens-adjoints/**").hasAnyRole("ADMINISTRER")
-                                .requestMatchers("/api/preparateurs/**").hasAnyRole("ADMINISTRER")
-                                .requestMatchers("/api/titulaires/**").hasAnyRole("GERER_ADMIN") //seulement les titulaires peuvent accéder aux titulaires
-                                .requestMatchers("/api/ventes/**").hasAnyRole("VENDRE") //seulement les vendeurs peuvent accéder aux ventes
-                                //.requestMatchers("api/email/send").hasAnyRole("ADMINISTRER")
-                                .anyRequest().authenticated())            // Protected routes
+//                                .requestMatchers("/api/auth/login").permitAll()  // Public routes
+//                                .requestMatchers("/api/auth/register/**").hasAnyRole("ADMINISTRER")
+//                                .requestMatchers("/api/administrateurs/**").hasAnyRole("GERER_ADMIN") //seulement les titulaires peuvent accéder aux administrateurs
+//                                .requestMatchers("/api/apprentis/**").hasAnyRole("ADMINISTRER")
+//                                .requestMatchers("/api/client/**").hasAnyRole("VENDRE") //seulement les vendeurs peuvent accéder aux clients
+//                                .requestMatchers("/api/employes/**").hasAnyRole("ADMINISTRER")
+//                                .requestMatchers("/api/fournisseurs/**").hasAnyRole("COMMANDER") //seulement les commandeurs peuvent accéder aux fournisseurs
+//                                .requestMatchers("/api/medecins/**").hasAnyRole("VENDRE") //seulement les vendeurs peuvent accéder aux médecins
+//                                .requestMatchers("/api/medicaments/**").hasAnyRole("VENDRE", "COMMANDER") //seulement les vendeurs et les commandeurs peuvent accéder aux médicaments
+//                                .requestMatchers("/api/ordonnances/**").hasAnyRole("VENDRE") //seulement les vendeurs peuvent accéder aux ordonnances
+//                                .requestMatchers("/api/pharmaciens-adjoints/**").hasAnyRole("ADMINISTRER")
+//                                .requestMatchers("/api/preparateurs/**").hasAnyRole("ADMINISTRER")
+//                                .requestMatchers("/api/titulaires/**").hasAnyRole("GERER_ADMIN") //seulement les titulaires peuvent accéder aux titulaires
+//                                .requestMatchers("/api/ventes/**").hasAnyRole("VENDRE") //seulement les vendeurs peuvent accéder aux ventes
+//                                .requestMatchers("api/email/send").hasAnyRole("ADMINISTRER")
+                                .anyRequest().permitAll())            // Protected routes
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
