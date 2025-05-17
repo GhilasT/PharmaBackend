@@ -7,12 +7,11 @@ import l3o2.pharmacie.api.model.dto.response.StockMedicamentDTO;
 import l3o2.pharmacie.api.service.MedicamentService;
 import l3o2.pharmacie.api.service.StockMedicamentService;
 import lombok.RequiredArgsConstructor;
-
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.data.domain.Page;
+
 import java.util.List;
 import java.util.Map;
 
@@ -22,48 +21,45 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class MedicamentController {
 
-    private final MedicamentService medicamentService;
+    // Services
+    private final MedicamentService medicamentService;         // Pour les opérations CRUD
+    private final StockMedicamentService stockMedicamentService; // Pour l'affichage/pagination
 
-    // creation d'un nouveau medicament
+    // ================================================================
+    // Endpoints CRUD (Utilisent MedicamentService)
+    // ================================================================
+    
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public MedicamentResponse create(@RequestBody MedicamentRequest request) {
         return medicamentService.createMedicament(request);
     }
 
-    // recuperer un medicament à partir de son ID
     @GetMapping("/id/{id}")
     public MedicamentResponse getOne(@PathVariable Long id) {
         return medicamentService.getMedicamentById(id);
     }
 
-    // maitre a jour
     @PutMapping("/id/{id}")
     public MedicamentResponse update(@PathVariable Long id, @RequestBody MedicamentRequest request) {
         return medicamentService.updateMedicament(id, request);
     }
 
-    // supprimer
     @DeleteMapping("/id/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long id) {
         medicamentService.deleteMedicament(id);
     }
 
-    // vérifier si ordonnance est requise
     @GetMapping("/id/{id}/ordonnance")
     public boolean checkOrdonnance(@PathVariable Long id) {
         return medicamentService.isOrdonnanceRequise(id);
     }
 
-    @Autowired
-    private StockMedicamentService stockMedicamentService;
-
-    /**
-     * Récupère tous les médicaments.
-     * 
-     * @return Liste des médicaments formatée pour l'affichage dans le frontend
-     */
+    // ================================================================
+    // Endpoints d'affichage (Utilisent StockMedicamentService)
+    // ================================================================
+    
     @GetMapping("/{page}")
     public ResponseEntity<Map<String, Object>> getPage(
             @PathVariable int page,
@@ -86,18 +82,11 @@ public class MedicamentController {
         return ResponseEntity.ok(results);
     }
 
-    /**
-     * Recherche des médicaments par terme de recherche.
-     * 
-     * @param searchTerm Terme de recherche (optionnel)
-     * @return Liste des médicaments correspondant au terme de recherche
-     */
     @GetMapping("/search/{page}")
     public ResponseEntity<Map<String, Object>> searchByLibelleOrCodeCIS(
             @RequestParam String searchTerm,
             @PathVariable int page) {
         Page<StockMedicamentDTO> resultPage = stockMedicamentService.searchByLibelleOrCodeCIS(searchTerm, page);
-
         return ResponseEntity.ok(Map.of(
                 "content", resultPage.getContent(),
                 "currentPage", resultPage.getNumber(),
@@ -109,5 +98,4 @@ public class MedicamentController {
     public ResponseEntity<MedicamentDetailsDTO> getDetailsByCip13(@PathVariable String cip13) {
         return ResponseEntity.ok(stockMedicamentService.getMedicamentDetailsByCip13(cip13));
     }
-
 }

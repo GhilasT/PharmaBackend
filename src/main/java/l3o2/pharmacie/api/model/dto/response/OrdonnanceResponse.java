@@ -19,12 +19,6 @@ import java.util.UUID;
 public class OrdonnanceResponse {
 
     private UUID idOrdonnance;
-    private String numeroOrd;
-    private Date dateEmission;
-    private Date dateExpiration;
-    private String rppsMedecin;
-    private Client client;
-    private Medecin medecin;
-    private List<Prescription> prescriptions;
+
 
 }

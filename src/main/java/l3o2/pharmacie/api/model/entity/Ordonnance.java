@@ -2,6 +2,8 @@ package l3o2.pharmacie.api.model.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -23,37 +25,30 @@ public class Ordonnance {
     @Column(nullable = false, updatable = false, unique = true)
     private UUID idOrdonnance;
 
-    @Column(nullable = false, unique = true)
-    private String numeroOrd;
-
     @Column(nullable = false)
     private Date dateEmission;
 
-    @Column(nullable = true)
-    private Date dateExpiration;
-
     @Column(nullable = false)
     private String rppsMedecin;
+    
+     @Column(name="numeroord", nullable=true)
+    private String numeroOrd;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    /** Relation vers le client */
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "client_id", nullable = false)
     private Client client;
 
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "medecin_id", nullable = false)
-    private Medecin medecin;
-
-
-    //indique qu’une Ordonnance peut être associée à plusieurs Prescription
-    // et que la gestion de cette relation est effectuée via l’attribut ordonnance
-    // dans la classe Prescription
-    @OneToMany(mappedBy = "ordonnance")
-    private List<Prescription> prescriptions;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    // lier ordonnace avec vente
-    @JoinColumn(name = "vente_id", nullable = true)
-    private Vente vente;
-
+    /**
+     * Chaque ordonnance peut comprendre plusieurs prescriptions.
+     * Relation unidirectionnelle, la FK est dans la table prescriptions.
+     * @Singular pour que Lombok gère la liste sans initialisation explicite.
+     */
+    @Builder.Default      // ← garantit qu’on initialise même via builder()
+    @OneToMany(
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    @JoinColumn(name = "ordonnance_id", nullable = false)
+    private List<Prescription> prescriptions= new ArrayList<>();;
 }

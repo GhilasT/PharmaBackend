@@ -61,24 +61,20 @@ public class CsvImportService {
     public Map<String, Integer> importAllCsvFiles() {
         Map<String, Integer> results = new HashMap<>();
 
-        // Importer les médicaments (CIS_bdpm.csv) en premier car les autres entités en dépendent
+        // Importer les médicaments (CIS_bdpm.csv)
         results.put("CIS_bdpm.csv", importCisBdpm(CSV_FOLDER + "CIS_bdpm.csv"));
 
-        // Importer les autres fichiers CSV un par un pour éviter les problèmes de session
+        // Importer les présentations (CIS_CIP_bdpm.csv)
         results.put("CIS_CIP_bdpm.csv", importCisCipBdpm(CSV_FOLDER + "CIS_CIP_bdpm.csv"));
-        results.put("CIS_COMPO_bdpm.csv", importCisCompoBdpm(CSV_FOLDER + "CIS_COMPO_bdpm.csv"));
+
+        // Importer les conditions de prescription (CIS_CPD_bdpm.csv)
         results.put("CIS_CPD_bdpm.csv", importCisCpdBdpm(CSV_FOLDER + "CIS_CPD_bdpm.csv"));
-        results.put("CIS_GENER_bdpm.csv", importCisGenerBdpm(CSV_FOLDER + "CIS_GENER_bdpm.csv"));
-        results.put("CIS_HAS_ASMR_bdpm.csv", importCisHasAsmr(CSV_FOLDER + "CIS_HAS_ASMR_bdpm.csv"));
-        results.put("CIS_HAS_SMR_bdpm.csv", importCisHasSmr(CSV_FOLDER + "CIS_HAS_SMR_bdpm.csv"));
-        results.put("CIS_InfoImportantes.csv", importCisInfoImportantes(CSV_FOLDER + "CIS_InfoImportantes.csv"));
-        results.put("CIS_CIP_Dispo_Spec.csv", importCisCipDispoSpec(CSV_FOLDER + "CIS_CIP_Dispo_Spec.csv"));
-        results.put("CIS_MITM.csv", importCisMitm(CSV_FOLDER + "CIS_MITM.csv"));
-        results.put("HAS_LiensPageCT_bdpm.csv", importHasLiensPageCT(CSV_FOLDER + "HAS_LiensPageCT_bdpm.csv"));
+
+        // Importer le stock (supposons que le fichier s'appelle 'stock.csv')
+        results.put("stock.csv", importStock(CSV_FOLDER + "stock.csv"));
 
         return results;
     }
-
     /**
      * Importe les médicaments depuis le fichier CIS_bdpm.csv.
      *
