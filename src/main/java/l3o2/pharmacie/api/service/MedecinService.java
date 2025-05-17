@@ -1,181 +1,158 @@
 package l3o2.pharmacie.api.service;
 
-import l3o2.pharmacie.api.exceptions.DuplicateEmailException;
-import l3o2.pharmacie.api.exceptions.DuplicateRPPSException;
-import l3o2.pharmacie.api.exceptions.ResourceNotFoundException;
 import l3o2.pharmacie.api.model.dto.request.MedecinCreateRequest;
-import l3o2.pharmacie.api.model.dto.request.MedecinUpdateRequest;
 import l3o2.pharmacie.api.model.dto.response.MedecinResponse;
 import l3o2.pharmacie.api.model.entity.Medecin;
 import l3o2.pharmacie.api.repository.MedecinRepository;
-import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
-import l3o2.pharmacie.api.exceptions.InvalidParameterException;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
-@RequiredArgsConstructor
 public class MedecinService {
 
     private final MedecinRepository medecinRepository;
-    private static final Logger logger = LoggerFactory.getLogger(MedecinService.class);
 
-    public MedecinResponse createMedecin(MedecinCreateRequest request) {
-
-        if (request.getEmail() == null || request.getEmail().trim().isEmpty()) {
-            throw new InvalidParameterException("L'email ne peut pas être vide.");
-        }
-
-        // Vérification si un médecin existe déjà avec cet email
-        if (medecinRepository.findByEmail(request.getEmail().trim()).isPresent()) {
-            throw new DuplicateEmailException(request.getEmail().trim());
-
-        }
-
-        // Vérification si un médecin existe déjà avec ce RPPS
-        if (medecinRepository.findByRpps(request.getRpps()).isPresent()) {
-            throw new DuplicateRPPSException(request.getRpps());
-        }
-
-        // Création de l'objet Médecin
-        Medecin medecin = Medecin.builder()
-                .nom(request.getNom().trim())
-                .prenom(request.getPrenom().trim())
-                .email(request.getEmail().trim()) // Assurez-vous que l'email est bien passé sans espaces
-                .telephone(request.getTelephone().trim()) // Téléphone sans espaces superflus
-                .adresse(request.getAdresse().trim()) // Adresse sans espaces inutiles
-                .rpps(request.getRpps().trim()) // RPPS sans espaces superflus
-                .adeli(request.getAdeli().trim()) // ADELI sans espaces superflus
-                .civilite(request.getCivilite().trim()) // Civilité sans espaces superflus
-                .profession(request.getProfession().trim()) // Profession sans espaces superflus
-                .specialitePrincipale(request.getSpecialitePrincipale().trim()) // Spécialité principale sans espaces
-                .specialiteSecondaire(
-                        request.getSpecialiteSecondaire() != null ? request.getSpecialiteSecondaire().trim() : null) // Si
-                                                                                                                     // secondaire
-                                                                                                                     // est
-                                                                                                                     // null,
-                                                                                                                     // ne
-                                                                                                                     // rien
-                                                                                                                     // mettre
-                .modeExercice(request.getModeExercice().trim()) // Mode d'exercice sans espaces
-                .codePostal(request.getCodePostal().trim()) // Code postal sans espaces
-                .ville(request.getVille().trim()) // Ville sans espaces
-                .siteWeb(request.getSiteWeb() != null ? request.getSiteWeb().trim() : null) // Site Web, mais peut être
-                                                                                            // null
-                .secteur(request.getSecteur().trim()) // Secteur sans espaces
-                .conventionnement(request.getConventionnement().trim()) // Conventionnement sans espaces
-                .honoraires(request.getHonoraires().trim()) // Honoraires sans espaces
-                .languesParlees(request.getLanguesParlees() != null ? request.getLanguesParlees() : List.of()) // Langues
-                                                                                                               // parlées,
-                                                                                                               // sinon
-                                                                                                               // liste
-                                                                                                               // vide
-                .siret(request.getSiret().trim())
-                .dateMiseAJour(request.getDateMiseAJour())
-                .build();
-
-        return mapToResponse(medecinRepository.save(medecin));
+    @Autowired
+    public MedecinService(MedecinRepository medecinRepository) {
+        this.medecinRepository = medecinRepository;
     }
 
-    public List<MedecinResponse> getAllMedecins() {
-        List<Medecin> medecins = medecinRepository.findAll();
+    // Créer un médecin et renvoyer le MedecinResponse
+    public MedecinResponse createMedecin(MedecinCreateRequest request) {
+        // Vérifier si un médecin avec le même numéro RPPS existe déjà
+        Optional<Medecin> existingMedecin = medecinRepository.findByRppsMedecin(request.getRppsMedecin());
 
+        if (existingMedecin.isPresent()) {
+            // Si un médecin existe déjà avec ce numéro RPPS, on lance une exception
+            throw new RuntimeException("Un médecin avec ce numéro RPPS existe déjà.");
+        }
+
+        // Si aucun médecin n'existe, on crée un nouveau médecin
+        Medecin medecin = new Medecin();
+        medecin.setCivilite(request.getCivilite());
+        medecin.setNomExercice(request.getNomExercice());
+        medecin.setPrenomExercice(request.getPrenomExercice());
+        medecin.setRppsMedecin(request.getRppsMedecin());
+        medecin.setCategorieProfessionnelle(request.getCategorieProfessionnelle());
+        medecin.setProfession(request.getProfession());
+        medecin.setModeExercice(request.getModeExercice());
+        medecin.setQualifications(request.getQualifications());
+        medecin.setStructureExercice(request.getStructureExercice());
+        medecin.setFonctionActivite(request.getFonctionActivite());
+        medecin.setGenreActivite(request.getGenreActivite());
+
+        // Sauvegarder le médecin dans la base de données
+        medecin = medecinRepository.save(medecin);
+
+        // Retourner la réponse en DTO
+        return mapToResponse(medecin);
+    }
+    // Récupérer un médecin par son ID
+    public MedecinResponse getMedecinById(UUID id) {
+        Medecin medecin = medecinRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Médecin non trouvé"));
+
+        return mapToResponse(medecin);
+    }
+
+    // Récupérer tous les médecins
+    public List<MedecinResponse> getAllMedecins() {
+        return medecinRepository.findAll().stream()
+                .map(this::mapToResponse)
+                .collect(Collectors.toList());
+    }
+
+    // Récupérer les médecins paginés
+    public Page<MedecinResponse> getMedecinsPaginated(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Medecin> medecinsPage = medecinRepository.findAll(pageable);
+
+        return medecinsPage.map(this::mapToResponse);
+    }
+
+    // Mettre à jour un médecin
+    public MedecinResponse updateMedecin(UUID id, MedecinCreateRequest request) {
+        Medecin medecin = medecinRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Médecin non trouvé"));
+
+        // Mettre à jour les champs du médecin
+        medecin.setCivilite(request.getCivilite());
+        medecin.setNomExercice(request.getNomExercice());
+        medecin.setPrenomExercice(request.getPrenomExercice());
+        medecin.setRppsMedecin(request.getRppsMedecin());
+        medecin.setCategorieProfessionnelle(request.getCategorieProfessionnelle());
+        medecin.setProfession(request.getProfession());
+        medecin.setModeExercice(request.getModeExercice());
+        medecin.setQualifications(request.getQualifications());
+        medecin.setStructureExercice(request.getStructureExercice());
+        medecin.setFonctionActivite(request.getFonctionActivite());
+        medecin.setGenreActivite(request.getGenreActivite());
+
+        medecin = medecinRepository.save(medecin);
+
+        return mapToResponse(medecin);
+    }
+
+    // Supprimer un médecin
+    public void deleteMedecin(UUID id) {
+        Medecin medecin = medecinRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Médecin non trouvé"));
+
+        medecinRepository.delete(medecin);
+    }
+
+    // Mapper de Medecin à MedecinResponse
+    private MedecinResponse mapToResponse(Medecin medecin) {
+        return new MedecinResponse(
+                medecin.getIdMedecin(),
+                medecin.getCivilite(),
+                medecin.getNomExercice(),
+                medecin.getPrenomExercice(),
+                medecin.getRppsMedecin(),
+                medecin.getCategorieProfessionnelle(),
+                medecin.getProfession(),
+                medecin.getModeExercice(),
+                medecin.getQualifications(),
+                medecin.getStructureExercice(),
+                medecin.getFonctionActivite(),
+                medecin.getGenreActivite()
+        );
+    }
+
+    public MedecinResponse checkMedecinByRpps(String rpps) {
+        // Rechercher un médecin avec le numéro RPPS
+        Optional<Medecin> medecinOptional = medecinRepository.findByRppsMedecin(rpps);
+
+        // Vérifier si le médecin est trouvé
+        if (medecinOptional.isPresent()) {
+            return mapToResponse(medecinOptional.get());  // Si médecin trouvé, retourner sa réponse
+        }
+        return null;  // Si pas trouvé, retourner null
+    }
+
+    // Supprimer un médecin par RPPS
+    public void deleteMedecinByRpps(String rpps) {
+        Medecin medecin = medecinRepository.findByRppsMedecin(rpps)
+                .orElseThrow(() -> new RuntimeException("Médecin non trouvé avec RPPS: " + rpps));
+
+        // Supprimer le médecin trouvé
+        medecinRepository.delete(medecin);
+    }
+
+    // Recherche des médecins par nom ou prénom
+    public List<MedecinResponse> searchMedecins(String term) {
+        List<Medecin> medecins = medecinRepository.searchByNomPrenomCombinaison(term);
         return medecins.stream()
                 .map(this::mapToResponse)
-                .toList();
-    }
-
-    public MedecinResponse getMedecinById(UUID id) {
-        return medecinRepository.findById(id)
-                .map(this::mapToResponse)
-                .orElseThrow(() -> new ResourceNotFoundException("Médecin", "id", id));
-    }
-
-    public MedecinResponse getMedecinByRpps(String rpps) {
-        return medecinRepository.findByRpps(rpps)
-                .map(this::mapToResponse)
-                .orElseThrow(() -> new ResourceNotFoundException("Médecin", "RPPS", rpps));
-    }
-
-    public MedecinResponse getMedecinBySiret(String siret) {
-        return medecinRepository.findBySiret(siret)
-                .map(this::mapToResponse)
-                .orElseThrow(() -> new ResourceNotFoundException("Médecin", "SIRET", siret));
-
-    }
-
-    public List<MedecinResponse> getMedecinsByNomOuPrenom(String query) {
-        if (query == null || query.trim().isEmpty()) {
-            throw new InvalidParameterException("Le paramètre de recherche ne peut pas être vide.");
-        }
-
-        String cleanedQuery = query.trim().toLowerCase().replaceAll("\\s+", " ");
-
-        return medecinRepository.searchByNomPrenomCombinaison(cleanedQuery)
-                .stream()
-                .map(this::mapToResponse)
-                .toList();
-    }
-
-    // Méthode qui vérifie si un médecin avec un email existe déjà
-    public boolean existsByEmail(String email) {
-        return medecinRepository.existsByEmail(email.trim());
-    }
-
-    public MedecinResponse updateMedecin(UUID id, MedecinUpdateRequest request) {
-        Medecin medecin = medecinRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Médecin", "id", id));
-
-        if (request.getNom() != null)
-            medecin.setNom(request.getNom().trim());
-        if (request.getPrenom() != null)
-            medecin.setPrenom(request.getPrenom().trim());
-        if (request.getEmail() != null)
-            medecin.setEmail(request.getEmail().trim());
-        if (request.getTelephone() != null)
-            medecin.setTelephone(request.getTelephone().trim());
-        if (request.getAdresse() != null)
-            medecin.setAdresse(request.getAdresse().trim());
-
-        return mapToResponse(medecinRepository.save(medecin));
-    }
-
-    public void deleteMedecin(UUID id) {
-        if (!medecinRepository.existsById(id)) {
-            throw new ResourceNotFoundException("Médecin","id",id);   
-        }
-        medecinRepository.deleteById(id);
-    }
-
-    private MedecinResponse mapToResponse(Medecin entity) {
-        return MedecinResponse.builder()
-                .idPersonne(entity.getIdPersonne())
-                .nom(entity.getNom())
-                .prenom(entity.getPrenom())
-                .email(entity.getEmail())
-                .telephone(entity.getTelephone())
-                .adresse(entity.getAdresse())
-                .rpps(entity.getRpps())
-                .adeli(entity.getAdeli())
-                .civilite(entity.getCivilite())
-                .profession(entity.getProfession())
-                .specialitePrincipale(entity.getSpecialitePrincipale())
-                .specialiteSecondaire(entity.getSpecialiteSecondaire())
-                .modeExercice(entity.getModeExercice())
-                .codePostal(entity.getCodePostal())
-                .ville(entity.getVille())
-                .siteWeb(entity.getSiteWeb())
-                .secteur(entity.getSecteur())
-                .conventionnement(entity.getConventionnement())
-                .languesParlees(entity.getLanguesParlees())
-                .siret(entity.getSiret())
-                .build();
+                .collect(Collectors.toList());
     }
     public long countAllMedecins() {
         return medecinRepository.count();

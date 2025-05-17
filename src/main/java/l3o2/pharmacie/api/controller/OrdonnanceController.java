@@ -1,71 +1,35 @@
 package l3o2.pharmacie.api.controller;
 
 import l3o2.pharmacie.api.model.dto.request.OrdonnanceCreateRequest;
-import l3o2.pharmacie.api.model.dto.response.OrdonnanceResponse;
 import l3o2.pharmacie.api.model.entity.Ordonnance;
-import l3o2.pharmacie.api.model.entity.Vente;
-import l3o2.pharmacie.api.repository.VenteRepository;
-import l3o2.pharmacie.api.repository.OrdonnanceRepository;
 import l3o2.pharmacie.api.service.OrdonnanceService;
-import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.net.URI;
 import java.util.List;
 import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/ordonnances")
-@CrossOrigin(origins = "*")
-@RequiredArgsConstructor
 public class OrdonnanceController {
-/*
-    private final OrdonnanceService ordonnanceService;
-    private final VenteRepository venteRepository; // Injecte le repository pour les ventes
-    private final OrdonnanceRepository ordonnanceRepository; // Injecte le repository pour les ordonnances
+    private final OrdonnanceService service;
 
-
-     //Crée une nouvelle ordonnance.
+    public OrdonnanceController(OrdonnanceService service) {
+        this.service = service;
+    }
 
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public OrdonnanceResponse createOrdonnance(@RequestBody OrdonnanceCreateRequest request) {
-        return ordonnanceService.createOrdonnance(request);
+    public ResponseEntity<UUID> create(@RequestBody OrdonnanceCreateRequest dto) {
+        UUID id = service.createOrdonnance(dto);
+        return new ResponseEntity<>(id, HttpStatus.CREATED);
     }
-
-
-     // Récupère une ordonnance par son ID.
-
-    @GetMapping("/{idOrdonnance}")
-    public OrdonnanceResponse getOrdonnanceById(@PathVariable UUID idOrdonnance) {
-        return ordonnanceService.getOrdonnanceById(idOrdonnance);
-    }
-
-
-     //Récupère toutes les ordonnances.
 
     @GetMapping
-    public List<OrdonnanceResponse> getAllOrdonnances() {
-        return ordonnanceService.getAllOrdonnances();
+    public ResponseEntity<List<Ordonnance>> getAll() {
+        List<Ordonnance> ordonnances = service.getAllOrdonnances();
+        return ResponseEntity.ok(ordonnances);
     }
-
-
-     // Récupère une ordonnance par vente.
-
-
-    @GetMapping("/vente/{venteId}")
-    public OrdonnanceResponse getOrdonnanceByVente(@PathVariable UUID venteId) {
-        // Récupérer la vente via son ID
-        Vente vente = venteRepository.findById(venteId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Vente non trouvée"));
-
-        // Récupérer l'ordonnance associée à la vente
-        Ordonnance ordonnance = ordonnanceRepository.findByVente(venteId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Ordonnance non trouvée pour cette vente"));
-
-        // Retourner l'ordonnance sous forme de DTO
-        return ordonnanceService.mapToResponse(ordonnance);
-    }
-     */
 }

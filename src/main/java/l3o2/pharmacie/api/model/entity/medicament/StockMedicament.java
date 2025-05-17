@@ -44,7 +44,6 @@ public class StockMedicament {
     // Numéro de lot du médicament
     private String numeroLot;
 
-    @Future(message = "La date de péremption doit être dans le futur")
     @Column(name = "date_peremption")
     // Date de péremption du médicament (doit être dans le futur)
     private LocalDate datePeremption;

@@ -2,7 +2,6 @@ package l3o2.pharmacie.api.functional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
@@ -23,7 +22,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 
 import l3o2.pharmacie.api.model.dto.request.MedecinCreateRequest;
-import l3o2.pharmacie.api.model.dto.request.MedecinUpdateRequest;
 import l3o2.pharmacie.api.model.dto.response.MedecinResponse;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -51,114 +49,109 @@ public class MedecinFunctionalTest {
     @Order(1)
     void testCreateMedecin() {
         MedecinCreateRequest request = MedecinCreateRequest.builder()
-            .nom(INITIAL_NOM)
-            .prenom("Jean")
-            .email("jean.dupont@clinique.com")
-            .telephone("0612345678")
-            .adresse("1 Rue de la Santé")
-            .rpps(RPPS)
-            .adeli("123456789")
-            .civilite("Dr")
-            .profession("Médecin Généraliste")
-            .specialitePrincipale("Médecine générale")
-            .modeExercice("Libéral")
-            .codePostal("75000")
-            .ville("Paris")
-            .secteur("Secteur 1")
-            .conventionnement("Conventionné")
-            .honoraires("Carte Vitale")
-            .siret("12345678900001")
-            .dateMiseAJour(LocalDate.now())
-            .password("password123")          
-            .build();
+                .nomExercice(INITIAL_NOM)
+                .prenomExercice("Jean")
+                .rppsMedecin(RPPS)
+                .civilite("Dr")
+                .profession("Médecin Généraliste")
+                .modeExercice("Libéral")
+                .qualifications("Médecine générale")
+                .structureExercice("Cabinet privé")
+                .fonctionActivite("Médecin traitant")
+                .genreActivite("Consultation")
+                .build();
 
         ResponseEntity<MedecinResponse> response = restTemplate.postForEntity(
-            baseUrl, request, MedecinResponse.class);
+                baseUrl, request, MedecinResponse.class);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertNotNull(response.getBody().getIdPersonne());
-        assertEquals(INITIAL_NOM, response.getBody().getNom());
-        assertEquals(RPPS, response.getBody().getRpps());
-        
-        medecinId = response.getBody().getIdPersonne();
+        assertNotNull(response.getBody().getIdMedecin());  // Utilisation correcte de l'attribut idMedecin
+        assertEquals(INITIAL_NOM, response.getBody().getNomExercice());  // Vérification du nom
+        assertEquals(RPPS, response.getBody().getRppsMedecin());  // Vérification du RPPS
+
+        medecinId = response.getBody().getIdMedecin();  // Sauvegarde de l'id du médecin pour les tests suivants
     }
 
     @Test
     @Order(2)
     void testGetMedecinById() {
         ResponseEntity<MedecinResponse> response = restTemplate.getForEntity(
-            baseUrl + "/{id}", MedecinResponse.class, medecinId);
+                baseUrl + "/{id}", MedecinResponse.class, medecinId);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(medecinId, response.getBody().getIdPersonne());
-        assertEquals("Médecin Généraliste", response.getBody().getProfession());
+        assertEquals(medecinId, response.getBody().getIdMedecin());  // Utilisation correcte de l'attribut idMedecin
+        assertEquals("Médecin Généraliste", response.getBody().getProfession());  // Vérification de la profession
     }
 
     @Test
     @Order(3)
     void testGetAllMedecins() {
         ResponseEntity<List<MedecinResponse>> response = restTemplate.exchange(
-            baseUrl,
-            HttpMethod.GET,
-            null,
-            new ParameterizedTypeReference<List<MedecinResponse>>() {});
+                baseUrl,
+                HttpMethod.GET,
+                null,
+                new ParameterizedTypeReference<List<MedecinResponse>>() {});
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertTrue(response.getBody().size() > 0);
+        assertTrue(response.getBody().size() > 0);  // Vérification que la liste n'est pas vide
     }
 
     @Test
     @Order(4)
     void testUpdateMedecin() {
-        MedecinUpdateRequest updateRequest = MedecinUpdateRequest.builder()
-            .prenom("Jean-Marc")
-            .telephone("0623456789")
-            .adresse("2 Avenue des Médecins")
-            .build();
+
+        MedecinCreateRequest updateRequest = MedecinCreateRequest.builder()
+                .prenomExercice("Jean-Marc")
+                .build();
 
         ResponseEntity<MedecinResponse> response = restTemplate.exchange(
-            baseUrl + "/{id}",
-            HttpMethod.PUT,
-            new HttpEntity<>(updateRequest),
-            MedecinResponse.class,
-            medecinId);
+                baseUrl + "/{id}",
+                HttpMethod.PUT,
+                new HttpEntity<>(updateRequest),
+                MedecinResponse.class,
+                medecinId
+        );
 
+        // Vérification du statut HTTP
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals("Jean-Marc", response.getBody().getPrenom());
-        assertEquals("2 Avenue des Médecins", response.getBody().getAdresse());
+
+        // Vérification que le prénom a bien été mis à jour
+        assertEquals("Jean-Marc", response.getBody().getPrenomExercice());  // Vérification du prénom mis à jour
     }
 
     @Test
     @Order(5)
     void testSearchMedecins() {
         ResponseEntity<List<MedecinResponse>> response = restTemplate.exchange(
-            baseUrl + "/search?q={query}",
-            HttpMethod.GET,
-            null,
-            new ParameterizedTypeReference<List<MedecinResponse>>() {},
-            "Dup");
+                baseUrl + "/search?q={query}",
+                HttpMethod.GET,
+                null,
+                new ParameterizedTypeReference<List<MedecinResponse>>() {},
+                "Dup");
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertTrue(response.getBody().size() > 0);
+        assertTrue(response.getBody().size() > 0);  // Vérification qu'au moins un médecin est trouvé
     }
 
     @Test
     @Order(6)
     void testDeleteMedecin() {
         ResponseEntity<Void> deleteResponse = restTemplate.exchange(
-            baseUrl + "/{id}",
-            HttpMethod.DELETE,
-            null,
-            Void.class,
-            medecinId);
+                baseUrl + "/{id}",
+                HttpMethod.DELETE,
+                null,
+                Void.class,
+                medecinId);
 
         assertEquals(HttpStatus.NO_CONTENT, deleteResponse.getStatusCode());
 
         ResponseEntity<MedecinResponse> getResponse = restTemplate.getForEntity(
-            baseUrl + "/{id}",
-            MedecinResponse.class,
-            medecinId);
+                baseUrl + "/{id}",
+                MedecinResponse.class,
+                medecinId);
 
-        assertEquals(HttpStatus.NOT_FOUND, getResponse.getStatusCode());
+        assertEquals(HttpStatus.NOT_FOUND, getResponse.getStatusCode());  // Vérification qu'après suppression, le médecin n'est plus trouvé
     }
+
+
 }

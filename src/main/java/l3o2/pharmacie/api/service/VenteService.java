@@ -9,7 +9,11 @@ import l3o2.pharmacie.api.model.entity.PharmacienAdjoint;
 import l3o2.pharmacie.api.model.entity.Vente;
 import l3o2.pharmacie.api.model.entity.medicament.MedicamentPanier;
 import l3o2.pharmacie.api.model.entity.medicament.StockMedicament;
-import l3o2.pharmacie.api.repository.*;
+import l3o2.pharmacie.api.repository.ClientRepository;
+import l3o2.pharmacie.api.repository.CisCipBdpmRepository;
+import l3o2.pharmacie.api.repository.MedicamentRepository;
+import l3o2.pharmacie.api.repository.PharmacienAdjointRepository;
+import l3o2.pharmacie.api.repository.VenteRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
@@ -17,13 +21,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.web.server.ResponseStatusException;
-import java.util.logging.Logger;
-import java.util.logging.Level;
 
-import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import java.util.logging.Logger;
 
 @Service
 @RequiredArgsConstructor
@@ -63,6 +65,7 @@ public class VenteService {
         System.out.println("Début de la création de la vente...");
         System.out.println("Requête reçue : " + request);
 
+        // 1) Préparer les notifications de stock
         StringBuilder notifications = new StringBuilder();
 
         List<MedicamentPanier> medicamentsPanier = request.getMedicaments().stream()
@@ -70,9 +73,10 @@ public class VenteService {
                     String codeInitial = medRequest.getCodeCip13();
                     String finalCode = codeInitial.length() == 8
                             ? medicamentService.getCodeCip13FromCodeCis(codeInitial)
-                                    .orElseThrow(() -> new ResponseStatusException(
-                                            HttpStatus.NOT_FOUND,
-                                            "Aucune présentation trouvée pour le code CIS : " + codeInitial))
+                            .orElseThrow(() -> new ResponseStatusException(
+                                    HttpStatus.NOT_FOUND,
+                                    "Aucune présentation trouvée pour le code CIS : " + codeInitial
+                            ))
                             : codeInitial;
 
                     System.out.println("Code utilisé (CIP13) : " + finalCode);
@@ -81,21 +85,27 @@ public class VenteService {
                             .findTopByPresentation_CodeCip13OrderByDateMiseAJourDesc(finalCode)
                             .orElseThrow(() -> {
                                 System.out.println("Stock introuvable pour le code CIP13 : " + finalCode);
-                                return new ResponseStatusException(HttpStatus.NOT_FOUND,
-                                        "Stock introuvable pour le code CIP13 : " + finalCode);
+                                return new ResponseStatusException(
+                                        HttpStatus.NOT_FOUND,
+                                        "Stock introuvable pour le code CIP13 : " + finalCode
+                                );
                             });
 
                     System.out.println("Stock trouvé (id: " + stock.getId() + ") | Quantité : " + stock.getQuantite());
 
                     if (stock.getQuantite() < medRequest.getQuantite()) {
-                        System.out.println("quantiter insufisante");
-                        throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                                "Quantité insuffisante pour le médicament : " + finalCode);
+                        System.out.println("Quantité insuffisante");
+                        throw new ResponseStatusException(
+                                HttpStatus.BAD_REQUEST,
+                                "Quantité insuffisante pour le médicament : " + finalCode
+                        );
                     }
 
+                    // Met à jour le stock
                     stock.setQuantite(stock.getQuantite() - medRequest.getQuantite());
                     medicamentRepository.save(stock);
 
+                    // Notifications de stock faible / rupture
                     if (stock.getQuantite() <= stock.getSeuilAlerte()) {
                         notifications.append("Stock faible pour ").append(finalCode).append("\n");
                     }
@@ -103,20 +113,54 @@ public class VenteService {
                         notifications.append("Rupture de stock : ").append(finalCode).append("\n");
                     }
 
-                    System.out.println("sotck est ok !");
+                    System.out.println("Stock OK !");
                     MedicamentPanier mp = new MedicamentPanier();
                     mp.setStockMedicament(stock);
                     mp.setQuantite(medRequest.getQuantite());
                     return mp;
                 })
                 .collect(Collectors.toList());
-        System.out.println("la liste aussi !");
+
+        // 2) Chargement du pharmacien adjoint et du client
         PharmacienAdjoint pharmacienAdjoint = pharmacienAdjointRepository.findById(request.getPharmacienAdjointId())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Pharmacien adjoint non trouvé"));
-        System.out.println("pharmacinet ok ?! ");
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "Pharmacien adjoint non trouvé"
+                ));
         Client client = clientRepository.findById(request.getClientId())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Client non trouvé"));
-        System.out.println("client ok ?! ");
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "Client non trouvé"
+                ));
+
+        // 3) Vérification de l’ordonnance requise AVANT création
+        List<String> sousOrdonnance = request.getMedicaments().stream()
+                .filter(med -> {
+                    String cip13 = med.getCodeCip13();
+                    if (cip13.length() == 8) {
+                        cip13 = medicamentService.getCodeCip13FromCodeCis(cip13).orElse(null);
+                    }
+                    return cip13 != null && medicamentService.isOrdonnanceRequise(
+                            medicamentRepository
+                                    .findTopByPresentation_CodeCip13OrderByDateMiseAJourDesc(cip13)
+                                    .orElseThrow()
+                                    .getId()
+                    );
+                })
+                .map(MedicamentPanierRequest::getCodeCip13)
+                .collect(Collectors.toList());
+
+        if (!request.isOrdonnanceAjoutee() && !sousOrdonnance.isEmpty()) {
+            System.out.println("Ordonnance requise");
+            // Conserve le blocage stricte (428) de la V2
+            LOGGER.warning("Ordonnance requise avant paiement");
+            throw new ResponseStatusException(
+                    HttpStatus.PRECONDITION_REQUIRED,
+                    "Impossible de finaliser la vente : ordonnance requise."
+            );
+        }
+
+        // 4) Création de l’entité Vente
         Vente vente = Vente.builder()
                 .dateVente(request.getDateVente())
                 .modePaiement(request.getModePaiement())
@@ -127,37 +171,22 @@ public class VenteService {
                 .medicamentsPanier(medicamentsPanier)
                 .build();
 
-        medicamentsPanier.forEach(med -> med.setVente(vente));
+        medicamentsPanier.forEach(mp -> mp.setVente(vente));
 
         Vente savedVente = venteRepository.save(vente);
+
+        // 5) Construction de la réponse
         VenteResponse response = mapToResponse(savedVente);
 
+        // Injecter les notifications de stock (V1)
         if (notifications.length() > 0) {
             response.setNotification(notifications.toString());
-        }
-
-        List<String> sousOrdonnance = request.getMedicaments().stream()
-                .filter(med -> {
-                    String cip13 = med.getCodeCip13();
-                    if (cip13.length() == 8) {
-                        cip13 = medicamentService.getCodeCip13FromCodeCis(cip13).orElse(null);
-                    }
-                    return cip13 != null && medicamentService.isOrdonnanceRequise(
-                            medicamentRepository.findTopByPresentation_CodeCip13OrderByDateMiseAJourDesc(cip13)
-                                    .orElseThrow().getId());
-                })
-                .map(MedicamentPanierRequest::getCodeCip13)
-                .collect(Collectors.toList());
-
-        if (!request.isOrdonnanceAjoutee() && !sousOrdonnance.isEmpty()) {
-            System.out.println("Ordonnance requise");
-
-            response.setNotification(" Ordonnance requise");
         } else {
+            // Par défaut, indiquer que tout est OK (V1)
             response.setNotification("Pas d'ordonnance requise");
         }
 
-        System.out.println(" Vente enregistrée avec succès !");
+        System.out.println("Vente enregistrée avec succès !");
         return response;
     }
 
@@ -191,13 +220,16 @@ public class VenteService {
                                             .dateMiseAJour(stock.getDateMiseAJour())
                                             .seuilAlerte(stock.getSeuilAlerte())
                                             .emplacement(stock.getEmplacement())
+                                            // Remettre la dénomination (V1)
                                             .denomination(stock.getPresentation().getCisBdpm().getDenomination())
                                             .build();
                                 })
-                                .collect(Collectors.toList()))
+                                .collect(Collectors.toList())
+                )
                 .build();
     }
 
+    // Rétablir les méthodes de filtrage absentes en V2 (V1)
     @Transactional(readOnly = true)
     public List<VenteResponse> getByPharmacienId(UUID pharmacienId) {
         return venteRepository.findByPharmacienAdjoint_IdPersonne(pharmacienId).stream()
