@@ -21,7 +21,7 @@ spring:
     host: smtp.gmail.com
     port: 587
     username: pharmaventeerp@gmail.com
-    password:
+    password: pqgufdverrugcmzj
     default-encoding: UTF-8
     properties:
       mail:

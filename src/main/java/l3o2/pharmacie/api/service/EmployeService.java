@@ -8,8 +8,13 @@ import l3o2.pharmacie.api.model.dto.response.EmployeResponse;
 import l3o2.pharmacie.api.model.entity.Employe;
 import l3o2.pharmacie.api.repository.EmployeRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -21,11 +26,13 @@ import java.util.stream.Collectors;
 
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
-@Service
+@Service("employeUserDetailsService")
 @RequiredArgsConstructor
-public class EmployeService {
+public class EmployeService implements UserDetailsService {
 
-    private final EmployeRepository employeRepository;
+    @Autowired
+    private EmployeRepository employeRepository;
+
     private final PasswordEncoder passwordEncoder;
 
     // Ajoutez cette méthode pour vérifier si un employé existe avec cet email
@@ -85,15 +92,15 @@ public class EmployeService {
         return mapToResponse(updatedEmploye);
     }
 
-    public EmployeResponse updateEmployeEmail(UUID id,String email) {
+    public EmployeResponse updateEmployeEmail(UUID id, String email) {
         return updateEmploye(id, EmployeUpdateRequest.builder().email(email).build());
     }
 
-    public EmployeResponse updateEmployeEmailPro(UUID id,String emailPro) {
+    public EmployeResponse updateEmployeEmailPro(UUID id, String emailPro) {
         return updateEmploye(id, EmployeUpdateRequest.builder().email(emailPro).build());
     }
 
-    public EmployeResponse updateEmployePassword(UUID id,String oldPwd, String newPwd1, String newPwd2) {
+    public EmployeResponse updateEmployePassword(UUID id, String oldPwd, String newPwd1, String newPwd2) {
         Employe employe = employeRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Employé", "id", id));
         if (passwordEncoder.matches(oldPwd, employe.getPassword())) {
@@ -101,13 +108,11 @@ public class EmployeService {
                 employe.setPassword(passwordEncoder.encode(newPwd1));
                 Employe updatedEmploye = employeRepository.save(employe);
                 return mapToResponse(updatedEmploye);
-            }
-            else{
+            } else {
                 throw new ResponseStatusException(NOT_FOUND, "Problème mdp : nouveaux mdp ne matchent pas");
             }
 
-        }
-        else{
+        } else {
             throw new ResponseStatusException(NOT_FOUND, "Problème mdp : ancien mot de passe incorrect");
         }
     }
@@ -150,8 +155,7 @@ public class EmployeService {
     public void deleteEmploye(String matricule) {
         // Cherche l'employé par matricule dans toutes les sous-classes
         Employe employe = employeRepository.findByMatricule(matricule)
-        .orElseThrow(() -> new ResourceNotFoundException("Employé","Matricule",matricule));   
-
+                .orElseThrow(() -> new ResourceNotFoundException("Employé", "Matricule", matricule));
 
         // Supprime l'employé
         employeRepository.delete(employe);
@@ -175,7 +179,14 @@ public class EmployeService {
                 .diplome(employe.getDiplome())
                 .build();
     }
+
     public long countAllEmployes() {
         return employeRepository.count();
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        return employeRepository.findByEmailPro(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + username));
     }
 }

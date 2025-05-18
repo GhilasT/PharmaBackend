@@ -32,8 +32,9 @@ public class AuthService implements AuthenticationProvider {
             Employe user = employeService.getEmployeByEmailPro(request.getEmail());
             if (!(new BCryptPasswordEncoder()).matches(request.getPassword(), user.getPassword())) {
                 return null;
-            }else{
-                return jwtUtil.generateToken(user.getIdPersonne(), user.getAuthorities());
+            } else {
+                // Generate token with email instead of UUID to match expected format
+                return jwtUtil.generateTokenFromEmail(user.getEmailPro());
             }
         } catch (ResponseStatusException e) {
             return null;
@@ -52,7 +53,6 @@ public class AuthService implements AuthenticationProvider {
             return new UsernamePasswordAuthenticationToken(user, user.getPassword(), user.getAuthorities());
         }
         return null;
-
     }
 
     @Override

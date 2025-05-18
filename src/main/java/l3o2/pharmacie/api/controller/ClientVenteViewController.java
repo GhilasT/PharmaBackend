@@ -8,6 +8,7 @@ import l3o2.pharmacie.api.exceptions.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,10 +28,11 @@ import java.util.logging.Logger;
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/ventes/client")
+@PreAuthorize("permitAll()")
 public class ClientVenteViewController {
 
     private final VenteService venteService;
-    private final PharmacienAdjointService pharmacienAdjointService; // Ajout du service
+    private final PharmacienAdjointService pharmacienAdjointService;
     private static final Logger LOGGER = Logger.getLogger(ClientVenteViewController.class.getName());
 
     @GetMapping("/{clientId}/html")

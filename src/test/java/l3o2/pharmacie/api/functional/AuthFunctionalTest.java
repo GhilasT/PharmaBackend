@@ -101,6 +101,10 @@ public class AuthFunctionalTest {
         assertEquals("AuthTest", body.getNom());
         assertEquals("User", body.getPrenom());
         assertEquals(employeId, body.getId());
+        assertNotNull(body.getToken());
+        assertTrue(body.getToken().startsWith("eyJ"));
+        // Token should contain email as subject
+        assertTrue(body.getToken().contains("eyJhbGciOiJIUzI1NiJ9"));
     }
 
     @Test
