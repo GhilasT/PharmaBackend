@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consultation des Achats</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        /* Styles Header */
+        .main-header {
+            background-color: #007B3D;
+            padding: 1rem 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .brand {
+            color: white !important;
+            font-size: 1.8rem;
+            font-weight: 600;
+            text-decoration: none;
+            margin-left: 2rem;
+        }
+
+        /* Styles Footer */
+        .main-footer {
+            background-color: #007B3D;
+            color: white;
+            padding: 2rem 0;
+            margin-top: 4rem;
+            text-align: center;
+        }
+
+        .footer-text {
+            margin-bottom: 0.5rem;
+        }
+
+        /* Ajustements layout */
+        .main-content {
+            min-height: calc(100vh - 160px);
+            padding: 2rem 0;
+        }
+
+        .search-form {
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .brand-symbol {
+            font-size: 0.9em;
+            margin-right: 8px;
+            vertical-align: middle;
+        }
+
+        .alert {
+            max-width: 500px;
+            margin: 1rem auto;
+        }
+
+        .form-title {
+            color: #007B3D;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <!-- En-tête -->
+    <header class="main-header">
+        <div class="container">
+            <a href="#" class="brand">
+                <span class="brand-symbol">⚕</span>
+                PharmaPlus
+            </a>
+        </div>
+    </header>
+
+    <!-- Contenu principal -->
+    <main class="main-content">
+        <div class="container">
+            <!-- Message d'erreur éventuel -->
+            <div th:if="${error}" class="alert alert-danger" role="alert">
+                <span th:text="${error}">Message d'erreur</span>
+            </div>
+            
+            <div class="search-form">
+                <h2 class="form-title">Consulter mon historique d'achats</h2>
+                
+                <form action="/vente/recherche" method="post">
+                    <div class="form-group">
+                        <label for="telephone">Numéro de téléphone</label>
+                        <input type="tel" class="form-control" id="telephone" name="telephone" 
+                              placeholder="Entrez votre numéro de téléphone" required>
+                        <small class="form-text text-muted">
+                            Entrez le numéro de téléphone utilisé lors de vos achats.
+                        </small>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-success btn-block">
+                        Afficher mon historique
+                    </button>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <!-- Pied de page -->
+    <footer class="main-footer">
+        <div class="container">
+            <p class="footer-text">© 2025 PharmaPlus - Tous droits réservés</p>
+            <p class="footer-text small">Application de gestion pharmaceutique agréée</p>
+        </div>
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    
+    <script>
+        // Script pour formater le numéro de téléphone pendant la saisie
+        $(document).ready(function() {
+            $('#telephone').on('input', function() {
+                // Supprimer tous les caractères non numériques
+                let value = $(this).val().replace(/\D/g, '');
+                $(this).val(value);
+            });
+        });
+    </script>
+</body>
+</html>
