@@ -1,6 +1,7 @@
 package l3o2.pharmacie.api.service;
 
 import l3o2.pharmacie.api.model.dto.request.VenteCreateRequest;
+import l3o2.pharmacie.api.model.dto.request.VenteUpdateRequest;
 import l3o2.pharmacie.api.model.dto.request.MedicamentPanierRequest;
 import l3o2.pharmacie.api.model.dto.response.MedicamentResponse;
 import l3o2.pharmacie.api.model.dto.response.VenteResponse;
@@ -22,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -188,6 +190,182 @@ public class VenteService {
 
         System.out.println("Vente enregistrée avec succès !");
         return response;
+    }
+
+    @Transactional
+    public VenteResponse updateVente(UUID idVente, VenteUpdateRequest request) {
+        Vente vente = venteRepository.findById(idVente)
+                .orElseThrow(() -> new EntityNotFoundException("Vente non trouvée"));
+
+        StringBuilder notifications = new StringBuilder();
+
+        try {
+            // Mise à jour des champs modifiables
+            if (request.getPharmacienAdjointId() != null) {
+                PharmacienAdjoint pharmacienAdjoint = pharmacienAdjointRepository.findById(request.getPharmacienAdjointId())
+                        .orElseThrow(() -> new ResponseStatusException(
+                                HttpStatus.NOT_FOUND,
+                                "Pharmacien adjoint non trouvé"
+                        ));
+                vente.setPharmacienAdjoint(pharmacienAdjoint);
+            }
+
+            if (request.getClientId() != null) {
+                Client client = clientRepository.findById(request.getClientId())
+                        .orElseThrow(() -> new ResponseStatusException(
+                                HttpStatus.NOT_FOUND,
+                                "Client non trouvé"
+                        ));
+                vente.setClient(client);
+            }
+
+            if (request.getDateVente() != null) {
+                vente.setDateVente(request.getDateVente());
+            }
+
+            if (request.getModePaiement() != null) {
+                vente.setModePaiement(request.getModePaiement());
+            }
+
+            // Gestion de la mise à jour des médicaments
+            if (request.getMedicaments() != null && !request.getMedicaments().isEmpty()) {
+                // 1. Vérifier si les médicaments demandés sont disponibles avant de modifier quoi que ce soit
+                for (MedicamentPanierRequest medRequest : request.getMedicaments()) {
+                    String codeInitial = medRequest.getCodeCip13();
+                    // Utiliser une variable différente qui ne sera pas modifiée
+                    final String codeToUse = getFinalCode(codeInitial);
+
+                    // Vérification de la disponibilité du médicament
+                    StockMedicament stock = medicamentRepository
+                            .findTopByPresentation_CodeCip13OrderByDateMiseAJourDesc(codeToUse)
+                            .orElseThrow(() -> new ResponseStatusException(
+                                    HttpStatus.NOT_FOUND,
+                                    "Stock introuvable pour le code CIP13 : " + codeToUse
+                            ));
+
+                    if (stock.getQuantite() < medRequest.getQuantite()) {
+                        throw new ResponseStatusException(
+                                HttpStatus.BAD_REQUEST,
+                                "Quantité insuffisante pour le médicament : " + codeToUse + " (disponible: " + stock.getQuantite() + ", demandé: " + medRequest.getQuantite() + ")"
+                        );
+                    }
+                }
+
+                // 2. Récupérer les médicaments du panier actuel pour remettre le stock
+                for (MedicamentPanier mp : vente.getMedicamentsPanier()) {
+                    StockMedicament stock = mp.getStockMedicament();
+                    if (stock != null) {
+                        // Réincrémenter le stock pour les médicaments qui seront remplacés
+                        stock.setQuantite(stock.getQuantite() + mp.getQuantite());
+                        medicamentRepository.save(stock);
+                    }
+                }
+
+                // 3. Vider le panier actuel
+                vente.getMedicamentsPanier().clear();
+
+                // 4. Créer les nouveaux médicaments du panier
+                double nouveauMontantTotal = 0.0;
+                double nouveauMontantRembourse = 0.0;
+
+                List<MedicamentPanier> nouveauxMedicamentsPanier = new ArrayList<>();
+
+                for (MedicamentPanierRequest medRequest : request.getMedicaments()) {
+                    String codeInitial = medRequest.getCodeCip13();
+                    // Utiliser une variable différente qui ne sera pas modifiée
+                    final String codeToUse = getFinalCode(codeInitial);
+
+                    StockMedicament stock = medicamentRepository
+                            .findTopByPresentation_CodeCip13OrderByDateMiseAJourDesc(codeToUse)
+                            .orElseThrow(() -> new ResponseStatusException(
+                                    HttpStatus.NOT_FOUND,
+                                    "Stock introuvable pour le code CIP13 : " + codeToUse
+                            ));
+
+                    // Mise à jour du stock
+                    stock.setQuantite(stock.getQuantite() - medRequest.getQuantite());
+                    medicamentRepository.save(stock);
+
+                    // Notifications de stock faible / rupture
+                    if (stock.getQuantite() <= stock.getSeuilAlerte()) {
+                        notifications.append("Stock faible pour ").append(codeToUse).append("\n");
+                    }
+                    if (stock.getQuantite() == 0) {
+                        notifications.append("Rupture de stock : ").append(codeToUse).append("\n");
+                    }
+
+                    // Création du nouveau MedicamentPanier
+                    MedicamentPanier mp = new MedicamentPanier();
+                    mp.setStockMedicament(stock);
+                    mp.setQuantite(medRequest.getQuantite());
+                    mp.setVente(vente);
+                    nouveauxMedicamentsPanier.add(mp);
+
+                    // Calcul du nouveau montant total
+                    if (stock.getPresentation().getPrixTTC() != null) {
+                        nouveauMontantTotal += stock.getPresentation().getPrixTTC().doubleValue() * medRequest.getQuantite();
+                        
+                        // Calcul du remboursement
+                        String tauxStr = stock.getPresentation().getTauxRemboursement();
+                        if (tauxStr != null && !tauxStr.isEmpty()) {
+                            try {
+                                // Nettoyage du format du taux (suppression des caractères non numériques)
+                                String cleanTaux = tauxStr.replaceAll("[^0-9.]", "");
+                                if (!cleanTaux.isEmpty()) {
+                                    double taux = Double.parseDouble(cleanTaux) / 100.0;
+                                    nouveauMontantRembourse += stock.getPresentation().getPrixTTC().doubleValue() * medRequest.getQuantite() * taux;
+                                }
+                            } catch (NumberFormatException e) {
+                                // En cas d'erreur, on ne modifie pas le remboursement
+                                System.err.println("Erreur lors du parsing du taux de remboursement: " + tauxStr);
+                            }
+                        }
+                    }
+                }
+
+                // Mise à jour du panier et recalcul du montant total
+                vente.getMedicamentsPanier().addAll(nouveauxMedicamentsPanier);
+                vente.setMontantTotal(nouveauMontantTotal);
+                vente.setMontantRembourse(nouveauMontantRembourse);
+            }
+
+            // Sauvegarde de la vente mise à jour
+            Vente updatedVente = venteRepository.save(vente);
+            
+            // Construction de la réponse
+            VenteResponse response = mapToResponse(updatedVente);
+            
+            // Ajout des notifications éventuelles
+            if (notifications.length() > 0) {
+                response.setNotification(notifications.toString());
+            }
+            
+            return response;
+            
+        } catch (Exception e) {
+            // Log l'erreur pour le débogage
+            System.err.println("Erreur lors de la mise à jour de la vente: " + e.getMessage());
+            e.printStackTrace();
+            
+            // Relancer l'exception
+            throw e;
+        }
+    }
+
+    /**
+     * Méthode utilitaire pour obtenir le code CIP13 final
+     * @param codeInitial Le code initial (CIS ou CIP13)
+     * @return Le code CIP13 correspondant
+     */
+    private String getFinalCode(String codeInitial) {
+        if (codeInitial.length() == 8) {
+            return medicamentService.getCodeCip13FromCodeCis(codeInitial)
+                    .orElseThrow(() -> new ResponseStatusException(
+                            HttpStatus.NOT_FOUND,
+                            "Aucune présentation trouvée pour le code CIS : " + codeInitial
+                    ));
+        }
+        return codeInitial;
     }
 
     @Transactional

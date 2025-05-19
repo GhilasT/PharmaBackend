@@ -1,6 +1,7 @@
 package l3o2.pharmacie.api.service;
 
 import l3o2.pharmacie.api.model.dto.request.VenteCreateRequest;
+import l3o2.pharmacie.api.model.dto.request.VenteUpdateRequest;
 import l3o2.pharmacie.api.model.dto.request.MedicamentPanierRequest;
 import l3o2.pharmacie.api.model.dto.response.VenteResponse;
 import l3o2.pharmacie.api.model.entity.Client;
@@ -194,5 +195,72 @@ class VenteServiceTest {
         assertThatThrownBy(() -> venteService.delete(nonExistentId))
                 .isInstanceOf(EntityNotFoundException.class)
                 .hasMessageContaining("Vente non trouvée");
+    }
+
+    @Test
+    void updateVente_WhenExists_ShouldUpdateVente() {
+        // Given
+        PharmacienAdjoint newPharmacienAdjoint = new PharmacienAdjoint();
+        newPharmacienAdjoint.setIdPersonne(UUID.randomUUID());
+        
+        Client newClient = new Client();
+        newClient.setIdPersonne(UUID.randomUUID());
+        
+        // Création d'une requête de mise à jour sans les montants
+        VenteUpdateRequest updateRequest = VenteUpdateRequest.builder()
+                .pharmacienAdjointId(newPharmacienAdjoint.getIdPersonne())
+                .clientId(newClient.getIdPersonne())
+                .dateVente(new Date())
+                .modePaiement("Espèces")
+                .build();
+        
+        // When
+        when(venteRepository.findById(vente.getIdVente())).thenReturn(Optional.of(vente));
+        when(pharmacienAdjointRepository.findById(updateRequest.getPharmacienAdjointId())).thenReturn(Optional.of(newPharmacienAdjoint));
+        when(clientRepository.findById(updateRequest.getClientId())).thenReturn(Optional.of(newClient));
+        when(venteRepository.save(any(Vente.class))).thenAnswer(invocation -> invocation.getArgument(0));
+        
+        // Execute
+        VenteResponse response = venteService.updateVente(vente.getIdVente(), updateRequest);
+        
+        // Verify
+        assertThat(response.getModePaiement()).isEqualTo(updateRequest.getModePaiement());
+        verify(venteRepository).save(any(Vente.class));
+    }
+
+    @Test
+    void updateVente_WithMedicaments_ShouldUpdateVenteAndStock() {
+        // Given
+        MedicamentPanierRequest medicamentRequest = MedicamentPanierRequest.builder()
+                .codeCip13("1234567890123")
+                .quantite(3)
+                .build();
+                
+        VenteUpdateRequest updateRequest = VenteUpdateRequest.builder()
+                .modePaiement("Espèces")
+                .medicaments(List.of(medicamentRequest))
+                .build();
+        
+        // Préparation des mocks
+        when(venteRepository.findById(vente.getIdVente())).thenReturn(Optional.of(vente));
+        when(medicamentService.getCodeCip13FromCodeCis(anyString())).thenReturn(Optional.of("1234567890123"));
+        when(medicamentRepository.findTopByPresentation_CodeCip13OrderByDateMiseAJourDesc("1234567890123"))
+                .thenReturn(Optional.of(stockMedicament));
+                
+        // Le stockMedicament devrait avoir une présentation avec prix pour le calcul du nouveau montant
+        cisCipBdpm.setPrixTTC(java.math.BigDecimal.valueOf(20.0));
+        cisCipBdpm.setTauxRemboursement("65%");
+        when(venteRepository.save(any(Vente.class))).thenAnswer(invocation -> invocation.getArgument(0));
+        
+        // Execute
+        VenteResponse response = venteService.updateVente(vente.getIdVente(), updateRequest);
+        
+        // Verify
+        assertThat(response.getModePaiement()).isEqualTo(updateRequest.getModePaiement());
+        verify(medicamentRepository, times(2)).save(any(StockMedicament.class)); // Une fois pour réinitialiser et une fois pour mettre à jour
+        verify(venteRepository).save(any(Vente.class));
+        
+        // Vérification des montants recalculés
+        // Cette vérification dépend de votre logique de calcul dans la méthode update
     }
 }
