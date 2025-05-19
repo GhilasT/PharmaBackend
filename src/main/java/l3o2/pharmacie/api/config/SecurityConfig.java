@@ -35,6 +35,8 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 // Permit client vente view endpoints without authentication
                 .requestMatchers("/ventes/client/**").permitAll()
+                // Permit client vente endpoints without authentication
+                .requestMatchers("/vente/**").permitAll()
                 // Permit auth endpoints without authentication
                 .requestMatchers("/api/auth/**").permitAll()
                 // Permit dashboard endpoint without authentication
