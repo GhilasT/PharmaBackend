@@ -25,6 +25,10 @@ import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * Contrôleur pour afficher les ventes d'un client spécifique au format HTML.
+ * Ce contrôleur est accessible publiquement.
+ */
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/ventes/client")
@@ -35,6 +39,14 @@ public class ClientVenteViewController {
     private final PharmacienAdjointService pharmacienAdjointService;
     private static final Logger LOGGER = Logger.getLogger(ClientVenteViewController.class.getName());
 
+    /**
+     * Récupère et affiche les ventes d'un client sous forme de page HTML.
+     * Formate les dates et récupère les noms des pharmaciens associés aux ventes.
+     * @param clientId L'identifiant UUID du client.
+     * @param model L'objet Model pour passer les données à la vue.
+     * @return Le nom de la vue Thymeleaf "client-ventes" pour afficher les ventes.
+     * @throws ResponseStatusException Si une erreur interne survient lors de la récupération des données.
+     */
     @GetMapping("/{clientId}/html")
     public String getVentesClientHtml(@PathVariable UUID clientId, Model model) {
         try {

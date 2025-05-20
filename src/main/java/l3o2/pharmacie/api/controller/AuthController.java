@@ -13,7 +13,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 /**
- * Controller for authentication
+ * Contrôleur pour l'authentification des utilisateurs.
+ * Gère la connexion et l'inscription des employés.
  * @author raphaelcharoze
  */
 @RestController
@@ -26,8 +27,9 @@ public class AuthController {
     private final EmployeService employeService;
 
     /**
-     * Login a user
-     * @return ResponseEntity validating the login
+     * Connecte un utilisateur.
+     * @param request Les informations de connexion (email et mot de passe).
+     * @return Un LoginResponse contenant le token JWT, les informations de l'utilisateur et un indicateur de succès.
      * @author raphaelcharoze
      */
     @PostMapping("/login")
@@ -58,9 +60,9 @@ public class AuthController {
     }
 
     /**
-     * Register a new user
-     * @param request : EmployeCreateRequest
-     * @return ResponseEntity validating the registration
+     * Inscrit un nouvel utilisateur (employé).
+     * @param request Les informations de l'employé à créer.
+     * @return Une ResponseEntity indiquant le succès ou l'échec de l'inscription.
      * @author raphaelcharoze
      */
     @PostMapping("/register")

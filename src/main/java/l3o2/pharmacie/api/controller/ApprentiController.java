@@ -67,18 +67,30 @@ public class ApprentiController {
         return ResponseEntity.ok("Apprenti supprimé avec succès.");
     }
 
+    /**
+     * Met à jour un apprenti existant.
+     * @param id L'identifiant UUID de l'apprenti à mettre à jour.
+     * @param request Les données de mise à jour de l'apprenti.
+     * @return Une ResponseEntity contenant l'ApprentiResponse mis à jour.
+     */
     @PutMapping("/{id}")
-public ResponseEntity<ApprentiResponse> updateApprenti(
-        @PathVariable UUID id,
-        @Valid @RequestBody ApprentiUpdateRequest request) {
-    ApprentiResponse updatedApprenti = apprentiService.updateApprenti(id, request);
-    return ResponseEntity.ok(updatedApprenti);
-}
+    public ResponseEntity<ApprentiResponse> updateApprenti(
+            @PathVariable UUID id,
+            @Valid @RequestBody ApprentiUpdateRequest request) {
+        ApprentiResponse updatedApprenti = apprentiService.updateApprenti(id, request);
+        return ResponseEntity.ok(updatedApprenti);
+    }
 
-@GetMapping("/search")
-public ResponseEntity<List<ApprentiResponse>> searchApprentis(
-        @RequestParam String term) {
-    List<ApprentiResponse> results = apprentiService.searchApprentis(term);
-    return ResponseEntity.ok(results);
-}
+    /**
+     * Recherche des apprentis en fonction d'un terme de recherche.
+     * La recherche s'effectue sur le nom ou le prénom de l'apprenti.
+     * @param term Le terme de recherche.
+     * @return Une ResponseEntity contenant une liste d'ApprentiResponse correspondant aux critères de recherche.
+     */
+    @GetMapping("/search")
+    public ResponseEntity<List<ApprentiResponse>> searchApprentis(
+            @RequestParam String term) {
+        List<ApprentiResponse> results = apprentiService.searchApprentis(term);
+        return ResponseEntity.ok(results);
+    }
 }

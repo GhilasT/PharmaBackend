@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * Controller for sending emails
+ * Contrôleur pour l'envoi d'emails.
  * @author raphaelcharoze
  * @version 1.0
  * @since 2025-03-30
@@ -30,7 +30,9 @@ public class EmailController {
     private final CommandeService commandeService;
 
     /**
-     * Send a simple email
+     * Envoie un email simple.
+     * @param request Les détails de l'email à envoyer.
+     * @return Une ResponseEntity indiquant le résultat de l'opération.
      * @author raphaelcharoze
      */
     @PostMapping("/send")
@@ -39,7 +41,9 @@ public class EmailController {
     }
 
     /**
-     * Send an HTML email
+     * Envoie un email au format HTML.
+     * @param request Les détails de l'email HTML à envoyer.
+     * @return Une ResponseEntity indiquant le résultat de l'opération.
      * @author raphaelcharoze
      */
     @PostMapping("/sendHtml")
@@ -48,7 +52,9 @@ public class EmailController {
     }
 
     /**
-     * Send an email with an attachment using a file path
+     * Envoie un email avec une pièce jointe en utilisant un chemin de fichier.
+     * @param request Les détails de l'email et le chemin de la pièce jointe.
+     * @return Une ResponseEntity indiquant le résultat de l'opération.
      * @author raphaelcharoze
      */
     @PostMapping("/sendWithAttachmentPath")
@@ -57,7 +63,9 @@ public class EmailController {
     }
 
     /**
-     * Send an email with an attachment using a file
+     * Envoie un email avec une pièce jointe en utilisant un fichier.
+     * @param request Les détails de l'email et le fichier en pièce jointe.
+     * @return Une ResponseEntity indiquant le résultat de l'opération.
      * @author raphaelcharoze
      */
     @PostMapping("/sendWithAttachmentFile")
@@ -66,7 +74,9 @@ public class EmailController {
     }
 
     /**
-     * Send an HTML email with an attachment using a file
+     * Envoie un email HTML avec une pièce jointe en utilisant un fichier.
+     * @param request Les détails de l'email HTML et le fichier en pièce jointe.
+     * @return Une ResponseEntity indiquant le résultat de l'opération.
      * @author raphaelcharoze
      */
     @PostMapping("/sendHtmlWithAttachmentFile")
@@ -75,7 +85,9 @@ public class EmailController {
     }
 
     /**
-     * Send an HTML email with an attachment using a file path
+     * Envoie un email HTML avec une pièce jointe en utilisant un chemin de fichier.
+     * @param request Les détails de l'email HTML et le chemin de la pièce jointe.
+     * @return Une ResponseEntity indiquant le résultat de l'opération.
      * @author raphaelcharoze
      */
     @PostMapping("/sendHtmlWithAttachmentPath")
@@ -83,6 +95,11 @@ public class EmailController {
         return emailService.sendHTMLEmailWithAttachmentPath(request.getTo(), request.getSubject(), request.getText(), request.getFilePath());
     }
 
+    /**
+     * Envoie un email de commande au fournisseur.
+     * @param request La requête contenant la référence de la commande.
+     * @return Une ResponseEntity indiquant le résultat de l'opération.
+     */
     @PostMapping("/sendCommandeAuFournisseur")
     public ResponseEntity<?> sendCommandeAuFournisseur(@Valid @RequestBody EmailCommandeRequest request) {
         return emailService.sendCommandeEmailToFournisseur(request.getCommandeReference());

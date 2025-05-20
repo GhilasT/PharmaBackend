@@ -11,10 +11,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 /**
- * Controller pour gérer les requêtes liées au tableau de bord.
+ * Contrôleur pour gérer les requêtes liées au tableau de bord.
  * Il est responsable de la gestion des données affichées sur le tableau de bord.
  * Il utilise le service DashboardService pour interagir avec les données.
- * Author : raphaelcharoze
+ * @author raphaelcharoze
  */
 
 @RestController
@@ -25,6 +25,10 @@ public class DashboardController {
 
     private final DashboardService dashboardService;
 
+    /**
+     * Récupère les statistiques du tableau de bord.
+     * @return Une ResponseEntity contenant les données du tableau de bord et le statut HTTP OK.
+     */
     @GetMapping
     public ResponseEntity<DashboardResponse> getDashboard() {
         DashboardResponse dashboardResponse = dashboardService.getDashboardStats();

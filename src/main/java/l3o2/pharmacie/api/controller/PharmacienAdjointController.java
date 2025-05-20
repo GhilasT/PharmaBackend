@@ -24,6 +24,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.Valid;
 
+/**
+ * Contrôleur REST pour la gestion des pharmaciens adjoints.
+ */
 @RestController
 @RequestMapping("/api/pharmaciens-adjoints")
 @CrossOrigin(origins = "*")
@@ -32,6 +35,12 @@ public class PharmacienAdjointController {
 
     private final PharmacienAdjointService pharmacienAdjointService;
 
+    /**
+     * Crée un nouveau pharmacien adjoint.
+     *
+     * @param request Données pour la création du pharmacien adjoint.
+     * @return ResponseEntity contenant le pharmacien adjoint créé et le statut HTTP CREATED.
+     */
     @PostMapping
     public ResponseEntity<PharmacienAdjointResponse> createPharmacienAdjoint(
             @Valid @RequestBody PharmacienAdjointCreateRequest request) {
@@ -39,18 +48,36 @@ public class PharmacienAdjointController {
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
+    /**
+     * Récupère la liste de tous les pharmaciens adjoints.
+     *
+     * @return ResponseEntity contenant la liste des pharmaciens adjoints et le statut HTTP OK.
+     */
     @GetMapping
     public ResponseEntity<List<PharmacienAdjointResponse>> getAllPharmaciensAdjoints() {
         List<PharmacienAdjointResponse> responses = pharmacienAdjointService.getAllPharmaciensAdjoints();
         return ResponseEntity.ok(responses);
     }
 
+    /**
+     * Supprime un pharmacien adjoint par son identifiant.
+     *
+     * @param id Identifiant UUID du pharmacien adjoint à supprimer.
+     * @return ResponseEntity avec le statut HTTP NO_CONTENT.
+     */
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletePharmacienAdjoint(@PathVariable UUID id) {
         pharmacienAdjointService.deletePharmacienAdjoint(id);
         return ResponseEntity.noContent().build();
     }
 
+    /**
+     * Met à jour les informations d'un pharmacien adjoint existant.
+     *
+     * @param id Identifiant UUID du pharmacien adjoint à mettre à jour.
+     * @param request Données de mise à jour du pharmacien adjoint.
+     * @return ResponseEntity contenant le pharmacien adjoint mis à jour et le statut HTTP OK.
+     */
     @PutMapping("/{id}")
     public ResponseEntity<PharmacienAdjointResponse> updatePharmacienAdjoint(
             @PathVariable UUID id,
@@ -59,6 +86,12 @@ public class PharmacienAdjointController {
         return ResponseEntity.ok(response);
     }
 
+    /**
+     * Recherche des pharmaciens adjoints en fonction d'un terme de recherche.
+     *
+     * @param term Terme de recherche.
+     * @return ResponseEntity contenant la liste des pharmaciens adjoints correspondants et le statut HTTP OK.
+     */
     @GetMapping("/search")
     public ResponseEntity<List<PharmacienAdjointResponse>> searchPharmaciensAdjoints(
             @RequestParam String term) {
@@ -66,6 +99,12 @@ public class PharmacienAdjointController {
         return ResponseEntity.ok(responses);
     }
 
+    /**
+     * Récupère un pharmacien adjoint par son identifiant unique.
+     *
+     * @param id Identifiant UUID du pharmacien adjoint.
+     * @return ResponseEntity contenant le pharmacien adjoint trouvé et le statut HTTP OK.
+     */
     @GetMapping("/{id}")
     public ResponseEntity<PharmacienAdjointResponse> getPharmacienAdjointById(@PathVariable UUID id) {
         PharmacienAdjointResponse response = pharmacienAdjointService.getPharmacienAdjointById(id);

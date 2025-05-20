@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.UUID;
 
 /**
- * Contrôleur REST pour gérer les titulaires en pharmacie.
- * Fournit des endpoints pour la création, récupération et suppression.
+ * Contrôleur REST pour gérer le titulaire de la pharmacie.
+ * Fournit des endpoints pour la création, la récupération et la suppression du titulaire.
  */
 @RestController
 @RequestMapping("/api/titulaires")
@@ -23,9 +23,10 @@ public class TitulaireController {
     private final TitulaireService titulaireService;
 
     /**
-     * Endpoint pour créer un nouveau titulaire.
-     * @param request Données de création du titulaire.
-     * @return TitulaireResponse contenant les détails du titulaire créé.
+     * Crée un nouveau titulaire.
+     *
+     * @param request Données pour la création du titulaire.
+     * @return ResponseEntity contenant le titulaire créé et le statut HTTP CREATED.
      */
     @PostMapping
     public ResponseEntity<TitulaireResponse> createTitulaire(@RequestBody TitulaireCreateRequest request) {
@@ -33,8 +34,9 @@ public class TitulaireController {
     }
 
     /**
-     * Endpoint pour récupérer le titulaire en pharmacie.
-     * @return Détails du titulaire.
+     * Récupère le titulaire actuel de la pharmacie.
+     *
+     * @return ResponseEntity contenant les détails du titulaire et le statut HTTP OK.
      */
     @GetMapping
     public ResponseEntity<TitulaireResponse> getTitulaire() {
@@ -42,9 +44,10 @@ public class TitulaireController {
     }
 
     /**
-     * Endpoint pour supprimer un titulaire.
-     * @param id Identifiant du titulaire.
-     * @return Confirmation de suppression.
+     * Supprime un titulaire par son identifiant.
+     *
+     * @param id Identifiant du titulaire à supprimer.
+     * @return ResponseEntity avec le statut HTTP NO_CONTENT.
      */
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteTitulaire(@PathVariable UUID id) {

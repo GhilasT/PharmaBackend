@@ -12,7 +12,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Contrôleur REST pour gérer les opérations d'importation de données.
+ * Contrôleur REST pour gérer les opérations d'importation de données CSV.
+ * Fournit des endpoints pour importer différents types de données à partir de fichiers CSV.
  */
 @RestController
 @RequestMapping("/api/import")
@@ -23,9 +24,9 @@ public class ImportController {
     private final CsvImportService csvImportService;
 
     /**
-     * Importe tous les fichiers CSV du dossier data.
+     * Importe tous les fichiers CSV présents dans le dossier de données configuré.
      *
-     * @return Réponse contenant le nombre d'enregistrements importés pour chaque fichier
+     * @return Réponse contenant le nombre d'enregistrements importés pour chaque fichier et un message de succès.
      */
     @PostMapping("/all")
     public ResponseEntity<Map<String, Object>> importAllCsvFiles() {
@@ -40,9 +41,9 @@ public class ImportController {
     }
 
     /**
-     * Importe uniquement les médicaments depuis le fichier CIS_bdpm.csv.
+     * Importe les données des médicaments à partir du fichier CIS_bdpm.csv.
      *
-     * @return Réponse contenant le nombre de médicaments importés
+     * @return Réponse contenant le nombre de médicaments importés et un message de succès.
      */
     @PostMapping("/medicaments")
     public ResponseEntity<Map<String, Object>> importMedicaments() {
@@ -57,9 +58,9 @@ public class ImportController {
     }
 
     /**
-     * Importe uniquement les présentations depuis le fichier CIS_CIP_bdpm.csv.
+     * Importe les données des présentations de médicaments à partir du fichier CIS_CIP_bdpm.csv.
      *
-     * @return Réponse contenant le nombre de présentations importées
+     * @return Réponse contenant le nombre de présentations importées et un message de succès.
      */
     @PostMapping("/presentations")
     public ResponseEntity<Map<String, Object>> importPresentations() {
@@ -74,9 +75,9 @@ public class ImportController {
     }
 
     /**
-     * Importe uniquement les compositions depuis le fichier CIS_COMPO_bdpm.csv.
+     * Importe les données des compositions de médicaments à partir du fichier CIS_COMPO_bdpm.csv.
      *
-     * @return Réponse contenant le nombre de compositions importées
+     * @return Réponse contenant le nombre de compositions importées et un message de succès.
      */
     @PostMapping("/compositions")
     public ResponseEntity<Map<String, Object>> importCompositions() {
@@ -89,6 +90,12 @@ public class ImportController {
         
         return ResponseEntity.ok(response);
     }
+
+    /**
+     * Importe les données de stock à partir du fichier stock.csv.
+     *
+     * @return Réponse contenant le nombre d'entrées de stock importées et un message de succès.
+     */
     @PostMapping("/stock")
     public ResponseEntity<Map<String, Object>> importStock() {
         int count = csvImportService.importStock("data/stock.csv");
@@ -100,10 +107,11 @@ public class ImportController {
         
         return ResponseEntity.ok(response);
     }
+
     /**
-     * Importe uniquement les conditions de prescription depuis le fichier CIS_CPD_bdpm.csv.
+     * Importe les conditions de prescription des médicaments à partir du fichier CIS_CPD_bdpm.csv.
      *
-     * @return Réponse contenant le nombre de conditions importées
+     * @return Réponse contenant le nombre de conditions importées et un message de succès.
      */
     @PostMapping("/conditions")
     public ResponseEntity<Map<String, Object>> importConditions() {
@@ -118,9 +126,9 @@ public class ImportController {
     }
 
     /**
-     * Importe uniquement les groupes génériques depuis le fichier CIS_GENER_bdpm.csv.
+     * Importe les informations sur les groupes génériques de médicaments à partir du fichier CIS_GENER_bdpm.csv.
      *
-     * @return Réponse contenant le nombre de groupes génériques importés
+     * @return Réponse contenant le nombre de groupes génériques importés et un message de succès.
      */
     @PostMapping("/generiques")
     public ResponseEntity<Map<String, Object>> importGeneriques() {
@@ -135,9 +143,9 @@ public class ImportController {
     }
 
     /**
-     * Importe uniquement les avis ASMR depuis le fichier CIS_HAS_ASMR_bdpm.csv.
+     * Importe les avis ASMR (Amélioration du Service Médical Rendu) de la HAS à partir du fichier CIS_HAS_ASMR_bdpm.csv.
      *
-     * @return Réponse contenant le nombre d'avis ASMR importés
+     * @return Réponse contenant le nombre d'avis ASMR importés et un message de succès.
      */
     @PostMapping("/avis-asmr")
     public ResponseEntity<Map<String, Object>> importAvisAsmr() {
@@ -152,9 +160,9 @@ public class ImportController {
     }
 
     /**
-     * Importe uniquement les avis SMR depuis le fichier CIS_HAS_SMR_bdpm.csv.
+     * Importe les avis SMR (Service Médical Rendu) de la HAS à partir du fichier CIS_HAS_SMR_bdpm.csv.
      *
-     * @return Réponse contenant le nombre d'avis SMR importés
+     * @return Réponse contenant le nombre d'avis SMR importés et un message de succès.
      */
     @PostMapping("/avis-smr")
     public ResponseEntity<Map<String, Object>> importAvisSmr() {
@@ -169,9 +177,9 @@ public class ImportController {
     }
 
     /**
-     * Importe uniquement les informations importantes depuis le fichier CIS_InfoImportantes.csv.
+     * Importe les informations importantes relatives aux médicaments à partir du fichier CIS_InfoImportantes.csv.
      *
-     * @return Réponse contenant le nombre d'informations importantes importées
+     * @return Réponse contenant le nombre d'informations importantes importées et un message de succès.
      */
     @PostMapping("/infos-importantes")
     public ResponseEntity<Map<String, Object>> importInfosImportantes() {
@@ -186,9 +194,9 @@ public class ImportController {
     }
 
     /**
-     * Importe uniquement les disponibilités spécifiques depuis le fichier CIS_CIP_Dispo_Spec.csv.
+     * Importe les informations sur les disponibilités spécifiques des médicaments (par CIP) à partir du fichier CIS_CIP_Dispo_Spec.csv.
      *
-     * @return Réponse contenant le nombre de disponibilités importées
+     * @return Réponse contenant le nombre d'enregistrements de disponibilité importés et un message de succès.
      */
     @PostMapping("/disponibilites")
     public ResponseEntity<Map<String, Object>> importDisponibilites() {
@@ -203,9 +211,9 @@ public class ImportController {
     }
 
     /**
-     * Importe uniquement les médicaments MITM depuis le fichier CIS_MITM.csv.
+     * Importe les informations sur les Médicaments d'Intérêt Thérapeutique Majeur (MITM) à partir du fichier CIS_MITM.csv.
      *
-     * @return Réponse contenant le nombre de médicaments MITM importés
+     * @return Réponse contenant le nombre de médicaments MITM importés et un message de succès.
      */
     @PostMapping("/mitm")
     public ResponseEntity<Map<String, Object>> importMitm() {
@@ -220,9 +228,9 @@ public class ImportController {
     }
 
     /**
-     * Importe uniquement les liens vers les pages CT depuis le fichier HAS_LiensPageCT_bdpm.csv.
+     * Importe les liens vers les pages des Commissions de la Transparence (CT) de la HAS à partir du fichier HAS_LiensPageCT_bdpm.csv.
      *
-     * @return Réponse contenant le nombre de liens importés
+     * @return Réponse contenant le nombre de liens importés et un message de succès.
      */
     @PostMapping("/liens-ct")
     public ResponseEntity<Map<String, Object>> importLiensCt() {

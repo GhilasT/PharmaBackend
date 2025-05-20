@@ -12,39 +12,69 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * Contrôleur REST pour gérer les médecins.
+ * Fournit des endpoints pour créer, récupérer, mettre à jour et supprimer des médecins,
+ * ainsi que pour rechercher des médecins et vérifier leur existence par RPPS.
+ */
 @RestController
 @RequestMapping("/api/medecins")
 public class MedecinController {
 
     private final MedecinService medecinService;
 
+    /**
+     * Constructeur pour MedecinController.
+     *
+     * @param medecinService Le service MedecinService à injecter.
+     */
     @Autowired
     public MedecinController(MedecinService medecinService) {
         this.medecinService = medecinService;
     }
 
-    // Endpoint pour créer un médecin
+    /**
+     * Crée un nouveau médecin.
+     *
+     * @param request Données de création du médecin.
+     * @return ResponseEntity contenant le médecin créé et le statut HTTP CREATED.
+     */
     @PostMapping
     public ResponseEntity<MedecinResponse> createMedecin(@RequestBody MedecinCreateRequest request) {
         MedecinResponse medecinResponse = medecinService.createMedecin(request);
         return new ResponseEntity<>(medecinResponse, HttpStatus.CREATED);
     }
 
-    // Endpoint pour récupérer un médecin par son ID
+    /**
+     * Récupère un médecin par son identifiant.
+     *
+     * @param id Identifiant UUID du médecin.
+     * @return ResponseEntity contenant le médecin trouvé et le statut HTTP OK.
+     */
     @GetMapping("/{id}")
     public ResponseEntity<MedecinResponse> getMedecinById(@PathVariable UUID id) {
         MedecinResponse medecinResponse = medecinService.getMedecinById(id);
         return new ResponseEntity<>(medecinResponse, HttpStatus.OK);
     }
 
-    // Endpoint pour récupérer tous les médecins
+    /**
+     * Récupère la liste de tous les médecins.
+     *
+     * @return ResponseEntity contenant la liste des médecins et le statut HTTP OK.
+     */
     @GetMapping
     public ResponseEntity<List<MedecinResponse>> getAllMedecins() {
         List<MedecinResponse> medecins = medecinService.getAllMedecins();
         return new ResponseEntity<>(medecins, HttpStatus.OK);
     }
 
-    // Endpoint pour récupérer les médecins paginés
+    /**
+     * Récupère une liste paginée de médecins.
+     *
+     * @param page Numéro de la page (commence à 0).
+     * @param size Nombre d'éléments par page.
+     * @return ResponseEntity contenant la liste des médecins pour la page demandée et le statut HTTP OK.
+     */
     @GetMapping("/page")
     public ResponseEntity<List<MedecinResponse>> getMedecinsPaginated(
             @RequestParam(defaultValue = "0") int page,
@@ -53,24 +83,48 @@ public class MedecinController {
         return new ResponseEntity<>(medecins, HttpStatus.OK);
     }
 
-    // Endpoint pour mettre à jour un médecin
+    /**
+     * Met à jour les informations d'un médecin existant.
+     *
+     * @param id Identifiant UUID du médecin à mettre à jour.
+     * @param request Données de mise à jour du médecin.
+     * @return ResponseEntity contenant le médecin mis à jour et le statut HTTP OK.
+     */
     @PutMapping("/{id}")
     public ResponseEntity<MedecinResponse> updateMedecin(@PathVariable UUID id, @RequestBody MedecinCreateRequest request) {
         MedecinResponse updatedMedecin = medecinService.updateMedecin(id, request);
         return new ResponseEntity<>(updatedMedecin, HttpStatus.OK);
     }
 
-    // Endpoint pour supprimer un médecin
+    /**
+     * Supprime un médecin par son identifiant.
+     *
+     * @param id Identifiant UUID du médecin à supprimer.
+     * @return ResponseEntity avec le statut HTTP NO_CONTENT.
+     */
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteMedecin(@PathVariable UUID id) {
         medecinService.deleteMedecin(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
+    /**
+     * Gère les exceptions de type EntityNotFoundException.
+     *
+     * @param ex L'exception EntityNotFoundException levée.
+     * @return ResponseEntity contenant un message d'erreur et le statut HTTP NOT_FOUND.
+     */
     @ExceptionHandler(EntityNotFoundException.class)
     public ResponseEntity<String> handleEntityNotFound(EntityNotFoundException ex) {
         return new ResponseEntity<>("Médecin non trouvé", HttpStatus.NOT_FOUND);
     }
-    // Endpoint pour vérifier si un médecin existe déjà avec un numéro RPPS
+
+    /**
+     * Vérifie l'existence d'un médecin par son numéro RPPS et retourne ses informations s'il existe.
+     *
+     * @param rpps Numéro RPPS du médecin.
+     * @return ResponseEntity contenant les informations du médecin si trouvé, ou le statut NOT_FOUND/INTERNAL_SERVER_ERROR sinon.
+     */
     @GetMapping("/rpps/{rpps}")
     public ResponseEntity<MedecinResponse> checkMedecinByRpps(@PathVariable String rpps) {
         try {
@@ -85,7 +139,12 @@ public class MedecinController {
         }
     }
 
-    // Endpoint pour supprimer un médecin par RPPS
+    /**
+     * Supprime un médecin par son numéro RPPS.
+     *
+     * @param rpps Numéro RPPS du médecin à supprimer.
+     * @return ResponseEntity avec le statut NO_CONTENT en cas de succès, NOT_FOUND si non trouvé, ou INTERNAL_SERVER_ERROR en cas d'autre erreur.
+     */
     @DeleteMapping("/rpps/{rpps}")
     public ResponseEntity<Void> deleteMedecinByRpps(@PathVariable String rpps) {
         try {
@@ -101,7 +160,12 @@ public class MedecinController {
         }
     }
 
-    // Endpoint pour rechercher un médecin par nom ou prénom
+    /**
+     * Recherche des médecins par nom ou prénom.
+     *
+     * @param term Terme de recherche.
+     * @return ResponseEntity contenant la liste des médecins correspondants et le statut HTTP OK.
+     */
     @GetMapping("/search")
     public ResponseEntity<List<MedecinResponse>> searchMedecins(@RequestParam String term) {
         List<MedecinResponse> medecins = medecinService.searchMedecins(term);

@@ -24,9 +24,10 @@ public class PreparateurController {
     private final PreparateurService preparateurService;
 
     /**
-     * Création d'un préparateur.
-     * @param request Données du préparateur.
-     * @return Le préparateur créé.
+     * Crée un nouveau préparateur en pharmacie.
+     *
+     * @param request Données pour la création du préparateur.
+     * @return ResponseEntity contenant le préparateur créé et le statut HTTP OK.
      */
     @PostMapping
     public ResponseEntity<PreparateurResponse> createPreparateur(@Valid @RequestBody PreparateurCreateRequest request) {
@@ -34,8 +35,9 @@ public class PreparateurController {
     }
 
     /**
-     * Récupère tous les préparateurs.
-     * @return Liste des préparateurs.
+     * Récupère la liste de tous les préparateurs.
+     *
+     * @return ResponseEntity contenant la liste des préparateurs et le statut HTTP OK.
      */
     @GetMapping
     public ResponseEntity<List<PreparateurResponse>> getAllPreparateurs() {
@@ -43,9 +45,10 @@ public class PreparateurController {
     }
 
     /**
-     * Récupère un préparateur par son ID.
-     * @param id ID du préparateur.
-     * @return Le préparateur trouvé.
+     * Récupère un préparateur par son identifiant unique.
+     *
+     * @param id Identifiant UUID du préparateur.
+     * @return ResponseEntity contenant le préparateur trouvé et le statut HTTP OK.
      */
     @GetMapping("/{id}")
     public ResponseEntity<PreparateurResponse> getPreparateurById(@PathVariable UUID id) {
@@ -53,8 +56,10 @@ public class PreparateurController {
     }
 
     /**
-     * Suppression d'un préparateur.
-     * @param id ID du préparateur.
+     * Supprime un préparateur par son identifiant.
+     *
+     * @param id Identifiant UUID du préparateur à supprimer.
+     * @return ResponseEntity avec le statut HTTP NO_CONTENT.
      */
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletePreparateur(@PathVariable UUID id) {
@@ -62,18 +67,31 @@ public class PreparateurController {
         return ResponseEntity.noContent().build();
     }
 
+    /**
+     * Met à jour les informations d'un préparateur existant.
+     *
+     * @param id Identifiant UUID du préparateur à mettre à jour.
+     * @param request Données de mise à jour du préparateur.
+     * @return ResponseEntity contenant le préparateur mis à jour et le statut HTTP OK.
+     */
     @PutMapping("/{id}")
-public ResponseEntity<PreparateurResponse> updatePreparateur(
-        @PathVariable UUID id,
-        @Valid @RequestBody PreparateurUpdateRequest request) {
-    PreparateurResponse response = preparateurService.updatePreparateur(id, request);
-    return ResponseEntity.ok(response);
-}
+    public ResponseEntity<PreparateurResponse> updatePreparateur(
+            @PathVariable UUID id,
+            @Valid @RequestBody PreparateurUpdateRequest request) {
+        PreparateurResponse response = preparateurService.updatePreparateur(id, request);
+        return ResponseEntity.ok(response);
+    }
 
-@GetMapping("/search")
-public ResponseEntity<List<PreparateurResponse>> searchPreparateurs(
-        @RequestParam String term) {
-    List<PreparateurResponse> responses = preparateurService.searchPreparateurs(term);
-    return ResponseEntity.ok(responses);
-}
+    /**
+     * Recherche des préparateurs en fonction d'un terme de recherche (nom, prénom, etc.).
+     *
+     * @param term Terme de recherche.
+     * @return ResponseEntity contenant la liste des préparateurs correspondants et le statut HTTP OK.
+     */
+    @GetMapping("/search")
+    public ResponseEntity<List<PreparateurResponse>> searchPreparateurs(
+            @RequestParam String term) {
+        List<PreparateurResponse> responses = preparateurService.searchPreparateurs(term);
+        return ResponseEntity.ok(responses);
+    }
 }

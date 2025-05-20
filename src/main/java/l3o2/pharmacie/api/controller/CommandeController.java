@@ -35,7 +35,10 @@ public class CommandeController {
         return new ResponseEntity<>(commandeResponse, HttpStatus.CREATED);
     }
 
-
+    /**
+     * Récupère toutes les commandes.
+     * @return Une ResponseEntity contenant la liste de toutes les CommandeResponse et le statut HTTP OK.
+     */
     @GetMapping
     public ResponseEntity<List<CommandeResponse>> getAllCommandes() {
         System.out.println("Get all commandes controller");
@@ -54,6 +57,11 @@ public class CommandeController {
         return ResponseEntity.ok(commandeResponse);
     }
 
+    /**
+     * Met à jour le statut d'une commande à "Reçue".
+     * @param reference La référence de la commande à mettre à jour.
+     * @return Une ResponseEntity contenant la CommandeResponse mise à jour ou un statut NOT_FOUND si la commande n'existe pas.
+     */
     @PutMapping("/StatusRecu/{reference}")
     public ResponseEntity<CommandeResponse> updateStatusRecu(@PathVariable String reference) {
         try {
@@ -64,6 +72,12 @@ public class CommandeController {
         }
     }
     
+    /**
+     * Met à jour une commande marquée comme incomplète avec de nouvelles quantités.
+     * @param reference La référence de la commande à mettre à jour.
+     * @param nouvellesQuantites La liste des nouvelles quantités pour les médicaments de la commande.
+     * @return Une ResponseEntity contenant la CommandeResponse mise à jour ou un statut NOT_FOUND si une erreur survient.
+     */
     @PutMapping("/updateIncomplete/{reference}")
     public ResponseEntity<CommandeResponse> updateCommandeIncomplete(
             @PathVariable UUID reference,

@@ -16,6 +16,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * Contrôleur pour gérer les vues liées aux ventes, notamment la recherche d'historique de ventes par client.
+ */
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/vente")
@@ -25,12 +28,25 @@ public class VenteViewController {
     private final ClientService clientService;
     private static final Logger LOGGER = Logger.getLogger(VenteViewController.class.getName());
 
+    /**
+     * Affiche la page d'accueil pour la recherche de ventes (historique client).
+     *
+     * @param model Modèle pour passer des données à la vue.
+     * @return Nom de la vue à afficher (vente-recherche).
+     */
     @GetMapping
     public String showVenteHomePage(Model model) {
         // Afficher la page du formulaire de recherche
         return "vente-recherche";
     }
     
+    /**
+     * Recherche l'historique des ventes d'un client par son numéro de téléphone et redirige vers la page correspondante.
+     *
+     * @param telephone Numéro de téléphone du client.
+     * @param redirectAttributes Attributs pour la redirection, utilisés pour passer des messages d'erreur/succès.
+     * @return Chaîne de redirection vers la page d'historique du client ou la page de recherche en cas d'erreur.
+     */
     @PostMapping("/recherche")
     public String rechercherHistoriqueVentes(@RequestParam("telephone") String telephone, 
                                             RedirectAttributes redirectAttributes) {
