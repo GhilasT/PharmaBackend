@@ -44,6 +44,13 @@ public interface ApprentiRepository extends JpaRepository<Apprenti, UUID> {
      */
     List<Apprenti> findAll();
 
+    /**
+     * Recherche les apprentis par nom, prénom ou une combinaison des deux.
+     * La recherche est insensible à la casse.
+     * 
+     * @param term Le terme de recherche.
+     * @return Liste des apprentis correspondant au terme de recherche.
+     */
     @Query("SELECT a FROM Apprenti a WHERE " +
        "LOWER(a.nom) LIKE LOWER(CONCAT('%', :term, '%')) OR " +
        "LOWER(a.prenom) LIKE LOWER(CONCAT('%', :term, '%')) OR " +

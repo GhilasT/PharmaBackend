@@ -44,10 +44,17 @@ public interface PreparateurRepository extends JpaRepository<Preparateur, UUID> 
      */
     List<Preparateur> findAll();
 
+    /**
+     * Recherche les préparateurs par nom, prénom ou une combinaison des deux.
+     * La recherche est insensible à la casse.
+     * 
+     * @param term Le terme de recherche.
+     * @return Liste des préparateurs correspondant au terme de recherche.
+     */
     @Query("SELECT p FROM Preparateur p WHERE " +
        "LOWER(p.nom) LIKE LOWER(CONCAT('%', :term, '%')) OR " +
        "LOWER(p.prenom) LIKE LOWER(CONCAT('%', :term, '%')) OR " +
        "LOWER(CONCAT(p.nom, ' ', p.prenom)) LIKE LOWER(CONCAT('%', :term, '%'))")
-List<Preparateur> searchByNomPrenom(@Param("term") String term);
+    List<Preparateur> searchByNomPrenom(@Param("term") String term);
 
 }

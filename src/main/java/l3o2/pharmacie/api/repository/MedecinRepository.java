@@ -9,6 +9,10 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+/**
+ * Repository pour l'entité Medecin.
+ * Permet d'accéder aux données des médecins.
+ */
 @Repository
 public interface MedecinRepository extends JpaRepository<Medecin, UUID> {
 

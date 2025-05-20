@@ -47,10 +47,24 @@ public interface MedicamentRepository extends JpaRepository<StockMedicament, Lon
      */
     List<Medicament> findByQuantiteLessThanEqual(Integer seuilAlerte);
 
+    /**
+     * Recherche les médicaments en stock par libellé de présentation ou code CIS.
+     * La recherche est insensible à la casse et paginée.
+     * 
+     * @param searchTerm Le terme de recherche.
+     * @param pageable   Les informations de pagination.
+     * @return Une page de médicaments en stock correspondant aux critères de recherche.
+     */
     @Query("SELECT s FROM StockMedicament s WHERE " +
             "LOWER(s.presentation.libellePresentation) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR " +
             "LOWER(s.presentation.cisBdpm.codeCis) LIKE LOWER(CONCAT('%', :searchTerm, '%'))")
     Page<StockMedicament> searchByLibelleOrCodeCIS(@Param("searchTerm") String searchTerm, Pageable pageable);
 
+    /**
+     * Recherche le médicament en stock le plus récemment mis à jour pour un code CIP13 donné.
+     * 
+     * @param codeCip13 Le code CIP13 de la présentation du médicament.
+     * @return Un Optional contenant le médicament en stock le plus récent, ou vide s'il n'est pas trouvé.
+     */
     Optional<StockMedicament> findTopByPresentation_CodeCip13OrderByDateMiseAJourDesc(String codeCip13);
 }

@@ -49,7 +49,24 @@ public interface AdministrateurRepository extends JpaRepository<Administrateur, 
      * @return true si un administrateur avec cet email existe, sinon false.
      */
     boolean existsByEmailPro(String emailPro);
+    /**
+     * Vérifie si un administrateur existe déjà avec cet email personnel.
+     * 
+     * @param email Email personnel de l'administrateur.
+     * @return true si un administrateur avec cet email existe, sinon false.
+     */
     boolean existsByEmail(String email);
+    /**
+     * Vérifie si un administrateur existe déjà avec ce matricule.
+     * 
+     * @param matricule Matricule de l'administrateur.
+     * @return true si un administrateur avec ce matricule existe, sinon false.
+     */
     boolean existsByMatricule(String matricule);
+    /**
+     * Supprime un administrateur par son matricule.
+     * 
+     * @param matricule Matricule de l'administrateur à supprimer.
+     */
     void deleteByMatricule(String matricule);
 }

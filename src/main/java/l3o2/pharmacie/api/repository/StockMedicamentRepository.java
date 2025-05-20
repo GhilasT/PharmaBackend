@@ -98,19 +98,52 @@ public interface StockMedicamentRepository extends JpaRepository<StockMedicament
      */
     List<StockMedicament> findByPresentation_LibellePresentationContainingIgnoreCase(String libelle);
 
+    /**
+     * Recherche les médicaments en stock par libellé de présentation, code CIS ou dénomination du médicament.
+     * La recherche est insensible à la casse et paginée.
+     * 
+     * @param searchTerm Le terme de recherche.
+     * @param pageable   Les informations de pagination.
+     * @return Une page de médicaments en stock correspondant aux critères de recherche.
+     */
     @Query("SELECT s FROM StockMedicament s WHERE " +
             "LOWER(s.presentation.libellePresentation) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR " +
             "LOWER(s.presentation.cisBdpm.codeCis) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR " +
             "LOWER(s.presentation.cisBdpm.denomination) LIKE LOWER(CONCAT('%', :searchTerm, '%'))")
     Page<StockMedicament> searchByLibelleOrCodeCIS(@Param("searchTerm") String searchTerm, Pageable pageable);
 
+    /**
+     * Compte le nombre de médicaments en stock dont la quantité est supérieure ou égale à un montant donné.
+     * 
+     * @param amount La quantité minimale.
+     * @return Le nombre de médicaments en stock correspondants.
+     */
     @Query("SELECT COUNT(s) FROM StockMedicament s WHERE s.quantite >= :amount")
     long countByQuantiteGreaterThanEqual(@Param("amount") int amount);
     
+    /**
+     * Compte le nombre de médicaments en stock dont la quantité est inférieure ou égale à un seuil donné.
+     * 
+     * @param seuil Le seuil de quantité.
+     * @return Le nombre de médicaments en stock correspondants.
+     */
     @Query("SELECT COUNT(s) FROM StockMedicament s WHERE s.quantite <= :seuil")
     long countByQuantiteLessThanEqual(@Param("seuil") int seuil);
 
+    /**
+     * Compte le nombre de médicaments en stock dont la date de péremption est antérieure à une date donnée.
+     * 
+     * @param date La date de référence.
+     * @return Le nombre de médicaments périmés.
+     */
     long countByDatePeremptionBefore(LocalDate date);
 
+    /**
+     * Compte le nombre de médicaments en stock dont la date de péremption est comprise entre deux dates.
+     * 
+     * @param start Date de début de la période.
+     * @param end   Date de fin de la période.
+     * @return Le nombre de médicaments dont la date de péremption est dans l'intervalle spécifié.
+     */
     long countByDatePeremptionBetween(LocalDate start, LocalDate end);
 }

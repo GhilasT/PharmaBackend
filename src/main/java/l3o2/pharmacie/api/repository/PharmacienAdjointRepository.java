@@ -43,11 +43,17 @@ public interface PharmacienAdjointRepository extends JpaRepository<PharmacienAdj
      */
     List<PharmacienAdjoint> findByCommandesPasseesIsNotEmpty();
 
-@Query("SELECT p FROM PharmacienAdjoint p WHERE " +
-"LOWER(p.nom) LIKE LOWER(CONCAT('%', :term, '%')) OR " +
-"LOWER(p.prenom) LIKE LOWER(CONCAT('%', :term, '%')) OR " +
-"LOWER(CONCAT(p.nom, ' ', p.prenom)) LIKE LOWER(CONCAT('%', :term, '%'))")
-List<PharmacienAdjoint> searchByNomPrenom(@Param("term") String term);
-
+    /**
+     * Recherche les pharmaciens adjoints par nom, prénom ou une combinaison des deux.
+     * La recherche est insensible à la casse.
+     * 
+     * @param term Le terme de recherche.
+     * @return Liste des pharmaciens adjoints correspondant au terme de recherche.
+     */
+    @Query("SELECT p FROM PharmacienAdjoint p WHERE " +
+    "LOWER(p.nom) LIKE LOWER(CONCAT('%', :term, '%')) OR " +
+    "LOWER(p.prenom) LIKE LOWER(CONCAT('%', :term, '%')) OR " +
+    "LOWER(CONCAT(p.nom, ' ', p.prenom)) LIKE LOWER(CONCAT('%', :term, '%'))")
+    List<PharmacienAdjoint> searchByNomPrenom(@Param("term") String term);
 
 }

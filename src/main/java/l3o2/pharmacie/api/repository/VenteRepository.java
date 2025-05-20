@@ -50,8 +50,13 @@ public interface VenteRepository extends JpaRepository<Vente, UUID> {
     })
     List<Vente> findByClient_IdPersonne(UUID clientId);
 
-    // Recherche les ventes effectuées dans une période donnée.
-
+    /**
+     * Recherche les ventes effectuées dans une période donnée.
+     * 
+     * @param start Date de début de la période.
+     * @param end Date de fin de la période.
+     * @return Liste des ventes effectuées dans l'intervalle de dates spécifié.
+     */
     @EntityGraph(attributePaths = {
             "pharmacienAdjoint",
             "client",
@@ -70,6 +75,12 @@ public interface VenteRepository extends JpaRepository<Vente, UUID> {
      */
     List<Vente> findByModePaiement(String modePaiement);
 
+    /**
+     * Récupère toutes les ventes enregistrées.
+     * Les entités associées (pharmacienAdjoint, client, medicamentsPanier, etc.) sont chargées avidement.
+     * 
+     * @return Liste de toutes les ventes.
+     */
     @Override
     @EntityGraph(attributePaths = {
             "pharmacienAdjoint",
@@ -81,6 +92,13 @@ public interface VenteRepository extends JpaRepository<Vente, UUID> {
     })
     List<Vente> findAll();
 
+    /**
+     * Recherche une vente par son identifiant unique.
+     * Les entités associées (pharmacienAdjoint, client, medicamentsPanier, etc.) sont chargées avidement.
+     * 
+     * @param idVente Identifiant de la vente.
+     * @return Un Optional contenant la vente si trouvée, sinon Optional vide.
+     */
     @EntityGraph(attributePaths = {
             "pharmacienAdjoint",
             "client",
@@ -89,6 +107,11 @@ public interface VenteRepository extends JpaRepository<Vente, UUID> {
     })
     Optional<Vente> findById(UUID idVente);
 
+    /**
+     * Calcule la somme totale du chiffre d'affaires de toutes les ventes.
+     * 
+     * @return Le montant total du chiffre d'affaires.
+     */
     @Query("SELECT COALESCE(SUM(v.montantTotal), 0) FROM Vente v")
     double sumTotalCA();
 }

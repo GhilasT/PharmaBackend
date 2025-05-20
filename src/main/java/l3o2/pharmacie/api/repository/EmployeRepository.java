@@ -21,7 +21,13 @@ public interface EmployeRepository extends JpaRepository<Employe, UUID> {
      * @return L'employé correspondant s'il existe.
      */
     Optional<Employe> findByMatricule(String matricule);
-    //trouver un employe a partir de son emailPRO
+
+    /**
+     * Recherche un employé par son adresse email professionnelle.
+     * 
+     * @param emailPro L'adresse email professionnelle de l'employé.
+     * @return L'employé correspondant s'il existe.
+     */
     Optional<Employe> findByEmailPro(String emailPro);
 
     /**
@@ -36,6 +42,5 @@ public interface EmployeRepository extends JpaRepository<Employe, UUID> {
      * @param emailPro Email professionnel à vérifier.
      * @return True si un employé avec cet email existe, sinon false.
      */
-
     boolean existsByEmailPro(String emailPro);
 }
