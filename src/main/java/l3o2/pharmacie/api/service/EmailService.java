@@ -36,6 +36,7 @@ public class EmailService {
     private final EmailUtil emailUtil;
     @Autowired
     private CommandeService commandeService;
+    private final FournisseurService fournisseurService; // Added FournisseurService
 
     /**
      * Envoie un e-mail simple.
@@ -207,10 +208,10 @@ public class EmailService {
      */
     public ResponseEntity<?> sendCommandeEmailToFournisseur(String commandeRef) {
         CommandeResponse commande = commandeService.getCommande(UUID.fromString(commandeRef));
-        String fournisseurEmail = "raphaelcharoze@gmail.com"; //commande.getFournisseur().getEmail(); // TODO: Utiliser l'email réel du fournisseur
+        String fournisseurEmail = fournisseurService.getFournisseurById(commande.getFournisseurId()).getEmail();
         String subject = "Commande - ref." + commandeRef;
         String body = emailUtil.commandeToHtmlEmail(commande);
         System.out.println(body);
-        return sendHTMLEmail(fournisseurEmail,subject, body);
+        return sendHTMLEmail(fournisseurEmail, subject, body);
     }
 }
