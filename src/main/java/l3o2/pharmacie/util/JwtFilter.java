@@ -17,6 +17,11 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+/**
+ * Filtre pour intercepter les requêtes HTTP, extraire et valider les tokens JWT.
+ * Si un token valide est trouvé, il configure le contexte de sécurité Spring
+ * avec les informations d'authentification de l'utilisateur.
+ */
 @Component
 public class JwtFilter extends OncePerRequestFilter {
 
@@ -27,6 +32,16 @@ public class JwtFilter extends OncePerRequestFilter {
     @Qualifier("userDetailsServiceImpl")
     private UserDetailsService userDetailsService;
     
+    /**
+     * Traite chaque requête HTTP pour vérifier la présence d'un token JWT dans l'en-tête "Authorization".
+     * Si un token est présent et valide, l'utilisateur est authentifié dans le contexte de sécurité.
+     *
+     * @param request La requête HTTP.
+     * @param response La réponse HTTP.
+     * @param filterChain La chaîne de filtres.
+     * @throws ServletException Si une erreur de servlet se produit.
+     * @throws IOException Si une erreur d'entrée/sortie se produit.
+     */
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {

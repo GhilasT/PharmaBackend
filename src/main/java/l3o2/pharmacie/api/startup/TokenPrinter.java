@@ -15,6 +15,10 @@ import java.util.Collections;
 import java.util.Optional;
 import java.util.UUID;
 
+/**
+ * Composant qui imprime un token JWT pour un pharmacien spécifique au démarrage de l'application.
+ * Utile à des fins de débogage et de test.
+ */
 @Component
 public class TokenPrinter {
     
@@ -24,6 +28,11 @@ public class TokenPrinter {
     @Autowired
     private JwtUtil jwtUtil;
     
+    /**
+     * Méthode exécutée après le démarrage de l'application pour imprimer un token JWT.
+     * Tente de générer un token pour un pharmacien prédéfini. Si l'employé n'est pas trouvé,
+     * un token de secours est généré.
+     */
     @EventListener(ApplicationReadyEvent.class)
     public void printPharmacienToken() {
         String email = "pharmacien.pro@example.com";
@@ -37,7 +46,7 @@ public class TokenPrinter {
                 String token = jwtUtil.generateToken(employe); // Modified to use employe directly
                 
                 System.out.println("\n\n====================================");
-                System.out.println("Token for " + email + ":");
+                System.out.println("Token pour " + email + " :");
                 System.out.println(token);
                 System.out.println("====================================\n\n");
             } else {
@@ -47,20 +56,25 @@ public class TokenPrinter {
                 String token = jwtUtil.generateToken(userId.toString(), Collections.singletonList("ROLE_PHARMACIEN"));
                 
                 System.out.println("\n\n====================================");
-                System.out.println("WARNING: User " + email + " not found in database.");
-                System.out.println("Generated mock token instead:");
+                System.out.println("ATTENTION : Utilisateur " + email + " non trouvé dans la base de données.");
+                System.out.println("Token de secours généré :");
                 System.out.println(token);
                 System.out.println("====================================\n\n");
             }
         } catch (Exception e) {
             System.out.println("\n\n====================================");
-            System.out.println("Error generating token for " + email + ":");
+            System.out.println("Erreur lors de la génération du token pour " + email + " :");
             System.out.println(e.getMessage());
             System.out.println("====================================\n\n");
             e.printStackTrace();
         }
     }
     
+    /**
+     * Génère un UUID déterministe basé sur une chaîne de caractères (email).
+     * Utilisé pour créer un ID utilisateur de secours lorsque l'utilisateur n'est pas trouvé dans la base de données.
+     * @return L'UUID généré.
+     */
     private UUID generateMockUserId() {
         // Generate a deterministic UUID based on the email string
         return UUID.nameUUIDFromBytes("pharmacien.pro@example.com".getBytes());

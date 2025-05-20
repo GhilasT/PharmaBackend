@@ -7,12 +7,21 @@ import l3o2.pharmacie.api.service.PharmacienAdjointService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+/**
+ * Classe utilitaire pour la génération de contenu d'email au format HTML.
+ * Principalement utilisée pour formater les détails des commandes.
+ */
 @Component
 @RequiredArgsConstructor
 public class EmailUtil {
 
     private final PharmacienAdjointService pharmacienAdjointService;
 
+    /**
+     * Convertit les informations d'une commande en une représentation HTML pour un email.
+     * @param commande L'objet CommandeResponse contenant les détails de la commande.
+     * @return Une chaîne de caractères contenant le HTML de l'email de la commande.
+     */
     public String commandeToHtmlEmail(CommandeResponse commande) {
         StringBuilder sb = new StringBuilder();
 
@@ -36,6 +45,11 @@ public class EmailUtil {
         return sb.toString();
     }
 
+    /**
+     * Convertit les informations d'une ligne de commande en une partie de tableau HTML.
+     * @param ligne L'objet LigneCommandeResponse contenant les détails de la ligne de commande.
+     * @return Une chaîne de caractères représentant une ligne (<tr>...</tr>) d'un tableau HTML.
+     */
     public String ligneCommandeToPartHtmlEmail(LigneCommandeResponse ligne) {
 
         return "<tr>" +

@@ -21,13 +21,46 @@ import org.springframework.context.annotation.Profile;
 import  l3o2.pharmacie.api.model.entity.medicament.*;
 import l3o2.pharmacie.api.model.entity.medicament.MedicamentPanier;
 
+/**
+ * Classe principale de l'application Spring Boot PharmaBackend.
+ * Contient la méthode main pour démarrer l'application et un CommandLineRunner
+ * pour initialiser des données de démonstration (si le profil 'test' n'est pas actif).
+ */
 @SpringBootApplication
 public class Application {
 
+    /**
+     * Point d'entrée principal de l'application.
+     * @param args Arguments de la ligne de commande.
+     */
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
     }
 
+    /**
+     * Bean CommandLineRunner pour charger des données initiales au démarrage de l'application.
+     * Ce runner est exécuté uniquement si le profil 'test' n'est pas actif.
+     * Il peut créer des employés, des clients, des fournisseurs, des médicaments, etc.
+     *
+     * @param pharmacienService Service pour la gestion des pharmaciens adjoints.
+     * @param employeService Service pour la gestion des employés.
+     * @param csvImportService Service pour l'importation de données CSV.
+     * @param administrateurService Service pour la gestion des administrateurs.
+     * @param apprentiService Service pour la gestion des apprentis.
+     * @param preparateurService Service pour la gestion des préparateurs.
+     * @param titulaireService Service pour la gestion des titulaires.
+     * @param clientService Service pour la gestion des clients.
+     * @param fournisseurService Service pour la gestion des fournisseurs.
+     * @param medecinService Service pour la gestion des médecins.
+     * @param medicamentService Service pour la gestion des médicaments.
+     * @param cisBdpmService Service pour la gestion des entités CisBdpm.
+     * @param cisCpdBdpmService Service pour la gestion des entités CisCpdBdpm.
+     * @param cisCipBdpmService Service pour la gestion des entités CisCipBdpm.
+     * @param medicamentRepository Dépôt pour l'accès aux données des médicaments en stock.
+     * @param venteService Service pour la gestion des ventes.
+     * @param commandeService Service pour la gestion des commandes.
+     * @return Un CommandLineRunner qui exécute la logique d'initialisation.
+     */
     @Bean
     @Transactional
     @Profile("!test") // Ne pas exécuter ce code lors des tests
