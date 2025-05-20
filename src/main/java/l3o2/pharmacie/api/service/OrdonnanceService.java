@@ -15,17 +15,33 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
+/**
+ * Service gérant la logique métier pour les ordonnances.
+ * Fournit des méthodes pour créer et récupérer des ordonnances.
+ */
 @Service
 public class OrdonnanceService {
     private final ClientRepository clientRepo;
     private final OrdonnanceRepository ordRepo;
 
+    /**
+     * Constructeur pour l'injection de dépendances.
+     * @param clientRepo Le référentiel pour les entités Client.
+     * @param ordRepo Le référentiel pour les entités Ordonnance.
+     */
     public OrdonnanceService(ClientRepository clientRepo,
                              OrdonnanceRepository ordRepo) {
         this.clientRepo = clientRepo;
         this.ordRepo = ordRepo;
     }
 
+    /**
+     * Crée une nouvelle ordonnance avec ses prescriptions associées.
+     * Génère un numéro d'ordonnance unique.
+     * @param dto Le DTO contenant les informations pour la création de l'ordonnance.
+     * @return L'identifiant UUID de l'ordonnance créée.
+     * @throws EntityNotFoundException si le client spécifié dans le DTO n'est pas trouvé.
+     */
     @Transactional
     public UUID createOrdonnance(OrdonnanceCreateRequest dto) {
         Client client = clientRepo.findById(dto.getClientId())
@@ -86,6 +102,10 @@ public class OrdonnanceService {
         return ord.getIdOrdonnance();
     }
 
+    /**
+     * Récupère toutes les ordonnances enregistrées dans le système.
+     * @return Une liste de toutes les entités {@link Ordonnance}.
+     */
     public List<Ordonnance> getAllOrdonnances() {
         return ordRepo.findAll();
     }

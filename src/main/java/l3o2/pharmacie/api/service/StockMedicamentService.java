@@ -20,6 +20,10 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Service gérant la logique métier pour le stock de médicaments.
+ * Fournit des méthodes pour rechercher, paginer et récupérer les détails des médicaments en stock.
+ */
 @Service
 public class StockMedicamentService {
 
@@ -28,6 +32,11 @@ public class StockMedicamentService {
 
     private final CisCipBdpmRepository cisCipBdpmRepository; 
 
+    /**
+     * Constructeur pour l'injection de dépendances.
+     * @param stockMedicamentRepository Le référentiel pour les entités StockMedicament.
+     * @param cisCipBdpmRepository Le référentiel pour les entités CisCipBdpm.
+     */
     public StockMedicamentService(
             StockMedicamentRepository stockMedicamentRepository,
             CisCipBdpmRepository cisCipBdpmRepository
@@ -36,13 +45,23 @@ public class StockMedicamentService {
         this.cisCipBdpmRepository = cisCipBdpmRepository;
     }
 
-    // Méthode pour la pagination standard
+    /**
+     * Récupère une page de médicaments en stock.
+     * @param page Le numéro de la page à récupérer (commence à 0).
+     * @return Une page de {@link StockMedicamentDTO}.
+     */
     public Page<StockMedicamentDTO> getMedicamentsPagines(int page) {
         Pageable pageable = PageRequest.of(page, PAGE_SIZE);
         return stockMedicamentRepository.findAll(pageable)
                 .map(this::convertToStockMedicamentDTO);
     }
 
+    /**
+     * Recherche tous les médicaments correspondant à un terme de recherche, avec une limite de résultats.
+     * La recherche s'effectue sur le libellé de la présentation ou le code CIS.
+     * @param searchTerm Le terme à rechercher. Peut être vide ou nul pour récupérer tous les médicaments (limités).
+     * @return Une liste de {@link StockMedicamentDTO} correspondant à la recherche.
+     */
     public List<StockMedicamentDTO> searchAllMedicaments(String searchTerm) {
         Pageable limit = PageRequest.of(0, 20); // Limite à 50 résultats
         Page<StockMedicament> stockPage;
@@ -59,7 +78,13 @@ public class StockMedicamentService {
                 .collect(Collectors.toList());
     }
 
-    // Méthode pour la recherche paginée
+    /**
+     * Recherche des médicaments en stock de manière paginée.
+     * La recherche s'effectue sur le libellé de la présentation ou le code CIS.
+     * @param searchTerm Le terme à rechercher. Si nul ou vide, retourne tous les médicaments paginés.
+     * @param page Le numéro de la page à récupérer.
+     * @return Une page de {@link StockMedicamentDTO} correspondant à la recherche.
+     */
     public Page<StockMedicamentDTO> searchMedicamentsPagines(String searchTerm, int page) {
         Pageable pageable = PageRequest.of(page, PAGE_SIZE);
         System.out.println("Recherche dans le backend : [" + searchTerm + "] (page " + page + ")");
@@ -75,7 +100,11 @@ public class StockMedicamentService {
         return stockPage.map(this::convertToStockMedicamentDTO);
     }
 
-    // Conversion d'une entité vers DTO
+    /**
+     * Convertit une entité {@link StockMedicament} en son DTO {@link StockMedicamentDTO}.
+     * @param stock L'entité StockMedicament à convertir.
+     * @return Le DTO {@link StockMedicamentDTO} correspondant.
+     */
     public StockMedicamentDTO convertToStockMedicamentDTO(StockMedicament stock) {
         CisBdpm cisBdpm = stock.getPresentation().getCisBdpm();
         CisCipBdpm cisCipBdpm = stock.getPresentation();
@@ -131,12 +160,25 @@ public class StockMedicamentService {
                 .codeCip13(codeCip13)
                 .build();
     }
+
+    /**
+     * Recherche des médicaments par libellé ou code CIS de manière paginée.
+     * @param searchTerm Le terme de recherche.
+     * @param page Le numéro de la page.
+     * @return Une page de {@link StockMedicamentDTO} correspondant aux critères.
+     */
     public Page<StockMedicamentDTO> searchByLibelleOrCodeCIS(String searchTerm, int page) {
         Pageable pageable = PageRequest.of(page, PAGE_SIZE);
         Page<StockMedicament> stockPage = stockMedicamentRepository.searchByLibelleOrCodeCIS(searchTerm, pageable);
         return stockPage.map(this::convertToStockMedicamentDTO);
     }
 
+    /**
+     * Récupère les détails d'un médicament, y compris ses stocks, par son code CIP13.
+     * @param cip13 Le code CIP13 du médicament.
+     * @return Un {@link MedicamentDetailsDTO} contenant les détails du médicament et ses stocks.
+     * @throws RuntimeException si le code CIP13 n'est pas trouvé.
+     */
     public MedicamentDetailsDTO getMedicamentDetailsByCip13(String cip13) {
         // 1. Récupérer la présentation CIP13
         CisCipBdpm presentation = cisCipBdpmRepository.findByCodeCip13(cip13)
@@ -160,7 +202,11 @@ public class StockMedicamentService {
                 .build();
     }
 
-    // Méthode de conversion existante (à ajouter)
+    /**
+     * Convertit une liste d'entités {@link StockMedicament} en une liste de DTO {@link StockDetailsDTO}.
+     * @param stocks La liste des entités StockMedicament à convertir.
+     * @return Une liste de {@link StockDetailsDTO}.
+     */
     private List<StockDetailsDTO> convertToStockDetailsDTO(List<StockMedicament> stocks) {
         return stocks.stream()
                 .map(stock -> StockDetailsDTO.builder()

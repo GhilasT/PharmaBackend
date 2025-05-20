@@ -20,6 +20,10 @@ import l3o2.pharmacie.api.model.entity.Preparateur;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * Service gérant la logique métier pour les pharmaciens titulaires.
+ * Fournit des méthodes pour créer, récupérer et supprimer des titulaires.
+ */
 @Service
 @RequiredArgsConstructor
 public class TitulaireService {

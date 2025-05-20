@@ -17,7 +17,8 @@ import java.io.File;
 import java.util.UUID;
 
 /**
- * Service for sending emails
+ * Service pour l'envoi d'e-mails.
+ * Gère différents types d'e-mails : simples, avec pièces jointes, et au format HTML.
  * @author raphaelcharoze
  * @version 1.0
  * @since 2025-03-30
@@ -37,11 +38,11 @@ public class EmailService {
     private CommandeService commandeService;
 
     /**
-     * Send a simple email
-     * @param to destinataire
-     * @param subject sujet
-     * @param text corps du mail
-     * @return ResponseEntity de l'email envoyé
+     * Envoie un e-mail simple.
+     * @param to Le destinataire de l'e-mail.
+     * @param subject Le sujet de l'e-mail.
+     * @param text Le corps du message de l'e-mail.
+     * @return Une {@link ResponseEntity} indiquant le succès ou l'échec de l'envoi.
      * @author raphaelcharoze
      */
     public ResponseEntity<?> sendSimpleMessage(String to, String subject, String text) {
@@ -60,12 +61,12 @@ public class EmailService {
     }
 
     /**
-     * Send an email with an attachment
-     * @param to destinataire
-     * @param subject sujet
-     * @param text corps du mail
-     * @param filePath chemin du fichier à envoyer
-     * @return ResponseEntity de l'email envoyé
+     * Envoie un e-mail avec une pièce jointe spécifiée par son chemin d'accès.
+     * @param to Le destinataire de l'e-mail.
+     * @param subject Le sujet de l'e-mail.
+     * @param text Le corps du message de l'e-mail.
+     * @param filePath Le chemin d'accès au fichier à joindre.
+     * @return Une {@link ResponseEntity} indiquant le succès ou l'échec de l'envoi.
      * @author raphaelcharoze
      */
     public ResponseEntity<?> sendEmailWithAttachmentPath(String to, String subject, String text, String filePath) {
@@ -90,12 +91,12 @@ public class EmailService {
     }
 
     /**
-     * Send an email with an attachment
-     * @param to destinataire
-     * @param subject sujet
-     * @param text corps du mail
-     * @param file chemin du fichier à envoyer
-     * @return ResponseEntity de l'email envoyé
+     * Envoie un e-mail avec une pièce jointe de type {@link File}.
+     * @param to Le destinataire de l'e-mail.
+     * @param subject Le sujet de l'e-mail.
+     * @param text Le corps du message de l'e-mail.
+     * @param file Le fichier à joindre.
+     * @return Une {@link ResponseEntity} indiquant le succès ou l'échec de l'envoi.
      * @author raphaelcharoze
      */
     public ResponseEntity<?> sendEmailWithAttachmentFile(String to, String subject, String text, File file) {
@@ -119,10 +120,11 @@ public class EmailService {
     }
 
     /**
-     * Send an HTML email
-     * @param to destinataire
-     * @param subject sujet
-     * @param htmlBody corps du mail
+     * Envoie un e-mail au format HTML.
+     * @param to Le destinataire de l'e-mail.
+     * @param subject Le sujet de l'e-mail.
+     * @param htmlBody Le corps de l'e-mail au format HTML.
+     * @return Une {@link ResponseEntity} indiquant le succès ou l'échec de l'envoi.
      */
     public ResponseEntity<?> sendHTMLEmail(String to, String subject, String htmlBody) {
         try{
@@ -142,11 +144,12 @@ public class EmailService {
     }
 
     /**
-     * Send an HTML email with an attachment (given by a path)
-     * @param to destinataire
-     * @param subject sujet
-     * @param htmlBody corps du mail
-     * @param filePath chemin du fichier à envoyer
+     * Envoie un e-mail au format HTML avec une pièce jointe spécifiée par son chemin d'accès.
+     * @param to Le destinataire de l'e-mail.
+     * @param subject Le sujet de l'e-mail.
+     * @param htmlBody Le corps de l'e-mail au format HTML.
+     * @param filePath Le chemin d'accès au fichier à joindre.
+     * @return Une {@link ResponseEntity} indiquant le succès ou l'échec de l'envoi.
      */
     public ResponseEntity<?> sendHTMLEmailWithAttachmentPath(String to, String subject, String htmlBody, String filePath) {
         try{
@@ -169,11 +172,12 @@ public class EmailService {
     }
 
     /**
-     * Send an HTML email with an attachment (given by a file)
-     * @param to destinataire
-     * @param subject sujet
-     * @param htmlBody corps du mail
-     * @param file fichier à envoyer
+     * Envoie un e-mail au format HTML avec une pièce jointe de type {@link File}.
+     * @param to Le destinataire de l'e-mail.
+     * @param subject Le sujet de l'e-mail.
+     * @param htmlBody Le corps de l'e-mail au format HTML.
+     * @param file Le fichier à joindre.
+     * @return Une {@link ResponseEntity} indiquant le succès ou l'échec de l'envoi.
      */
     public ResponseEntity<?> sendHTMLEmailWithAttachmentFile(String to, String subject, String htmlBody, File file) {
         try{
@@ -195,12 +199,15 @@ public class EmailService {
     }
 
     /**
-     *  Envoie un email au fournisseur à partir d'une commande
+     *  Envoie un e-mail au fournisseur à partir des informations d'une commande.
+     *  L'e-mail contient les détails de la commande au format HTML.
+     * @param commandeRef La référence (UUID sous forme de String) de la commande.
+     * @return Une {@link ResponseEntity} indiquant le succès ou l'échec de l'envoi.
      * @author raphaelcharoze
      */
     public ResponseEntity<?> sendCommandeEmailToFournisseur(String commandeRef) {
         CommandeResponse commande = commandeService.getCommande(UUID.fromString(commandeRef));
-        String fournisseurEmail = "raphaelcharoze@gmail.com"; //commande.getFournisseur().getEmail();
+        String fournisseurEmail = "raphaelcharoze@gmail.com"; //commande.getFournisseur().getEmail(); // TODO: Utiliser l'email réel du fournisseur
         String subject = "Commande - ref." + commandeRef;
         String body = emailUtil.commandeToHtmlEmail(commande);
         System.out.println(body);

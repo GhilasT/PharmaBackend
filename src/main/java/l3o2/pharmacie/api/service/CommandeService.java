@@ -22,6 +22,11 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+/**
+ * Service pour la gestion des commandes auprès des fournisseurs.
+ * Permet de créer des commandes, de les récupérer, de valider leur réception
+ * et de mettre à jour leur statut (par exemple, en cas de réception incomplète).
+ */
 @Service
 @RequiredArgsConstructor
 public class CommandeService {
@@ -30,6 +35,13 @@ public class CommandeService {
     private final MedicamentRepository medicamentRepository;
     private final StockMedicamentService stockMedicamentService;
 
+    /**
+     * Crée une nouvelle commande.
+     * Calcule le montant total de la commande en fonction des lignes de commande.
+     *
+     * @param request Les informations de la commande à créer, y compris les lignes de commande.
+     * @return Un {@link CommandeResponse} représentant la commande créée.
+     */
     public CommandeResponse createCommande(CommandeCreateRequest request) {
         Commande commande = Commande.builder()
                 .dateCommande(new Date())
@@ -62,7 +74,12 @@ public class CommandeService {
         return mapToResponse(commande);
     }
 
-    // Mapper Commande en CommandeResponse
+    /**
+     * Convertit une entité {@link Commande} en un DTO {@link CommandeResponse}.
+     *
+     * @param commande L'entité commande à convertir.
+     * @return Le DTO {@link CommandeResponse} correspondant.
+     */
     private CommandeResponse mapToResponse(Commande commande) {
         return CommandeResponse.builder()
                 .reference(commande.getReference())
@@ -77,7 +94,12 @@ public class CommandeService {
                 .build();
     }
 
-    // Mapper une ligne de commande pour la réponse
+    /**
+     * Convertit une entité {@link LigneCommande} en un DTO {@link LigneCommandeResponse}.
+     *
+     * @param ligneCommande L'entité ligne de commande à convertir.
+     * @return Le DTO {@link LigneCommandeResponse} correspondant.
+     */
     private LigneCommandeResponse mapLigneToResponse(LigneCommande ligneCommande) {
         StockMedicamentDTO stockMedicamentDTO = stockMedicamentService
                 .convertToStockMedicamentDTO(ligneCommande.getStockMedicament());
@@ -90,6 +112,14 @@ public class CommandeService {
                 .build();
     }
 
+    /**
+     * Convertit un DTO {@link LigneCommandeCreateRequest} en une entité {@link LigneCommande}.
+     * Récupère le {@link StockMedicament} associé et calcule le montant de la ligne.
+     *
+     * @param req Le DTO de création de ligne de commande.
+     * @return L'entité {@link LigneCommande} correspondante.
+     * @throws RuntimeException si le {@link StockMedicament} n'est pas trouvé pour l'ID fourni.
+     */
     private LigneCommande mapLigneCommandeToEntity(LigneCommandeCreateRequest req) {
         StockMedicament stockMedicament = medicamentRepository.findById(req.getStockMedicamentId())
                 .orElseThrow(() -> new RuntimeException(
@@ -106,7 +136,13 @@ public class CommandeService {
                 .build();
     }
 
-    // Récupérer une commande par son identifiant
+    /**
+     * Récupère une commande par sa référence (UUID).
+     *
+     * @param reference La référence UUID de la commande.
+     * @return Un {@link CommandeResponse} représentant la commande trouvée.
+     * @throws RuntimeException si aucune commande n'est trouvée pour la référence fournie.
+     */
     @Transactional
     public CommandeResponse getCommande(UUID reference) {
         Commande commande = commandeRepository.findById(reference)
@@ -115,11 +151,24 @@ public class CommandeService {
         return mapToResponse(commande);
     }
 
+    /**
+     * Récupère la liste de toutes les commandes avec leurs lignes de commande et les informations sur les médicaments.
+     *
+     * @return Une liste de {@link CommandeResponse}.
+     */
     public List<CommandeResponse> getAll() {
         List<Commande> commandes = commandeRepository.findAllWithLigneCommandesAndStockMedicament();
         return commandes.stream().map(this::mapToResponse).collect(Collectors.toList());
     }
 
+    /**
+     * Valide la réception d'une commande.
+     * Met à jour le stock des médicaments concernés et change le statut de la commande à "Reçu".
+     *
+     * @param referenceCommande La référence UUID de la commande à valider.
+     * @return Un {@link CommandeResponse} représentant la commande mise à jour.
+     * @throws RuntimeException si aucune commande n'est trouvée pour la référence fournie.
+     */
     @Transactional
     public CommandeResponse validerReceptionCommande(UUID referenceCommande) {
         // Récupérer la commande
@@ -143,6 +192,18 @@ public class CommandeService {
         return mapToResponse(commande);
     }
 
+    /**
+     * Met à jour une commande en cas de réception incomplète.
+     * Ajuste les quantités reçues pour chaque ligne de commande, met à jour le stock des médicaments,
+     * recalcule le montant total de la commande et change son statut à "Incomplète".
+     *
+     * @param reference La référence UUID de la commande à mettre à jour.
+     * @param nouvellesQuantites Une liste des nouvelles quantités reçues, correspondant à chaque ligne de commande.
+     * @return Un {@link CommandeResponse} représentant la commande mise à jour.
+     * @throws RuntimeException si la commande n'est pas trouvée, si le nombre de quantités ne correspond pas
+     *                          au nombre de lignes, ou si le stock devient insuffisant.
+     * @throws IllegalArgumentException si une nouvelle quantité est négative.
+     */
     @Transactional
     public CommandeResponse updateCommandeIncomplete(UUID reference, List<Integer> nouvellesQuantites) {
         Commande commande = commandeRepository.findById(reference)

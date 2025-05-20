@@ -41,6 +41,15 @@ public class AuthService implements AuthenticationProvider {
         }
     }
 
+    /**
+     * Authentifie un utilisateur en utilisant l'objet Authentication de Spring Security.
+     * Cette méthode est typiquement appelée par le AuthenticationManager de Spring Security.
+     *
+     * @param authentication L'objet Authentication contenant les informations d'identification (email et mot de passe).
+     * @return Un objet Authentication complet (incluant les autorités) si l'authentification réussit.
+     * @throws AuthenticationException si l'authentification échoue.
+     *                                 Retourne null si l'authentification échoue (par exemple, mot de passe incorrect ou utilisateur non trouvé).
+     */
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         String email = authentication.getName();
@@ -55,6 +64,12 @@ public class AuthService implements AuthenticationProvider {
         return null;
     }
 
+    /**
+     * Indique si ce AuthenticationProvider supporte la classe d'Authentication spécifiée.
+     *
+     * @param authentication La classe d'Authentication à vérifier.
+     * @return true si UsernamePasswordAuthenticationToken est assignable depuis la classe fournie, false sinon.
+     */
     @Override
     public boolean supports(Class<?> authentication) {
         return UsernamePasswordAuthenticationToken.class.isAssignableFrom(authentication);

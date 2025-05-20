@@ -22,6 +22,7 @@ import java.util.stream.Collectors;
 
 /**
  * Service pour la gestion des préparateurs en pharmacie.
+ * Fournit des fonctionnalités pour créer, lire, mettre à jour et supprimer des préparateurs.
  */
 @Service
 @RequiredArgsConstructor
@@ -37,6 +38,14 @@ public class PreparateurService {
      */
     private final EmployeService employeService;
 
+    /**
+     * Crée un nouveau préparateur en pharmacie.
+     * Vérifie l'unicité de l'email professionnel et génère un matricule.
+     * @param request Les données pour la création du préparateur.
+     * @return Le {@link PreparateurResponse} du préparateur créé.
+     * @throws DuplicateEmailProException si l'email professionnel existe déjà.
+     * @throws InvalidDataException en cas de données invalides ou de violation de contraintes.
+     */
     @Transactional
     public PreparateurResponse createPreparateur(PreparateurCreateRequest request) {
         // Vérifier si un Preparateur avec le même email professionnel existe déjà
@@ -74,9 +83,8 @@ public class PreparateurService {
     }
 
     /**
-     * Récupère tous les préparateurs.
-     * 
-     * @return Liste des préparateurs.
+     * Récupère la liste de tous les préparateurs en pharmacie.
+     * @return Une liste de {@link PreparateurResponse}.
      */
     @Transactional(readOnly = true)
     public List<PreparateurResponse> getAllPreparateurs() {
@@ -87,10 +95,10 @@ public class PreparateurService {
     }
 
     /**
-     * Récupère un préparateur par son ID.
-     * 
-     * @param id ID du préparateur.
-     * @return Le préparateur correspondant.
+     * Récupère un préparateur en pharmacie par son identifiant unique.
+     * @param id L'identifiant UUID du préparateur.
+     * @return Le {@link PreparateurResponse} du préparateur trouvé.
+     * @throws ResourceNotFoundException si aucun préparateur n'est trouvé avec cet ID.
      */
     @Transactional(readOnly = true)
     public PreparateurResponse getPreparateurById(UUID id) {
@@ -100,9 +108,9 @@ public class PreparateurService {
     }
 
     /**
-     * Supprime un préparateur par son ID.
-     * 
-     * @param id ID du préparateur.
+     * Supprime un préparateur en pharmacie par son identifiant unique.
+     * @param id L'identifiant UUID du préparateur à supprimer.
+     * @throws ResourceNotFoundException si aucun préparateur n'est trouvé avec cet ID.
      */
     @Transactional
     public void deletePreparateur(UUID id) {
@@ -113,10 +121,9 @@ public class PreparateurService {
     }
 
     /**
-     * Conversion d'une entité Preparateur en DTO.
-     * 
-     * @param entity L'entité à convertir.
-     * @return Le DTO correspondant.
+     * Convertit une entité {@link Preparateur} en un DTO {@link PreparateurResponse}.
+     * @param entity L'entité préparateur à convertir.
+     * @return Le DTO {@link PreparateurResponse} correspondant.
      */
     private PreparateurResponse mapToResponse(Preparateur entity) {
         return PreparateurResponse.builder()
@@ -136,6 +143,14 @@ public class PreparateurService {
                 .build();
     }
 
+    /**
+     * Met à jour les informations d'un préparateur existant.
+     * @param id L'identifiant UUID du préparateur à mettre à jour.
+     * @param request Les données de mise à jour du préparateur.
+     * @return Le {@link PreparateurResponse} du préparateur mis à jour.
+     * @throws ResourceNotFoundException si aucun préparateur n'est trouvé avec cet ID.
+     * @throws DuplicateEmailProException si le nouvel email professionnel existe déjà pour un autre employé.
+     */
     public PreparateurResponse updatePreparateur(UUID id, PreparateurUpdateRequest request) {
         Preparateur preparateur = preparateurRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Préparateur", "id", id));
@@ -176,6 +191,12 @@ public class PreparateurService {
         return mapToResponse(updated);
     }
 
+    /**
+     * Recherche des préparateurs par leur nom ou prénom.
+     * La recherche est insensible à la casse et ignore les espaces de début/fin.
+     * @param searchTerm Le terme de recherche pour le nom ou prénom.
+     * @return Une liste de {@link PreparateurResponse} correspondant aux critères de recherche.
+     */
     public List<PreparateurResponse> searchPreparateurs(String searchTerm) {
         String normalizedTerm = searchTerm.toLowerCase().trim();
         return preparateurRepository.searchByNomPrenom(normalizedTerm).stream()

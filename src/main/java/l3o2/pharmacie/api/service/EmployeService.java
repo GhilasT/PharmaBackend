@@ -26,6 +26,12 @@ import java.util.stream.Collectors;
 
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
+/**
+ * Service pour la gestion des employés.
+ * Implémente {@link UserDetailsService} pour l'authentification Spring Security.
+ * Fournit les opérations CRUD pour les employés, la gestion des mots de passe,
+ * et la recherche d'employés.
+ */
 @Service("employeUserDetailsService")
 @RequiredArgsConstructor
 public class EmployeService implements UserDetailsService {
@@ -35,12 +41,23 @@ public class EmployeService implements UserDetailsService {
 
     private final PasswordEncoder passwordEncoder;
 
-    // Ajoutez cette méthode pour vérifier si un employé existe avec cet email
-    // professionnel
+    /**
+     * Vérifie si un employé existe avec l'email professionnel spécifié.
+     *
+     * @param emailPro L'email professionnel à vérifier.
+     * @return {@code true} si un employé avec cet email professionnel existe, {@code false} sinon.
+     */
     public boolean existsByEmailPro(String emailPro) {
         return employeRepository.existsByEmailPro(emailPro); // Cette méthode est déjà définie dans le repository
     }
 
+    /**
+     * Crée un nouvel employé.
+     *
+     * @param request Les informations de l'employé à créer.
+     * @return Un {@link EmployeResponse} représentant l'employé créé.
+     * @throws DuplicateEmailProException si l'email professionnel existe déjà.
+     */
     public EmployeResponse createEmploye(EmployeCreateRequest request) {
         // Vérifier si un employé avec le même email professionnel existe déjà
         if (employeRepository.existsByEmailPro(request.getEmailPro())) {
@@ -72,18 +89,38 @@ public class EmployeService implements UserDetailsService {
         return mapToResponse(savedEmploye);
     }
 
+    /**
+     * Récupère la liste de tous les employés.
+     *
+     * @return Une liste de {@link EmployeResponse}.
+     */
     public List<EmployeResponse> getAllEmployes() {
         return employeRepository.findAll().stream()
                 .map(this::mapToResponse)
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Récupère un employé par son identifiant unique (UUID).
+     *
+     * @param id L'identifiant UUID de l'employé.
+     * @return Un {@link EmployeResponse} représentant l'employé trouvé.
+     * @throws ResourceNotFoundException si aucun employé n'est trouvé pour l'ID fourni.
+     */
     public EmployeResponse getEmployeById(UUID id) {
         return employeRepository.findById(id)
                 .map(this::mapToResponse)
                 .orElseThrow(() -> new ResourceNotFoundException("Employé", "id", id));
     }
 
+    /**
+     * Met à jour les informations d'un employé existant.
+     *
+     * @param id L'identifiant UUID de l'employé à mettre à jour.
+     * @param request Les nouvelles informations de l'employé.
+     * @return Un {@link EmployeResponse} représentant l'employé mis à jour.
+     * @throws ResourceNotFoundException si aucun employé n'est trouvé pour l'ID fourni.
+     */
     public EmployeResponse updateEmploye(UUID id, EmployeUpdateRequest request) {
         Employe employe = employeRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Employé", "id", id));
@@ -92,14 +129,39 @@ public class EmployeService implements UserDetailsService {
         return mapToResponse(updatedEmploye);
     }
 
+    /**
+     * Met à jour l'email personnel d'un employé.
+     *
+     * @param id L'identifiant UUID de l'employé.
+     * @param email Le nouvel email personnel.
+     * @return Un {@link EmployeResponse} représentant l'employé mis à jour.
+     */
     public EmployeResponse updateEmployeEmail(UUID id, String email) {
         return updateEmploye(id, EmployeUpdateRequest.builder().email(email).build());
     }
 
+    /**
+     * Met à jour l'email professionnel d'un employé.
+     *
+     * @param id L'identifiant UUID de l'employé.
+     * @param emailPro Le nouvel email professionnel.
+     * @return Un {@link EmployeResponse} représentant l'employé mis à jour.
+     */
     public EmployeResponse updateEmployeEmailPro(UUID id, String emailPro) {
         return updateEmploye(id, EmployeUpdateRequest.builder().email(emailPro).build());
     }
 
+    /**
+     * Met à jour le mot de passe d'un employé.
+     *
+     * @param id L'identifiant UUID de l'employé.
+     * @param oldPwd L'ancien mot de passe.
+     * @param newPwd1 Le nouveau mot de passe.
+     * @param newPwd2 Confirmation du nouveau mot de passe.
+     * @return Un {@link EmployeResponse} représentant l'employé avec le mot de passe mis à jour.
+     * @throws ResourceNotFoundException si l'employé n'est pas trouvé.
+     * @throws ResponseStatusException si l'ancien mot de passe est incorrect ou si les nouveaux mots de passe ne correspondent pas.
+     */
     public EmployeResponse updateEmployePassword(UUID id, String oldPwd, String newPwd1, String newPwd2) {
         Employe employe = employeRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Employé", "id", id));
@@ -118,21 +180,36 @@ public class EmployeService implements UserDetailsService {
     }
 
     /**
-     * Recherche un employé par son email professionnel et retourne l'employe
+     * Recherche un employé par son email professionnel et retourne l'entité {@link Employe}.
+     *
+     * @param emailPro L'email professionnel de l'employé.
+     * @return L'entité {@link Employe} correspondante.
+     * @throws ResourceNotFoundException si aucun employé n'est trouvé pour l'email professionnel fourni.
      */
     public Employe getEmployeByEmailPro(String emailPro) {
         return employeRepository.findByEmailPro(emailPro)
                 .orElseThrow(() -> new ResourceNotFoundException("Employé", "Email Pro", emailPro));
     }
 
-    // et ici je retourne que le ID de l'employe
-
+    /**
+     * Récupère l'identifiant (UUID) d'un employé par son email professionnel.
+     *
+     * @param emailPro L'email professionnel de l'employé.
+     * @return L'UUID de l'employé.
+     * @throws ResourceNotFoundException si aucun employé n'est trouvé pour l'email professionnel fourni.
+     */
     public UUID getEmployeIdByEmailPro(String emailPro) {
         Employe employe = employeRepository.findByEmailPro(emailPro)
                 .orElseThrow(() -> new ResourceNotFoundException("Employé", "Email Pro", emailPro));
         return employe.getIdPersonne();
     }
 
+    /**
+     * Met à jour les champs spécifiés d'une entité {@link Employe} à partir d'un {@link EmployeUpdateRequest}.
+     *
+     * @param employe L'entité employé à mettre à jour.
+     * @param request Le DTO contenant les champs à mettre à jour.
+     */
     private void updateEmployeFields(Employe employe, EmployeUpdateRequest request) {
         if (request.getNom() != null)
             employe.setNom(request.getNom());
@@ -152,6 +229,12 @@ public class EmployeService implements UserDetailsService {
             employe.setStatutContrat(request.getStatutContrat());
     }
 
+    /**
+     * Supprime un employé par son matricule.
+     *
+     * @param matricule Le matricule de l'employé à supprimer.
+     * @throws ResourceNotFoundException si aucun employé n'est trouvé pour le matricule fourni.
+     */
     public void deleteEmploye(String matricule) {
         // Cherche l'employé par matricule dans toutes les sous-classes
         Employe employe = employeRepository.findByMatricule(matricule)
@@ -162,6 +245,12 @@ public class EmployeService implements UserDetailsService {
         System.out.println("Employé avec matricule '" + matricule + "' supprimé avec succès.");
     }
 
+    /**
+     * Convertit une entité {@link Employe} en un DTO {@link EmployeResponse}.
+     *
+     * @param employe L'entité employé à convertir.
+     * @return Le DTO {@link EmployeResponse} correspondant.
+     */
     private EmployeResponse mapToResponse(Employe employe) {
         return EmployeResponse.builder()
                 .idPersonne(employe.getIdPersonne())
@@ -180,10 +269,23 @@ public class EmployeService implements UserDetailsService {
                 .build();
     }
 
+    /**
+     * Compte le nombre total d'employés enregistrés.
+     *
+     * @return Le nombre total d'employés.
+     */
     public long countAllEmployes() {
         return employeRepository.count();
     }
 
+    /**
+     * Charge un utilisateur par son nom d'utilisateur (ici, l'email professionnel).
+     * Méthode requise par l'interface {@link UserDetailsService} pour Spring Security.
+     *
+     * @param username Le nom d'utilisateur (email professionnel) de l'employé.
+     * @return Un objet {@link UserDetails} représentant l'employé.
+     * @throws UsernameNotFoundException si aucun employé n'est trouvé pour le nom d'utilisateur fourni.
+     */
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return employeRepository.findByEmailPro(username)

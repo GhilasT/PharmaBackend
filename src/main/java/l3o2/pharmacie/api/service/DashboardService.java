@@ -14,8 +14,10 @@ import java.util.List;
 
 /**
  * Service pour gérer les opérations liées au tableau de bord.
- * Il contient des méthodes pour récupérer les données statistiques de la pharmacie.
- * Author : raphaelcharoze
+ * Il contient des méthodes pour récupérer les données statistiques agrégées de la pharmacie,
+ * telles que le chiffre d'affaires, le nombre d'employés, de clients, de médecins,
+ * et diverses statistiques sur les médicaments (en stock, en rupture, périmés, en alerte).
+ * @author raphaelcharoze
  */
 
 @Service
@@ -29,6 +31,13 @@ public class DashboardService {
     ClientService clientService;
     VenteRepository venteRepository;
 
+    /**
+     * Récupère les statistiques globales pour le tableau de bord.
+     * Calcule le chiffre d'affaires total, le nombre d'employés, de clients, de médecins,
+     * ainsi que des indicateurs sur l'état du stock de médicaments (quantité, rupture, péremption, alertes).
+     *
+     * @return Un objet {@link DashboardResponse} contenant toutes les statistiques agrégées.
+     */
     public DashboardResponse getDashboardStats() {
         double ca = venteRepository.sumTotalCA();
         long nbEmployes = employeService.countAllEmployes();

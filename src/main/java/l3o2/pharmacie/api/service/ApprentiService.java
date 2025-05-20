@@ -139,6 +139,16 @@ public class ApprentiService {
     }
 
     // Méthode de mise à jour
+    /**
+     * Met à jour les informations d'un apprenti existant.
+     * 
+     * @param id L'identifiant UUID de l'apprenti à mettre à jour.
+     * @param request Les données de mise à jour de l'apprenti.
+     * @return L'apprenti mis à jour sous forme de ApprentiResponse.
+     * @throws ResourceNotFoundException si l'apprenti avec l'ID spécifié n'est pas trouvé.
+     * @throws DuplicateEmailProException si le nouvel email professionnel est déjà utilisé.
+     * @throws InvalidDataException si les données fournies sont invalides ou violent des contraintes.
+     */
     @Transactional
     public ApprentiResponse updateApprenti(UUID id, ApprentiUpdateRequest request) {
         Apprenti existing = apprentiRepository.findById(id)
@@ -185,6 +195,13 @@ public class ApprentiService {
         }
     }
 
+    /**
+     * Recherche des apprentis en fonction d'un terme de recherche.
+     * La recherche s'effectue sur le nom, le prénom, l'email, le matricule ou l'école de l'apprenti (insensible à la casse).
+     * 
+     * @param term Le terme de recherche.
+     * @return Une liste d'ApprentiResponse correspondant aux critères de recherche.
+     */
     @Transactional(readOnly = true)
     public List<ApprentiResponse> searchApprentis(String term) {
         String searchTerm = term.toLowerCase();

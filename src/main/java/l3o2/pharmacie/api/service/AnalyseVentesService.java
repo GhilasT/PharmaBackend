@@ -12,6 +12,11 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+/**
+ * Service pour l'analyse des ventes et des commandes.
+ * Fournit des méthodes pour agréger les données de ventes et de commandes
+ * sur différentes périodes (jour, semaine, mois).
+ */
 @Service
 @RequiredArgsConstructor
 public class AnalyseVentesService {
@@ -20,10 +25,25 @@ public class AnalyseVentesService {
     private final CommandeRepository commandeRepository;
     private static final ZoneId ZONE_ID = ZoneId.of("Europe/Paris");
 
+    /**
+     * Récupère le nombre de ventes et de commandes par jour pour les 7 derniers jours.
+     * Inclut également le chiffre d'affaires (CA) des ventes par jour.
+     * Les clés du map sont formatées comme "vente-YYYY-MM-DD", "commande-YYYY-MM-DD", "vente-CA-YYYY-MM-DD".
+     * 
+     * @return Une map contenant le nombre de ventes, de commandes et le CA par jour.
+     */
     public Map<String, Integer> getVentesParJourSemaine() {
         return getVentesEtCommandesParJour(7);
     }
 
+    /**
+     * Récupère le nombre de ventes et de commandes par jour pour les 30 derniers jours.
+     * Inclut également le chiffre d'affaires (CA) des ventes par jour.
+     * Les clés du map sont formatées comme "vente-YYYY-MM-DD", "commande-YYYY-MM-DD", "vente-CA-YYYY-MM-DD".
+     * 
+     * @return Une map contenant le nombre de ventes, de commandes et le CA par jour.
+     * @throws RuntimeException si une erreur survient lors de la récupération des données.
+     */
     public Map<String, Integer> getVentesParJourMois() {
         try {
             return getVentesEtCommandesParJour(30);
@@ -33,6 +53,15 @@ public class AnalyseVentesService {
         }
     }
 
+    /**
+     * Récupère le nombre de ventes, de commandes et le chiffre d'affaires (CA) des ventes par mois
+     * pour un nombre de mois spécifié en remontant à partir de la date actuelle.
+     * Les clés du map sont formatées comme "vente-YYYY-MM", "commande-YYYY-MM", "vente-CA-YYYY-MM".
+     * 
+     * @param nbMois Le nombre de mois pour lesquels récupérer les données.
+     * @return Une map contenant le nombre de ventes, de commandes et le CA par mois.
+     * @throws RuntimeException si une erreur survient lors de la récupération des données.
+     */
     public Map<String, Integer> getVentesParMois(int nbMois) {
         try {
             Date endDate = new Date();
@@ -84,6 +113,16 @@ public class AnalyseVentesService {
         }
     }
 
+    /**
+     * Récupère le nombre de ventes, de commandes et le chiffre d'affaires (CA) des ventes par jour
+     * pour un nombre de jours spécifié en remontant à partir de la date actuelle.
+     * Les clés du map sont formatées comme "vente-YYYY-MM-DD", "commande-YYYY-MM-DD", "vente-CA-YYYY-MM-DD".
+     * 
+     * @param nbJours Le nombre de jours pour lesquels récupérer les données.
+     * @return Une map contenant le nombre de ventes, de commandes et le CA par jour.
+     * @throws IllegalArgumentException si les dates de début et de fin sont invalides.
+     * @throws RuntimeException si une erreur survient lors de la récupération des données.
+     */
     private Map<String, Integer> getVentesEtCommandesParJour(int nbJours) {
         try {
             Date endDate = new Date();
@@ -142,7 +181,13 @@ public class AnalyseVentesService {
         }
     }
 
-    // Méthode utilitaire pour convertir Date vers LocalDate avec TimeZone fixe
+    /**
+     * Convertit un objet {@link Date} en {@link LocalDate} en utilisant le fuseau horaire {@code Europe/Paris}.
+     * 
+     * @param date L'objet Date à convertir. Ne doit pas être null.
+     * @return L'objet LocalDate correspondant.
+     * @throws IllegalArgumentException si la date fournie est null.
+     */
     private LocalDate convertToLocalDate(Date date) {
         if (date == null) {
             throw new IllegalArgumentException("La date ne peut pas être null");

@@ -29,6 +29,10 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.logging.Logger;
 
+/**
+ * Service gérant la logique métier pour les ventes.
+ * Fournit des méthodes pour créer, récupérer, mettre à jour et supprimer des ventes.
+ */
 @Service
 @RequiredArgsConstructor
 public class VenteService {
@@ -41,6 +45,10 @@ public class VenteService {
     private final CisCipBdpmRepository cisCipBdpmRepository;
     private static final Logger LOGGER = Logger.getLogger(VenteService.class.getName());
 
+    /**
+     * Récupère toutes les ventes.
+     * @return Une liste de toutes les ventes sous forme de DTO.
+     */
     @Transactional(readOnly = true)
     public List<VenteResponse> getAll() {
         return venteRepository.findAll().stream()
@@ -48,6 +56,12 @@ public class VenteService {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Récupère une vente par son identifiant.
+     * @param idVente L'identifiant de la vente.
+     * @return La vente correspondante sous forme de DTO.
+     * @throws EntityNotFoundException si aucune vente n'est trouvée pour l'identifiant donné.
+     */
     @Transactional(readOnly = true)
     public VenteResponse getById(UUID idVente) {
         return venteRepository.findById(idVente)
@@ -55,6 +69,10 @@ public class VenteService {
                 .orElseThrow(() -> new EntityNotFoundException("Vente non trouvée"));
     }
 
+    /**
+     * Récupère toutes les ventes triées par date de vente décroissante.
+     * @return Une liste de toutes les ventes triées par date, sous forme de DTO.
+     */
     @Transactional(readOnly = true)
     public List<VenteResponse> getAllOrderByDate() {
         return venteRepository.findAll(Sort.by(Sort.Direction.DESC, "dateVente")).stream()
@@ -62,6 +80,14 @@ public class VenteService {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Crée une nouvelle vente.
+     * Gère la mise à jour des stocks de médicaments, les notifications de stock et la vérification des ordonnances.
+     * @param request Les informations pour la création de la vente.
+     * @return La vente créée sous forme de DTO, avec d'éventuelles notifications.
+     * @throws ResponseStatusException si un médicament est introuvable, si la quantité est insuffisante,
+     *                                 si le pharmacien adjoint ou le client est introuvable, ou si une ordonnance est requise mais non fournie.
+     */
     @Transactional
     public VenteResponse createVente(VenteCreateRequest request) {
         System.out.println("Début de la création de la vente...");
@@ -192,6 +218,18 @@ public class VenteService {
         return response;
     }
 
+    /**
+     * Met à jour une vente existante.
+     * Permet de modifier le pharmacien adjoint, le client, la date de vente, le mode de paiement et les médicaments du panier.
+     * Gère la remise en stock des anciens médicaments et la décrémentation du stock pour les nouveaux.
+     * Calcule le nouveau montant total et le montant remboursé.
+     * @param idVente L'identifiant de la vente à mettre à jour.
+     * @param request Les informations de mise à jour de la vente.
+     * @return La vente mise à jour sous forme de DTO, avec d'éventuelles notifications de stock.
+     * @throws EntityNotFoundException si la vente n'est pas trouvée.
+     * @throws ResponseStatusException si le pharmacien adjoint ou le client est introuvable,
+     *                                 si un médicament du nouveau panier est introuvable ou si la quantité est insuffisante.
+     */
     @Transactional
     public VenteResponse updateVente(UUID idVente, VenteUpdateRequest request) {
         Vente vente = venteRepository.findById(idVente)
@@ -353,9 +391,11 @@ public class VenteService {
     }
 
     /**
-     * Méthode utilitaire pour obtenir le code CIP13 final
-     * @param codeInitial Le code initial (CIS ou CIP13)
-     * @return Le code CIP13 correspondant
+     * Méthode utilitaire pour obtenir le code CIP13 final à partir d'un code initial (CIS ou CIP13).
+     * Si le code initial est un code CIS (8 caractères), il est converti en code CIP13.
+     * @param codeInitial Le code initial (CIS ou CIP13).
+     * @return Le code CIP13 correspondant.
+     * @throws ResponseStatusException si aucune présentation n'est trouvée pour le code CIS fourni.
      */
     private String getFinalCode(String codeInitial) {
         if (codeInitial.length() == 8) {
@@ -368,6 +408,11 @@ public class VenteService {
         return codeInitial;
     }
 
+    /**
+     * Supprime une vente par son identifiant.
+     * @param idVente L'identifiant de la vente à supprimer.
+     * @throws EntityNotFoundException si aucune vente n'est trouvée pour l'identifiant donné.
+     */
     @Transactional
     public void delete(UUID idVente) {
         if (!venteRepository.existsById(idVente)) {
@@ -376,6 +421,11 @@ public class VenteService {
         venteRepository.deleteById(idVente);
     }
 
+    /**
+     * Mappe une entité Vente vers un DTO VenteResponse.
+     * @param vente L'entité Vente à mapper.
+     * @return Le DTO VenteResponse correspondant.
+     */
     private VenteResponse mapToResponse(Vente vente) {
         return VenteResponse.builder()
                 .idVente(vente.getIdVente())
@@ -407,7 +457,11 @@ public class VenteService {
                 .build();
     }
 
-    // Rétablir les méthodes de filtrage absentes en V2 (V1)
+    /**
+     * Récupère toutes les ventes associées à un pharmacien adjoint spécifique.
+     * @param pharmacienId L'identifiant du pharmacien adjoint.
+     * @return Une liste des ventes associées au pharmacien, sous forme de DTO.
+     */
     @Transactional(readOnly = true)
     public List<VenteResponse> getByPharmacienId(UUID pharmacienId) {
         return venteRepository.findByPharmacienAdjoint_IdPersonne(pharmacienId).stream()
@@ -415,6 +469,11 @@ public class VenteService {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Récupère toutes les ventes associées à un client spécifique.
+     * @param clientId L'identifiant du client.
+     * @return Une liste des ventes associées au client, sous forme de DTO.
+     */
     @Transactional(readOnly = true)
     public List<VenteResponse> getByClientId(UUID clientId) {
         return venteRepository.findByClient_IdPersonne(clientId).stream()

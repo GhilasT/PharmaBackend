@@ -23,7 +23,8 @@ import java.util.UUID;
 
 /**
  * Service pour gérer les fournisseurs.
- * Contient la logique métier pour la gestion des fournisseurs.
+ * Contient la logique métier pour la création, la mise à jour, la suppression,
+ * la recherche et la récupération des informations des fournisseurs.
  */
 @Service
 @RequiredArgsConstructor
@@ -35,7 +36,11 @@ public class FournisseurService {
      * Création d'un nouveau fournisseur.
      * 
      * @param request Données du fournisseur à créer.
-     * @return FournisseurResponse contenant les informations du fournisseur créé.
+     * @return {@link FournisseurResponse} contenant les informations du fournisseur créé.
+     * @throws DuplicateSocieteException si le nom de la société existe déjà.
+     * @throws DuplicateEmailException si l'email existe déjà.
+     * @throws DuplicateTelephoneException si le numéro de téléphone existe déjà.
+     * @throws InvalidDataException en cas d'erreur lors de la persistance des données.
      */
     public FournisseurResponse createFournisseur(FournisseurCreateRequest request) {
         // Vérification de l'unicité de la société (avec Nomsociete)
@@ -72,10 +77,21 @@ public class FournisseurService {
         }
     }
 
+    /**
+     * Met à jour un fournisseur existant.
+     *
+     * @param id L'identifiant UUID du fournisseur à mettre à jour.
+     * @param request Les données de mise à jour du fournisseur.
+     * @return {@link FournisseurResponse} contenant les informations du fournisseur mis à jour.
+     * @throws ResourceNotFoundException si le fournisseur avec l'ID spécifié n'est pas trouvé.
+     * @throws DuplicateSocieteException si le nouveau nom de société existe déjà pour un autre fournisseur.
+     * @throws DuplicateEmailException si le nouvel email existe déjà pour un autre fournisseur.
+     * @throws DuplicateTelephoneException si le nouveau numéro de téléphone existe déjà pour un autre fournisseur.
+     * @throws InvalidDataException en cas d'erreur lors de la persistance des données.
+     */
     public FournisseurResponse updateFournisseur(UUID id, FournisseurUpdateRequest request) {
         Fournisseur existing = fournisseurRepository.findById(id)
                         .orElseThrow(() -> new ResourceNotFoundException("Fournisseur","id",id));   
-
 
         if (request.getNomSociete() != null) {
             String newNomSociete = request.getNomSociete().trim();
@@ -127,6 +143,12 @@ public class FournisseurService {
         }
     }
 
+    /**
+     * Vérifie si un fournisseur existe avec l'email spécifié.
+     *
+     * @param email L'email à vérifier.
+     * @return {@code true} si un fournisseur avec cet email existe, {@code false} sinon.
+     */
     public boolean existsByEmail(String email) {
         return fournisseurRepository.existsByEmail(email.trim().toLowerCase());
     }
@@ -159,8 +181,8 @@ public class FournisseurService {
      * Recherche un fournisseur par son email.
      * 
      * @param email Email du fournisseur.
-     * @return FournisseurResponse si trouvé.
-     * @throws ResponseStatusException si le fournisseur n'est pas trouvé.
+     * @return {@link FournisseurResponse} si trouvé.
+     * @throws DuplicateEmailException si le fournisseur n'est pas trouvé (note: l'exception semble mal nommée ici, devrait être ResourceNotFoundException).
      */
     public FournisseurResponse getFournisseurByEmail(String email) {
         return fournisseurRepository.findByEmail(email.trim().toLowerCase())
@@ -172,8 +194,8 @@ public class FournisseurService {
      * Recherche un fournisseur par son téléphone.
      * 
      * @param telephone Numéro de téléphone du fournisseur.
-     * @return FournisseurResponse si trouvé.
-     * @throws ResponseStatusException si le fournisseur n'est pas trouvé.
+     * @return {@link FournisseurResponse} si trouvé.
+     * @throws DuplicateTelephoneException si le fournisseur n'est pas trouvé (note: l'exception semble mal nommée ici, devrait être ResourceNotFoundException).
      */
     public FournisseurResponse getFournisseurByTelephone(String telephone) {
         return fournisseurRepository.findByTelephone(telephone.trim())
@@ -199,7 +221,12 @@ public class FournisseurService {
                 .build();
     }
 
-    // suprimer un fournisssseur
+    /**
+     * Supprime un fournisseur par son identifiant UUID.
+     *
+     * @param id L'identifiant UUID du fournisseur à supprimer.
+     * @throws ResourceNotFoundException si le fournisseur avec l'ID spécifié n'est pas trouvé.
+     */
     public void deleteFournisseur(UUID id) {
         if (!fournisseurRepository.existsById(id)) {
             throw new ResourceNotFoundException("Fournisseur","id",id);   
@@ -208,6 +235,13 @@ public class FournisseurService {
         fournisseurRepository.deleteById(id);
     }
 
+    /**
+     * Recherche des fournisseurs en fonction d'une requête (nom de société, email, etc.).
+     *
+     * @param query Le terme de recherche.
+     * @return Une liste de {@link FournisseurResponse} correspondant aux critères de recherche.
+     * @throws InvalidParameterException si le paramètre de recherche est vide ou nul.
+     */
     public List<FournisseurResponse> searchFournisseurs(String query) {
         if (query == null || query.trim().isEmpty()) {
             throw new InvalidParameterException("Le paramètre de recherche ne peut pas être vide.");

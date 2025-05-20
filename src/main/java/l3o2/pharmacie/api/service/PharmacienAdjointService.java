@@ -20,7 +20,7 @@ import java.util.UUID;
 
 /**
  * Service gérant la logique métier des pharmaciens adjoints.
- * Il fournit des méthodes pour la création, récupération et gestion des
+ * Il fournit des méthodes pour la création, récupération, mise à jour et suppression des
  * pharmaciens adjoints.
  */
 @Service
@@ -28,16 +28,17 @@ import java.util.UUID;
 public class PharmacienAdjointService {
 
     private final PharmacienAdjointRepository pharmacienAdjointRepository;
-    private final EmployeRepository employeRepository;
-
-    /**
-     * Création d'un pharmacien adjoint en base de données.
-     * 
-     * @param request Contient les informations du pharmacien adjoint à créer.
-     * @return Pharmacien adjoint créé sous forme de DTO.
-     */
+    private final EmployeRepository employeRepository; // Ce champ n'est pas utilisé directement, EmployeService l'est.
     private final EmployeService employeService;
 
+    /**
+     * Crée un nouveau pharmacien adjoint en base de données.
+     * Vérifie l'unicité de l'email professionnel et génère un matricule.
+     * @param request Contient les informations du pharmacien adjoint à créer.
+     * @return {@link PharmacienAdjointResponse} Le pharmacien adjoint créé sous forme de DTO.
+     * @throws DuplicateEmailProException si l'email professionnel existe déjà.
+     * @throws InvalidDataException en cas de données invalides ou de violation de contraintes.
+     */
     public PharmacienAdjointResponse createPharmacienAdjoint(PharmacienAdjointCreateRequest request) {
         // Vérifier si un pharmacien adjoint avec le même email professionnel existe
         // déjà
@@ -58,7 +59,7 @@ public class PharmacienAdjointService {
                 .poste(request.getPoste())
                 .statutContrat(request.getStatutContrat())
                 .emailPro(request.getEmailPro().trim())
-                .permissions(List.of("VENDRE","COMMANDER")) //liste permissions backend
+                .permissions(List.of("VENDRE", "COMMANDER")) // liste permissions backend
                 .build();
 
         // Générer le matricule automatiquement en fonction du poste
@@ -75,10 +76,9 @@ public class PharmacienAdjointService {
     }
 
     /**
-     * Convertit une entité PharmacienAdjoint en DTO PharmacienAdjointResponse.
-     * 
+     * Convertit une entité {@link PharmacienAdjoint} en DTO {@link PharmacienAdjointResponse}.
      * @param entity L'entité PharmacienAdjoint.
-     * @return L'objet DTO contenant les informations du pharmacien adjoint.
+     * @return L'objet DTO {@link PharmacienAdjointResponse} contenant les informations du pharmacien adjoint.
      */
     private PharmacienAdjointResponse mapToResponse(PharmacienAdjoint entity) {
         return PharmacienAdjointResponse.builder()
@@ -98,6 +98,12 @@ public class PharmacienAdjointService {
                 .build();
     }
 
+    /**
+     * Recherche un pharmacien adjoint par son email professionnel.
+     * @param emailPro L'email professionnel du pharmacien adjoint.
+     * @return Le {@link PharmacienAdjointResponse} du pharmacien adjoint trouvé.
+     * @throws ResourceNotFoundException si aucun pharmacien adjoint n'est trouvé avec cet email.
+     */
     public PharmacienAdjointResponse findByEmailPro(String emailPro) {
         PharmacienAdjoint pharmacien = pharmacienAdjointRepository
                 .findByEmailPro(emailPro.trim())
@@ -109,10 +115,11 @@ public class PharmacienAdjointService {
     /**
      * Récupère un pharmacien adjoint par son ID.
      * @param id Identifiant du pharmacien adjoint.
-     * @return Pharmacien adjoint trouvé sous forme de DTO.
+     * @return {@link PharmacienAdjointResponse} Le pharmacien adjoint trouvé sous forme de DTO.
+     * @throws ResponseStatusException avec le statut NOT_FOUND si aucun pharmacien adjoint n'est trouvé.
      * @author raphaelcharoze
      */
-    public PharmacienAdjointResponse findById(UUID id){
+    public PharmacienAdjointResponse findById(UUID id) {
         PharmacienAdjoint pharmacien = pharmacienAdjointRepository
                 .findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
@@ -120,11 +127,9 @@ public class PharmacienAdjointService {
         return mapToResponse(pharmacien);
     }
 
-
     /**
      * Récupère la liste de tous les pharmaciens adjoints.
-     * 
-     * @return Liste de DTOs représentant les pharmaciens adjoints.
+     * @return Liste de {@link PharmacienAdjointResponse} représentant les pharmaciens adjoints.
      */
     public List<PharmacienAdjointResponse> getAllPharmaciensAdjoints() {
         return pharmacienAdjointRepository.findAll().stream()
@@ -132,6 +137,11 @@ public class PharmacienAdjointService {
                 .toList();
     }
 
+    /**
+     * Supprime un pharmacien adjoint par son identifiant.
+     * @param id L'identifiant UUID du pharmacien adjoint à supprimer.
+     * @throws ResourceNotFoundException si aucun pharmacien adjoint n'est trouvé avec cet ID.
+     */
     public void deletePharmacienAdjoint(UUID id) {
         if (!pharmacienAdjointRepository.existsById(id)) {
             throw new ResourceNotFoundException("PharmacienAdjoint", "id", id);
@@ -140,6 +150,14 @@ public class PharmacienAdjointService {
         pharmacienAdjointRepository.deleteById(id);
     }
 
+    /**
+     * Met à jour les informations d'un pharmacien adjoint existant.
+     * @param id L'identifiant UUID du pharmacien adjoint à mettre à jour.
+     * @param request Les données de mise à jour du pharmacien adjoint.
+     * @return Le {@link PharmacienAdjointResponse} du pharmacien adjoint mis à jour.
+     * @throws ResourceNotFoundException si aucun pharmacien adjoint n'est trouvé avec cet ID.
+     * @throws DuplicateEmailProException si le nouvel email professionnel existe déjà pour un autre employé.
+     */
     public PharmacienAdjointResponse updatePharmacienAdjoint(UUID id, PharmacienAdjointUpdateRequest request) {
         PharmacienAdjoint pharmacien = pharmacienAdjointRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("PharmacienAdjoint", "id", id));
@@ -180,6 +198,12 @@ public class PharmacienAdjointService {
         return mapToResponse(updated);
     }
 
+    /**
+     * Recherche des pharmaciens adjoints par leur nom ou prénom.
+     * La recherche est insensible à la casse et ignore les espaces de début/fin.
+     * @param searchTerm Le terme de recherche pour le nom ou prénom.
+     * @return Une liste de {@link PharmacienAdjointResponse} correspondant aux critères de recherche.
+     */
     public List<PharmacienAdjointResponse> searchPharmaciensAdjoints(String searchTerm) {
         String normalizedTerm = searchTerm.toLowerCase().trim();
         return pharmacienAdjointRepository.searchByNomPrenom(normalizedTerm).stream()
@@ -187,6 +211,12 @@ public class PharmacienAdjointService {
                 .toList();
     }
 
+    /**
+     * Récupère un pharmacien adjoint par son identifiant unique.
+     * @param id L'identifiant UUID du pharmacien adjoint.
+     * @return Le {@link PharmacienAdjointResponse} du pharmacien adjoint trouvé.
+     * @throws ResourceNotFoundException si aucun pharmacien adjoint n'est trouvé avec cet ID.
+     */
     public PharmacienAdjointResponse getPharmacienAdjointById(UUID id) {
         PharmacienAdjoint pharmacien = pharmacienAdjointRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("PharmacienAdjoint", "id", id));

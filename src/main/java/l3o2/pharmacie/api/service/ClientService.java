@@ -73,6 +73,13 @@ public class ClientService {
         }
     }
 
+    /**
+     * Vérifie si un client existe avec l'email spécifié.
+     * L'email est normalisé (trim et lowercase) avant la vérification.
+     * 
+     * @param email L'email à vérifier.
+     * @return true si un client avec cet email existe, false sinon.
+     */
     public boolean existsByEmail(String email) {
         return clientRepository.existsByEmail(email.trim().toLowerCase());
     }
@@ -133,7 +140,12 @@ public class ClientService {
         return mapToResponse(client);
     }
 
-    // supprimer un client
+    /**
+     * Supprime un client par son ID.
+     * 
+     * @param id L'identifiant UUID du client à supprimer.
+     * @throws ResourceNotFoundException si aucun client n'est trouvé avec cet ID.
+     */
     public void deleteClient(UUID id) {
         if (!clientRepository.existsById(id)) {
             throw new ResourceNotFoundException("Client", "id", id);
@@ -141,11 +153,25 @@ public class ClientService {
         clientRepository.deleteById(id);
     }
 
+    /**
+     * Recherche un client par son numéro de téléphone.
+     * Le numéro de téléphone est normalisé (trim) avant la recherche.
+     * 
+     * @param telephone Le numéro de téléphone du client.
+     * @return ClientResponse si trouvé.
+     * @throws ResourceNotFoundException si le client n'est pas trouvé.
+     */
     public ClientResponse getClientByTelephone(String telephone) {
         Client client = clientRepository.findByTelephone(telephone.trim())
                 .orElseThrow(() -> new ResourceNotFoundException("Client", "telephone", telephone));
         return mapToResponse(client);
     }
+
+    /**
+     * Compte le nombre total de clients enregistrés.
+     * 
+     * @return Le nombre total de clients.
+     */
     public long countAllClients() {
         return clientRepository.count();
     }
