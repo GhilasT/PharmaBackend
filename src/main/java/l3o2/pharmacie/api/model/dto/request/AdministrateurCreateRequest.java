@@ -25,35 +25,71 @@ import lombok.NoArgsConstructor;
 // Génère un constructeur avec tous les paramètres
 @AllArgsConstructor
 public class AdministrateurCreateRequest {
-    // Champs de Personne
+    /**
+     * Le nom de l'administrateur. Obligatoire.
+     */
     @NotBlank 
     private String nom;
+    /**
+     * Le prénom de l'administrateur. Obligatoire.
+     */
     @NotBlank 
     private String prenom;
+    /**
+     * L'adresse email personnelle de l'administrateur. Obligatoire et doit être un format d'email valide.
+     */
     @NotBlank
     @Email 
     private String email;
+    /**
+     * Le numéro de téléphone de l'administrateur. Obligatoire.
+     */
     @NotBlank
     private String telephone;
+    /**
+     * L'adresse postale de l'administrateur.
+     */
     private String adresse;
 
-    // Champs spécifiques à Employe
+    /**
+     * La date d'embauche de l'administrateur. Obligatoire.
+     */
     @NotNull 
     private Date dateEmbauche;
+    /**
+     * Le salaire de l'administrateur. Obligatoire.
+     */
     @NotNull
     private Double salaire;
 
+    /**
+     * Le poste de l'administrateur.
+     */
     private PosteEmploye poste;
 
+    /**
+     * Le statut du contrat de l'administrateur.
+     */
     private StatutContrat statutContrat;
+    /**
+     * Le diplôme de l'administrateur.
+     */
     private String diplome;
+    /**
+     * L'adresse email professionnelle de l'administrateur. Obligatoire et doit être un format d'email valide.
+     */
     @NotBlank 
     @Email 
     private String emailPro;
     
-    // Champs spécifiques à Administrateur
+    /**
+     * Le rôle de l'administrateur. Obligatoire.
+     */
     @NotBlank 
     private String role;
+    /**
+     * Le mot de passe pour le compte de l'administrateur. Obligatoire.
+     */
     @NotBlank 
     private String password;
 }

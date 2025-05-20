@@ -26,38 +26,38 @@ public class Medicament {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    // Identifiant unique du médicament dans la pharmacie.
+    /** Identifiant unique du médicament dans la pharmacie. */
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "code_cip13", referencedColumnName = "code_cip13", nullable = false)
-    // Relation avec la présentation du médicament via son code CIP13.
+    /** Relation avec la présentation du médicament via son code CIP13. */
     private CisCipBdpm presentation;
 
     @PositiveOrZero(message = "La quantité ne peut pas être négative")
     @Column(name = "quantite", nullable = false)
-    // Quantité du médicament en stock.
+    /** Quantité du médicament en stock. */
     private Integer quantite;
 
     @Column(name = "numero_lot", length = 50)
-    // Numéro de lot du médicament.
+    /** Numéro de lot du médicament. */
     private String numeroLot;
 
     @Future(message = "La date de péremption doit être dans le futur")
     @Column(name = "date_peremption")
-    // Date de péremption du médicament (doit être dans le futur).
+    /** Date de péremption du médicament (doit être dans le futur). */
     private LocalDate datePeremption;
 
     @Column(name = "date_mise_a_jour", nullable = false)
-    // Date de la dernière mise à jour de l'enregistrement.
+    /** Date de la dernière mise à jour de l'enregistrement. */
     private LocalDate dateMiseAJour = LocalDate.now();
 
     @PositiveOrZero
     @Column(name = "seuil_alerte")
-    // Seuil d'alerte du stock (notification lorsque la quantité est faible).
+    /** Seuil d'alerte du stock (notification lorsque la quantité est faible). */
     private Integer seuilAlerte;
 
     @Column(name = "emplacement", length = 100)
-    // Emplacement physique du médicament dans la pharmacie.
+    /** Emplacement physique du médicament dans la pharmacie. */
     private String emplacement;
 }

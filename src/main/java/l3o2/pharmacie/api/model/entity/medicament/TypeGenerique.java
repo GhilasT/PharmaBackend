@@ -12,11 +12,15 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum TypeGenerique {
 
-    PRINCEPS(0),           // Médicament original (référence)
-    GENERIQUE(1),          // Médicament générique
-    COMPLEMENTARITE(2),    // Médicament de complémentarité thérapeutique
-    SUBSTITUABLE(4);       // Médicament générique substituable
+    /** Médicament original (référence) */
+    PRINCEPS(0),
+    /** Médicament générique */
+    GENERIQUE(1),
+    /** Médicament de complémentarité thérapeutique */
+    COMPLEMENTARITE(2),
+    /** Médicament générique substituable */
+    SUBSTITUABLE(4);
 
-    // Code numérique associé à chaque type de générique
+    /** Code numérique associé à chaque type de générique. */
     private final int code;
 }

@@ -24,42 +24,49 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 // Permet d'utiliser le pattern Builder pour faciliter l'instanciation.
 @Builder
-
 public class LigneCommande {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    /** Identifiant unique de la ligne de commande. */
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "commande_id", nullable = false)
+    /** Commande à laquelle cette ligne est associée. */
     private Commande commande;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "stock_medicament_id", referencedColumnName = "id", nullable = false)
+    /** Médicament en stock concerné par cette ligne de commande. */
     private StockMedicament stockMedicament;
 
     @Column(nullable = false)
+    /** Quantité commandée du médicament. */
     private int quantite;
 
     @Column(nullable = false)
+    /** Prix unitaire du médicament pour cette commande. */
     private BigDecimal prixUnitaire;
 
     @Column(nullable = false)
+    /** Montant total de cette ligne de commande (prixUnitaire * quantite). */
     private BigDecimal montantLigne;
 
-    //cette methode sera executee avant l'insertion de la ligne de commande dans la base de donnees grace au : @PrePersist
+    /**
+     * Calcule le montant de la ligne de commande avant sa sauvegarde en base de données.
+     * Cette méthode est exécutée automatiquement avant la persistance de l'entité
+     * grâce à l'annotation {@code @PrePersist}.
+     * Le prix unitaire est calculé comme 70% du prix HT du médicament en stock.
+     * Le montant total de la ligne est ensuite calculé en multipliant le prix unitaire par la quantité.
+     */
     @PrePersist
-
     public void calculerMontantLigneAvantSauvegarde() {
+        // Calculer le prix unitaire basé sur 70% du prix HT
+        this.prixUnitaire = stockMedicament.getPresentation().getPrixUnitaireAvecReduction();
 
-
-            // Calculer le prix unitaire basé sur 70% du prix HT
-            this.prixUnitaire = stockMedicament.getPresentation().getPrixUnitaireAvecReduction();
-
-            // Calculer le montant total de la ligne de commande
-            this.montantLigne = prixUnitaire.multiply(BigDecimal.valueOf(quantite));
-
+        // Calculer le montant total de la ligne de commande
+        this.montantLigne = prixUnitaire.multiply(BigDecimal.valueOf(quantite));
     }
 }
 

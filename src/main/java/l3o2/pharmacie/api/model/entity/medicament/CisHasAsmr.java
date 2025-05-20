@@ -27,33 +27,33 @@ public class CisHasAsmr {
     @Id
     @Column(name = "code_dossier_has", nullable = false, unique = true)
     @NotBlank(message = "Le code dossier HAS est obligatoire")
-    // Code unique d'identification du dossier HAS pour l'ASMR.
+    /** Code unique d'identification du dossier HAS pour l'ASMR. */
     private String codeDossierHas;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "code_cis", nullable = false)
-    // Référence au médicament principal (CIS).
+    /** Référence au médicament principal (CIS). */
     private CisBdpm cisBdpm;
 
     @Column(name = "motif_evaluation")
-    // Motif de l'évaluation du médicament (ex: nouvelle indication, réévaluation).
+    /** Motif de l'évaluation du médicament (ex: nouvelle indication, réévaluation). */
     private String motifEvaluation;
 
     @Temporal(TemporalType.DATE)
     @Column(name = "date_avis")
-    // Date de l'avis HAS sur l'ASMR.
+    /** Date de l'avis HAS sur l'ASMR. */
     private Date dateAvis;
 
     @Column(name = "valeur_asmr")
-    // Valeur de l'ASMR (ex: "ASMR I", "ASMR V").
+    /** Valeur de l'ASMR (ex: "ASMR I", "ASMR V"). */
     private String valeurAsmr;
 
     @Column(name = "libelle_asmr", columnDefinition = "TEXT")
-    // Libellé détaillant le niveau d'amélioration du service médical rendu.
+    /** Libellé détaillant le niveau d'amélioration du service médical rendu. */
     private String libelleAsmr;
 
     @OneToOne
     @JoinColumn(name = "code_dossier_has", referencedColumnName = "code_dossier_has")
-    // Lien vers la page de la Commission de la Transparence (CT) associée à l'ASMR.
+    /** Lien vers la page de la Commission de la Transparence (CT) associée à l'ASMR. */
     private HasLiensPageCT lienPageCT;
 }

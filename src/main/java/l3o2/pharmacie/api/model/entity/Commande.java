@@ -25,30 +25,32 @@ public class Commande {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(nullable = false, unique = true, updatable = false)
-    // Référence unique de la commande.
+    /** Référence unique de la commande. */
     private UUID reference;
 
     @Column(nullable = false)
-    // Date de la commande.
+    /** Date de la commande. */
     private Date dateCommande;
 
     @Column(nullable = false)
-    // Montant total de la commande.
+    /** Montant total de la commande. */
     private BigDecimal montantTotal;
 
     @Column(nullable = false)
-    // Statut de la commande (ex: En attente, Validée, Expédiée).
+    /** Statut de la commande (ex: En attente, Validée, Expédiée). */
     private String statut;
 
     @Column(name = "fournisseur_id", nullable = false)
+    /** Identifiant du fournisseur associé à cette commande. */
     private UUID fournisseurId;
 
     @Column(name = "pharmacien_adjoint_id", nullable = false)
+    /** Identifiant du pharmacien adjoint ayant passé cette commande. */
     private UUID pharmacienAdjointId;
 
 
     @OneToMany(mappedBy = "commande", cascade = CascadeType.ALL, orphanRemoval = true)
-    // Liste des lignes de commande associées à cette commande.
+    /** Liste des lignes de commande associées à cette commande. */
     private List<LigneCommande> ligneCommandes;
 
 

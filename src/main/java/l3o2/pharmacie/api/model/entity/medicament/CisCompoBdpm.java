@@ -25,40 +25,40 @@ public class CisCompoBdpm {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    // Identifiant unique de la composition du médicament.
+    /** Identifiant unique de la composition du médicament. */
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "code_cis", nullable = false)
-    // Référence au médicament principal (CIS).
+    /** Référence au médicament principal (CIS). */
     private CisBdpm cisBdpm;
 
     @Column(name = "designation_element")
-    // Désignation de l'élément composant le médicament (ex: substance active, excipient).
+    /** Désignation de l'élément composant le médicament (ex: substance active, excipient). */
     private String designationElement;
 
     @Column(name = "code_substance")
-    // Code unique d'identification de la substance.
+    /** Code unique d'identification de la substance. */
     private String codeSubstance;
 
     @Column(name = "denomination_substance")
-    // Nom de la substance présente dans le médicament.
+    /** Nom de la substance présente dans le médicament. */
     private String denominationSubstance;
 
     @Column(name = "dosage")
-    // Dosage de la substance dans le médicament (ex: "500 mg", "1 UI").
+    /** Dosage de la substance dans le médicament (ex: "500 mg", "1 UI"). */
     private String dosage;
 
     @Column(name = "reference_dosage")
-    // Référence du dosage (ex: "base", "sel", "hydrate").
+    /** Référence du dosage (ex: "base", "sel", "hydrate"). */
     private String referenceDosage;
 
     @Column(name = "nature_composant")
     @Pattern(regexp = "SA|ST|FT", message = "La nature doit être 'SA' (principe actif) ou 'ST' (fraction thérapeutique) ou 'FT' (excipient)")
-    // Nature du composant : SA = Substance Active, ST = Fraction Thérapeutique.
+    /** Nature du composant : SA = Substance Active, ST = Fraction Thérapeutique, FT = Excipient à effet notoire. */
     private String natureComposant;
 
     @Column(name = "numero_liaison_saft")
-    // Numéro de liaison avec la base SAFT (Substance Active pour une Fiche Thérapeutique).
+    /** Numéro de liaison avec la base SAFT (Substance Active pour une Fiche Thérapeutique). */
     private String numeroLiaisonSaft;
 }

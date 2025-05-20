@@ -7,21 +7,58 @@ import lombok.NoArgsConstructor;
 
 import java.util.UUID;
 
+/**
+ * DTO pour la création d'un médecin.
+ * Contient les informations nécessaires pour enregistrer un nouveau médecin dans le système.
+ */
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class MedecinCreateRequest {
 
-    private String civilite;  // Civilité (M. / Mme, etc.)
-    private String nomExercice;  // Nom d'exercice
-    private String prenomExercice;  // Prénom d'exercice
-    private String rppsMedecin;  // Numéro RPPS unique
-    private String categorieProfessionnelle;  // Civil, militaire, étudiant, etc.
-    private String profession;  // Profession (Médecin, Chirurgien, etc.)
-    private String modeExercice;  // Mode d'exercice (libéral, salarié, bénévole)
-    private String qualifications;  // Qualifications, diplômes, autorisations, savoir-faire
-    private String structureExercice;  // Coordonnées des structures d'exercice (cabinet, hôpital, etc.)
-    private String fonctionActivite;  // Fonction dans l'exercice médical (par exemple, Médecin traitant)
-    private String genreActivite;  // Genre d’activité (consultation, chirurgie, soins palliatifs, etc.)
+    /**
+     * La civilité du médecin (ex: M., Mme.).
+     */
+    private String civilite;
+    /**
+     * Le nom d'exercice du médecin.
+     */
+    private String nomExercice;
+    /**
+     * Le prénom d'exercice du médecin.
+     */
+    private String prenomExercice;
+    /**
+     * Le numéro RPPS (Répertoire Partagé des Professionnels de Santé) unique du médecin.
+     */
+    private String rppsMedecin;
+    /**
+     * La catégorie professionnelle du médecin (ex: Civil, Militaire).
+     */
+    private String categorieProfessionnelle;
+    /**
+     * La profession du médecin (ex: Médecin généraliste, Chirurgien).
+     */
+    private String profession;
+    /**
+     * Le mode d'exercice du médecin (ex: Libéral, Salarié).
+     */
+    private String modeExercice;
+    /**
+     * Les qualifications, diplômes et autorisations du médecin.
+     */
+    private String qualifications;
+    /**
+     * Les coordonnées des structures d'exercice du médecin (ex: cabinet, hôpital).
+     */
+    private String structureExercice;
+    /**
+     * La fonction ou l'activité principale du médecin (ex: Médecin traitant).
+     */
+    private String fonctionActivite;
+    /**
+     * Le genre d'activité du médecin (ex: Consultation, Chirurgie).
+     */
+    private String genreActivite;
 }

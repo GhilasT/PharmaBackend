@@ -26,7 +26,7 @@ import lombok.experimental.SuperBuilder;
 public class Titulaire extends Administrateur {
 
     @Column(nullable = false, unique = true)
-    // Numéro RPPS du pharmacien titulaire (obligatoire et unique).
+    /** Numéro RPPS du pharmacien titulaire (obligatoire et unique). */
     private String numeroRPPS;
 
 }

@@ -23,28 +23,32 @@ public class Ordonnance {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(nullable = false, updatable = false, unique = true)
+    /** Identifiant unique de l'ordonnance, généré automatiquement. */
     private UUID idOrdonnance;
 
     @Column(nullable = false)
+    /** Date d'émission de l'ordonnance. */
     private Date dateEmission;
 
     @Column(nullable = false)
+    /** Numéro RPPS du médecin prescripteur. */
     private String rppsMedecin;
     
-     @Column(name="numeroord", nullable=true)
+    @Column(name="numeroord", nullable=true)
+    /** Numéro unique de l'ordonnance (peut être fourni par le système externe ou généré). */
     private String numeroOrd;
 
-    /** Relation vers le client */
+    /** Relation vers le client pour lequel l'ordonnance a été émise. */
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "client_id", nullable = false)
     private Client client;
 
     /**
      * Chaque ordonnance peut comprendre plusieurs prescriptions.
-     * Relation unidirectionnelle, la FK est dans la table prescriptions.
-     * @Singular pour que Lombok gère la liste sans initialisation explicite.
+     * Relation unidirectionnelle, la clé étrangère (FK) est dans la table des prescriptions.
+     * L'annotation {@code @Builder.Default} garantit l'initialisation de la liste même via le builder.
      */
-    @Builder.Default      // ← garantit qu’on initialise même via builder()
+    @Builder.Default
     @OneToMany(
             cascade = CascadeType.ALL,
             orphanRemoval = true

@@ -8,26 +8,57 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * DTO pour la mise à jour des informations d'un administrateur.
+ * Permet de modifier les attributs d'un administrateur existant.
+ */
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class AdministrateurUpdateRequest {
-    // Champs modifiables de Personne
+    /**
+     * Le nom de l'administrateur.
+     */
     private String nom;
+    /**
+     * Le prénom de l'administrateur.
+     */
     private String prenom;
+    /**
+     * L'adresse email personnelle de l'administrateur. Doit être un format d'email valide.
+     */
     @Email 
     private String email;
+    /**
+     * Le numéro de téléphone de l'administrateur.
+     */
     private String telephone;
+    /**
+     * L'adresse postale de l'administrateur.
+     */
     private String adresse;
 
-    // Champs modifiables de Employe
+    /**
+     * Le salaire de l'administrateur.
+     */
     private Double salaire;
+    /**
+     * Le statut du contrat de l'administrateur.
+     */
     private StatutContrat statutContrat;
+    /**
+     * Le diplôme de l'administrateur.
+     */
     private String diplome;
+    /**
+     * L'adresse email professionnelle de l'administrateur.
+     */
     private String emailPro;
 
-    // Champ spécifique à Administrateur
+    /**
+     * Le rôle de l'administrateur.
+     */
     private String role;
     
 }

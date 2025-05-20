@@ -21,10 +21,10 @@ public class HasLiensPageCT {
 
     @Id
     @Column(name = "code_dossier_has", length = 50)
-    // Identifiant unique du dossier HAS associé à l'avis de la CT.
+    /** Identifiant unique du dossier HAS associé à l'avis de la CT. */
     private String codeDossierHas;
 
     @Column(name = "lien_avis_ct", columnDefinition = "TEXT")
-    // Lien vers l'avis publié par la Commission de la Transparence (CT).
+    /** Lien vers l'avis publié par la Commission de la Transparence (CT). */
     private String lienAvisCt;
 }

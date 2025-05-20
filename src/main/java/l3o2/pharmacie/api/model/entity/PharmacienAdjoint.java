@@ -27,5 +27,6 @@ public class PharmacienAdjoint extends Employe {
 
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "pharmacien_adjoint_id")
+    /** Liste des commandes passées par ce pharmacien adjoint. */
     private List<Commande> commandesPassees;
 }

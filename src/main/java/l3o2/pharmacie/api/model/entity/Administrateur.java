@@ -24,7 +24,7 @@ import lombok.experimental.SuperBuilder;
 public class Administrateur extends Employe {
 
     @Column(nullable = false)
-    // Rôle de l'administrateur pour différencier le gestionnaire et le super-admin.
+    /** Rôle de l'administrateur pour différencier le gestionnaire et le super-admin. */
     private String role;
 
 }

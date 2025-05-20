@@ -24,49 +24,50 @@ public class CisCipDispoSpec {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    // Identifiant unique auto-généré.
+    /** Identifiant unique auto-généré. */
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "code_cis", nullable = false)
-    // Relation avec le médicament principal (CIS).
+    /** Relation avec le médicament principal (CIS). */
     private CisBdpm cisBdpm;
 
     @Column(name = "code_cip13")
-    // Code CIP13 du médicament.
+    /** Code CIP13 du médicament. */
     private String codeCip13;
 
     @Column(name = "code_statut", nullable = false)
     @Min(1)
     @Max(4)
-    // Code représentant le statut de disponibilité (ex: 1 = disponible, 4 = en rupture).
+    /** Code représentant le statut de disponibilité (ex: 1 = disponible, 4 = en rupture). */
     private Integer codeStatut;
 
     @Column(name = "libelle_statut", nullable = false)
-    // Libellé du statut de disponibilité (ex: "Disponible", "Rupture de stock").
+    /** Libellé du statut de disponibilité (ex: "Disponible", "Rupture de stock"). */
     private String libelleStatut;
 
-    // Dates au format JJ/MM/AAAA.
+    /** Dates au format JJ/MM/AAAA. */
     @Temporal(TemporalType.DATE)
     @Column(name = "date_debut", nullable = false)
-    // Date de début de la disponibilité ou indisponibilité.
+    /** Date de début de la disponibilité ou indisponibilité. */
     private Date dateDebut;
 
     @Temporal(TemporalType.DATE)
     @Column(name = "date_mise_a_jour", nullable = false)
-    // Date de la dernière mise à jour du statut.
+    /** Date de la dernière mise à jour du statut. */
     private Date dateMiseAJour;
 
     @Temporal(TemporalType.DATE)
     @Column(name = "date_remise_disposition")
-    // Date prévue de remise en disposition (si applicable).
+    /** Date prévue de remise en disposition (si applicable). */
     private Date dateRemiseDisposition;
 
     @Column(name = "lien_ansm", columnDefinition = "TEXT")
-    // Lien vers la page officielle ANSM pour plus d'informations.
+    /** Lien vers la page officielle ANSM pour plus d'informations. */
     private String lienANSM;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "medicament_id", referencedColumnName = "id")
+    /** Référence au médicament en stock, si cette disponibilité spécifique y est liée. */
     private StockMedicament stockMedicament;
 }

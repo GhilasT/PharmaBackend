@@ -18,7 +18,19 @@ import java.util.UUID;
 @Builder
 public class OrdonnanceResponse {
 
+    /** L'identifiant unique de l'ordonnance. */
     private UUID idOrdonnance;
 
+    // Note: Les autres champs (client, medecin, prescriptions, etc.) pourraient être ajoutés ici
+    // en fonction des informations nécessaires dans la réponse.
+    // Par exemple:
+    // /** L'identifiant du client associé à l'ordonnance. */
+    // private UUID clientId;
+    // /** L'identifiant du médecin prescripteur. */
+    // private UUID medecinId;
+    // /** La date de prescription de l'ordonnance. */
+    // private Date datePrescription;
+    // /** La liste des prescriptions de l'ordonnance. */
+    // private List<PrescriptionResponse> prescriptions; // Nécessiterait un PrescriptionResponse DTO
 
 }

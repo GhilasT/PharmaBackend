@@ -8,8 +8,8 @@ import lombok.Data;
 import java.io.File;
 
 /**
- * DTO for sending an email with attachment
- * Contains the information necessary to send an email
+ * DTO pour l'envoi d'un email avec une pièce jointe de type Fichier (File).
+ * Contient les informations nécessaires pour envoyer un email avec une pièce jointe.
  * @author raphaelcharoze
  * @version 1.0
  * @since 2025-04-05
@@ -19,15 +19,27 @@ import java.io.File;
 @AllArgsConstructor
 public class EmailWithAttachmentFileSendingRequest {
 
+    /**
+     * L'adresse email du destinataire. Ne peut pas être vide.
+     */
     @NotBlank(message = "Le destinataire ne peut pas etre vide")
     private String to;
 
+    /**
+     * Le sujet de l'email. Ne peut pas être vide.
+     */
     @NotBlank(message = "Le sujet ne peut pas etre vide")
     private String subject;
 
+    /**
+     * Le fichier à joindre à l'email. Ne peut pas être vide.
+     */
     @NotBlank(message = "Le fichier ne peut pas etre vide")
     private File file;
 
+    /**
+     * Le corps du message de l'email. Optionnel.
+     */
     private String text;
 
 }

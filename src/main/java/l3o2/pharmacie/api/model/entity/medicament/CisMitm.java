@@ -28,28 +28,27 @@ public class CisMitm {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    // Clé primaire auto-générée pour identifier un médicament MITM.
+    /** Clé primaire auto-générée pour identifier un médicament MITM. */
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "code_cis", nullable = false)
-    // Référence au médicament principal (CIS).
+    /** Référence au médicament principal (CIS). */
     private CisBdpm cisBdpm;
 
     @Column(name = "code_atc", nullable = false, length = 7)
     @NotBlank(message = "Le code ATC est obligatoire")
     @Pattern(regexp = "^[A-Z0-9]{4,7}$", message = "Format ATC invalide")
-    // Code ATC (Anatomical Therapeutic Chemical Classification System) du
-    // médicament.
+    /** Code ATC (Anatomical Therapeutic Chemical Classification System) du médicament. */
     private String codeAtc;
 
     @Column(name = "denomination", nullable = false, length = 500)
     @NotBlank(message = "La dénomination est obligatoire")
-    // Dénomination du médicament (ex: "Paracétamol 500mg, comprimé").
+    /** Dénomination du médicament (ex: "Paracétamol 500mg, comprimé"). */
     private String denomination;
 
     @Column(name = "lien_bdpm", nullable = false, columnDefinition = "TEXT")
     @NotBlank(message = "Le lien BDPM est obligatoire")
-    // Lien vers la fiche BDPM du médicament.
+    /** Lien vers la fiche BDPM du médicament. */
     private String lienBdpm;
 }

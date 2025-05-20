@@ -24,24 +24,24 @@ public class CisGenerBdpm {
 
     @Id
     @Column(name = "identifiant_groupe_generique", nullable = false)
-    // Identifiant unique du groupe générique auquel appartient le médicament.
+    /** Identifiant unique du groupe générique auquel appartient le médicament. */
     private String identifiantGroupeGenerique;
 
     @Column(name = "libelle_groupe_generique")
-    // Libellé du groupe générique (ex: "Paracétamol et ses dérivés").
+    /** Libellé du groupe générique (ex: "Paracétamol et ses dérivés"). */
     private String libelleGroupeGenerique;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "code_cis", nullable = false)
-    // Référence au médicament principal (CIS).
+    /** Référence au médicament principal (CIS). */
     private CisBdpm cisBdpm;
 
     @Enumerated(EnumType.ORDINAL) // Stocke la valeur numérique (0,1,2,4).
     @Column(name = "type_generique", nullable = false)
-    // Type de générique (ex: groupe homogène, assimilable).
+    /** Type de générique (ex: groupe homogène, assimilable). */
     private TypeGenerique typeGenerique;
 
     @Column(name = "numero_tri")
-    // Numéro de tri du médicament au sein du groupe générique.
+    /** Numéro de tri du médicament au sein du groupe générique. */
     private Integer numeroTri;
 }

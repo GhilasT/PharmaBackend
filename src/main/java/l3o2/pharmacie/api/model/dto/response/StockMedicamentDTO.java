@@ -14,47 +14,48 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 public class StockMedicamentDTO {
     
-    // Code CIS du médicament
+    /** Code CIS (Code Identifiant de Spécialité) du médicament. */
     private String codeCIS;
 
     
+    /** Identifiant unique du stock de médicament. */
     private long id;//modifier pour test 
 
 
-    // Code CIP13 du médicament
+    /** Code CIP13 (Code Identifiant de Présentation à 13 chiffres) du médicament. */
     private String codeCip13;
 
     
-    // Libellé de la présentation
+    /** Libellé de la présentation du médicament. */
     private String libelle;
     
-    // Dénomination du médicament (à partir de CisBdpm)
+    /** Dénomination commune du médicament (principe actif). */
     private String denomination;
     
-    // Dosage de la substance
+    /** Dosage de la substance active du médicament. */
     private String dosage;
     
-    // Référence de dosage
+    /** Référence de dosage. */
     private String reference;
     
-    // Indique si le médicament est sur ordonnance ("Avec" ou "Sans")
+    /** Indique si le médicament est délivré sur ordonnance ("Avec" ou "Sans"). */
     private String surOrdonnance;
     
-    // Quantité en stock
+    /** Quantité du médicament actuellement en stock. */
     private int stock;
     
-    // Prix hors taxe
+    /** Prix hors taxe du médicament. */
     private BigDecimal prixHT;
     
-    // Prix TTC
+    /** Prix toutes taxes comprises du médicament. */
     private BigDecimal prixTTC;
     
-    // Montant de la taxe
+    /** Montant de la taxe appliquée au médicament. */
     private BigDecimal taxe;
     
-    // Agrément aux collectivités (oui/non/inconnu)
+    /** Indique si le médicament est agréé aux collectivités (oui/non/inconnu). */
     private String agrementCollectivites;
     
-    // Taux de remboursement
+    /** Taux de remboursement du médicament. */
     private String tauxRemboursement;
 }

@@ -4,6 +4,10 @@ import lombok.*;
 
 import java.util.UUID;
 
+/**
+ * DTO représentant la réponse contenant les informations d'un médecin.
+ * Utilisé pour éviter d'exposer les entités directement et pour structurer les données du médecin.
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -12,16 +16,28 @@ import java.util.UUID;
 @Builder
 public class MedecinResponse {
 
-    private UUID idMedecin;  // Identifiant unique du médecin
-    private String civilite;  // Civilité (M. / Mme, etc.)
-    private String nomExercice;  // Nom d'exercice
-    private String prenomExercice;  // Prénom d'exercice
-    private String rppsMedecin;  // Numéro RPPS unique
-    private String categorieProfessionnelle;  // Civil, militaire, étudiant, etc.
-    private String profession;  // Profession (Médecin, Chirurgien, etc.)
-    private String modeExercice;  // Mode d'exercice (libéral, salarié, bénévole)
-    private String qualifications;  // Qualifications, diplômes, autorisations, savoir-faire
-    private String structureExercice;  // Coordonnées des structures d'exercice (cabinet, hôpital, etc.)
-    private String fonctionActivite;  // Fonction dans l'exercice médical (par exemple, Médecin traitant)
-    private String genreActivite;  // Genre d’activité (consultation, chirurgie, soins palliatifs, etc.)
+    /** L'identifiant unique du médecin. */
+    private UUID idMedecin;
+    /** La civilité du médecin (ex: M., Mme, Dr). */
+    private String civilite;
+    /** Le nom d'exercice du médecin. */
+    private String nomExercice;
+    /** Le prénom d'exercice du médecin. */
+    private String prenomExercice;
+    /** Le numéro RPPS (Répertoire Partagé des Professionnels de Santé) unique du médecin. */
+    private String rppsMedecin;
+    /** La catégorie professionnelle du médecin (ex: Civil, Militaire, Étudiant). */
+    private String categorieProfessionnelle;
+    /** La profession du médecin (ex: Médecin, Chirurgien). */
+    private String profession;
+    /** Le mode d'exercice du médecin (ex: Libéral, Salarié, Bénévole). */
+    private String modeExercice;
+    /** Les qualifications, diplômes, autorisations et savoir-faire du médecin. */
+    private String qualifications;
+    /** Les coordonnées des structures d'exercice du médecin (ex: cabinet, hôpital). */
+    private String structureExercice;
+    /** La fonction du médecin dans son exercice (ex: Médecin traitant). */
+    private String fonctionActivite;
+    /** Le genre d'activité médicale exercée (ex: Consultation, Chirurgie, Soins palliatifs). */
+    private String genreActivite;
 }

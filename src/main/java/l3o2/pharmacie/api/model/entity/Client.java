@@ -26,11 +26,11 @@ import lombok.experimental.SuperBuilder;
 public class Client extends Personne {
 
     @Column(nullable = true)
-    // Numéro de sécurité sociale du client (optionnel).
+    /** Numéro de sécurité sociale du client (optionnel). */
     private String numeroSecu;
 
     @Column(nullable = true)
-    // Mutuelle associée au client (optionnel).
+    /** Mutuelle associée au client (optionnel). */
     private String mutuelle;
 
 

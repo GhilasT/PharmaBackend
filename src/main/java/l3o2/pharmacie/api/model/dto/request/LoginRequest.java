@@ -9,12 +9,17 @@ import lombok.Data;
  * Utilisé lors de l'authentification d'un utilisateur.
  * @author raphaelcharoze
  */
-
 @Data
 @Builder
 public class LoginRequest {
+    /**
+     * L'adresse email de l'utilisateur pour la connexion. Obligatoire.
+     */
     @NotBlank(message = "L'email est obligatoire")
     private String email;
+    /**
+     * Le mot de passe de l'utilisateur pour la connexion. Obligatoire.
+     */
     @NotBlank(message = "Le mot de passe est obligatoire")
     private String password;
 }

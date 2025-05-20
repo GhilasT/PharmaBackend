@@ -6,8 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 
 /**
- * DTO for sending an email to a fournisseur with a commande
- * Contains the information necessary to send an email
+ * DTO pour l'envoi d'un email à un fournisseur concernant une commande.
+ * Contient les informations nécessaires pour identifier la commande.
  * @author raphaelcharoze
  * @version 1.0
  * @since 2025-03-30
@@ -16,6 +16,9 @@ import lombok.Data;
 @Builder
 @AllArgsConstructor
 public class EmailCommandeRequest {
+    /**
+     * La référence de la commande concernée par l'email. Obligatoire.
+     */
     @NotBlank(message = "Une commande est nécessaire")
     private String commandeReference;
 }

@@ -6,8 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 
 /**
- * DTO for sending an email
- * Contains the information necessary to send an email
+ * DTO pour l'envoi d'un email simple (sans pièce jointe).
+ * Contient les informations nécessaires pour envoyer un email.
  * @author raphaelcharoze
  * @version 1.0
  * @since 2025-03-30
@@ -17,12 +17,21 @@ import lombok.Data;
 @AllArgsConstructor
 public class EmailSendingRequest {
 
+    /**
+     * L'adresse email du destinataire. Ne peut pas être vide.
+     */
     @NotBlank(message = "Le destinataire ne peut pas etre vide")
     private String to;
 
+    /**
+     * Le sujet de l'email. Ne peut pas être vide.
+     */
     @NotBlank(message = "Le sujet ne peut pas etre vide")
     private String subject;
 
+    /**
+     * Le corps du message de l'email. Optionnel.
+     */
     private String text;
 
 }

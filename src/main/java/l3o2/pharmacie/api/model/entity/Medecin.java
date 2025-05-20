@@ -26,38 +26,50 @@ public class Medecin {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(nullable = false, updatable = false, unique = true)
-    private UUID idMedecin;  // Identifiant unique pour le médecin
+    /** Identifiant unique pour le médecin. */
+    private UUID idMedecin;
 
     @Column(nullable = false)
-    private String civilite;  // Civilité (M. / Mme, etc.)
+    /** Civilité (M. / Mme, etc.). */
+    private String civilite;
 
     @Column(nullable = false)
-    private String nomExercice;  // Nom d'exercice
+    /** Nom d'exercice du médecin. */
+    private String nomExercice;
 
     @Column(nullable = false)
-    private String prenomExercice;  // Prénom d'exercice
+    /** Prénom d'exercice du médecin. */
+    private String prenomExercice;
 
     @Column(nullable = false, unique = true)
-    private String rppsMedecin;  // Numéro RPPS unique
+    /** Numéro RPPS unique du médecin. */
+    private String rppsMedecin;
 
     @Column(nullable = false)
-    private String categorieProfessionnelle;  // Civil, militaire, étudiant, etc.
+    /** Catégorie professionnelle du médecin (Civil, militaire, étudiant, etc.). */
+    private String categorieProfessionnelle;
 
     @Column(nullable = false)
-    private String profession;  // Profession (Médecin, Chirurgien, etc.)
+    /** Profession du médecin (Médecin, Chirurgien, etc.). */
+    private String profession;
 
-    @Column(nullable = true)  // Changer nullable = false en nullable = true
-    private String modeExercice;  // Mode d'exercice (libéral, salarié, bénévole)
+    @Column(nullable = true)
+    /** Mode d'exercice du médecin (libéral, salarié, bénévole). */
+    private String modeExercice;
 
-    @Column(nullable = true)  // Changer nullable = false en nullable = true
-    private String qualifications;  // Qualifications, diplômes, autorisations, savoir-faire
+    @Column(nullable = true)
+    /** Qualifications, diplômes, autorisations, savoir-faire du médecin. */
+    private String qualifications;
 
-    @Column(nullable = true)  // Changer nullable = false en nullable = true
-    private String structureExercice;  // Coordonnées des structures d'exercice (cabinet, hôpital, etc.)
+    @Column(nullable = true)
+    /** Coordonnées des structures d'exercice (cabinet, hôpital, etc.). */
+    private String structureExercice;
 
-    @Column(nullable = true)  // Changer nullable = false en nullable = true
-    private String fonctionActivite;  // Fonction dans l'exercice médical (par exemple, Médecin traitant)
+    @Column(nullable = true)
+    /** Fonction dans l'exercice médical (par exemple, Médecin traitant). */
+    private String fonctionActivite;
 
-    @Column(nullable = true)  // Changer nullable = false en nullable = true
-    private String genreActivite;  // Genre d’activité (consultation, chirurgie, soins palliatifs, etc.)
+    @Column(nullable = true)
+    /** Genre d’activité (consultation, chirurgie, soins palliatifs, etc.). */
+    private String genreActivite;
 }

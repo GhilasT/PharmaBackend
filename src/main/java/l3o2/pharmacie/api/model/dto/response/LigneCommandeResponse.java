@@ -19,9 +19,14 @@ import java.math.BigDecimal;
 public class LigneCommandeResponse {
 
     //private StockMedicament stockMedicament;
+    /** L'identifiant du stock de médicament concerné par cette ligne de commande. */
     private Long stockMedicamentId;
+    /** Les détails du stock de médicament (DTO) pour cette ligne de commande. */
     private StockMedicamentDTO stockMedicamentDTO;
+    /** La quantité commandée pour ce médicament. */
     private int quantite;
+    /** Le prix unitaire du médicament dans cette ligne de commande. */
     private BigDecimal prixUnitaire;
+    /** Le montant total pour cette ligne de commande (quantité * prix unitaire). */
     private BigDecimal montantLigne;
 }

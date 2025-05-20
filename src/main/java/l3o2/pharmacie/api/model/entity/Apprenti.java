@@ -26,6 +26,6 @@ import lombok.experimental.SuperBuilder;
 public class Apprenti extends Employe {
 
     @Column(nullable = false)
-    // Nom de l'école de formation de l'apprenti.
+    /** Nom de l'école de formation de l'apprenti. */
     private String ecole;
 }

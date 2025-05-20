@@ -25,26 +25,26 @@ public class CisInfoImportantes {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    // Identifiant unique de l'information importante.
+    /** Identifiant unique de l'information importante. */
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "code_cis", nullable = false)
-    // Référence au médicament principal (CIS).
+    /** Référence au médicament principal (CIS). */
     private CisBdpm cisBdpm;
 
     @Temporal(TemporalType.DATE)
     @Column(name = "date_debut", nullable = false)
-    // Date de début de validité de l'information importante.
+    /** Date de début de validité de l'information importante. */
     private Date dateDebut;
 
     @Temporal(TemporalType.DATE)
     @Column(name = "date_fin")
-    // Date de fin de validité de l'information importante (si applicable).
+    /** Date de fin de validité de l'information importante (si applicable). */
     private Date dateFin;
 
     @Lob
     @Column(name = "texte_lien_html", nullable = false, columnDefinition = "TEXT")
-    // Texte contenant des liens HTML relatifs à l'information importante.
+    /** Texte contenant des liens HTML relatifs à l'information importante. */
     private String texteLienHtml;
 }

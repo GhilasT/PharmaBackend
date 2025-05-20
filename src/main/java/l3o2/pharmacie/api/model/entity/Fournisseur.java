@@ -32,36 +32,37 @@ public class Fournisseur {
     // Génèrer automatiquement un UUID comme identifiant unique
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(nullable = false)
-
+    /** Identifiant unique du fournisseur, généré automatiquement. */
     private UUID idFournisseur;
 
 
     @Column(nullable = false)
-    // Nom de la société du fournisseur.
+    /** Nom de la société du fournisseur. */
     private String nomSociete;
 
     @Column(nullable = true)
-    // Fonction ou rôle du fournisseur.
+    /** Fonction ou rôle du contact chez le fournisseur. */
     private String sujetFonction;
 
     @Column(nullable = true)
-    // Numéro de fax du fournisseur (optionnel).
+    /** Numéro de fax du fournisseur (optionnel). */
     private String fax;
 
     @Column(nullable = false)
-    // Adresse email de la personne
+    /** Adresse email du fournisseur. */
     private String email;
 
     @Column(nullable = false)
-    // Numéro de téléphone
+    /** Numéro de téléphone du fournisseur. */
     private String telephone;
 
     @Column(nullable = false)
-
+    /** Adresse postale du fournisseur. */
     private String adresse;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "fournisseur_id")
+    /** Liste des commandes associées à ce fournisseur. */
     private List<Commande> commandes;
 
 

@@ -27,28 +27,25 @@ import lombok.NoArgsConstructor;
 public class Prescription {
 
     @Id
-    // Identifiant unique de l'Prescription (généré automatiquement)
+    /** Identifiant unique de la Prescription (généré automatiquement). */
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(nullable = false, updatable = false, unique = true)
     private UUID idPrescription;
 
     @Column(nullable = false)
-    // Posologie indiquée pour le médicament prescrit.(ou commentaie)n
+    /** Posologie indiquée pour le médicament prescrit (ou commentaire). */
     private String posologie;
 
     @Column(nullable = false)
-    // Quantité prescrite du médicament.
+    /** Quantité prescrite du médicament. */
     private int quantitePrescrite;
 
     @Column(nullable = true)
-    // Durée du traitement en jours.
+    /** Durée du traitement en jours. */
     private int duree;
 
     @Column(nullable = false, name = "medicament")
+    /** Nom ou identifiant du médicament prescrit. */
     private String medicament;
-
-
-
-
 
 }
